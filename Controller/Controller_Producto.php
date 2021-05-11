@@ -1,0 +1,272 @@
+<?php 
+class Controller_Producto
+{
+    private $conn;
+
+
+    // Post Properties
+    public $id_producto;
+    public $nombre_producto;
+    public $valor_producto;
+
+
+
+    
+    public function __construct($db)
+    {
+        $this->conn = $db;
+    }
+    
+
+    public function Read_producto()
+    {
+        $query = "SELECT * from producto";
+        $stmt = $this->conn->prepare($query);
+
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n",$stmt->error);
+           
+            return false;
+        }
+    }
+    public function Read_single()
+    {
+        $query = "SELECT * FROM producto WHERE id_producto = ?";
+        $stmt = $this->conn->prepare($query);
+         //Bind id
+         $stmt->bindParam(1, $this->id_producto);
+         $stmt->execute();
+         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+         // set properties
+         $this->nombre_producto = $row['nombre_producto'];
+         $this->valor_producto= $row['valor_producto'];
+         $this->id_producto = $row['id_producto'];
+
+         try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n",$stmt->error);
+           
+            return false;
+        }
+    }
+    
+    public function create_producto()
+    {
+        $validador=true;
+        $query = 'INSERT INTO producto 
+        SET 
+            
+            nombre_producto = :nombre_producto,
+            valor_producto = :valor_producto';
+
+        $stmt = $this->conn->prepare($query);
+        
+        if (htmlspecialchars(strip_tags($this->valor_producto))!="") {
+            if (is_numeric(htmlspecialchars(strip_tags($this->valor_producto))) ) {
+                if (htmlspecialchars(strip_tags($this->valor_producto))>=0) {
+                    $this->valor_producto = htmlspecialchars(strip_tags($this->valor_producto));
+                }else {
+                    $validador=false;
+                }
+                
+            }else {
+                $validador=false;
+            }
+        }else {
+            $validador=false;
+        }
+
+        if (!empty(htmlspecialchars(strip_tags($this->nombre_producto)))) {
+            $this->nombre_producto=htmlspecialchars(strip_tags($this->nombre_producto));
+        }else {
+            $validador=false;
+        }
+
+        $stmt-> bindParam(':nombre_producto',$this->nombre_producto);
+        $stmt-> bindParam(':valor_producto',$this->valor_producto);
+
+        if ($validador==true) {
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n",$stmt->error);
+               
+                return false;
+            }
+        }else {
+            return false;
+        }
+
+    }
+
+
+    public function delete_single_producto()
+    {
+        $validador=true;
+        $query = "DELETE FROM producto WHERE id_producto = ?";
+        $stmt = $this->conn->prepare($query);
+
+        if (htmlspecialchars(strip_tags($this->id_producto))!="") {
+            $this->id_producto= htmlspecialchars(strip_tags($this->id_producto));
+        }else {
+            $validador=false;
+        }
+
+        $stmt->bindParam(1, $this->id_producto);
+
+        if ($validador==true) {
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n",$stmt->error);
+               
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+    
+    public function update_producto()
+    {
+        $validador=true;
+        $query = "UPDATE producto SET valor_producto =:valor_producto, nombre_producto= :nombre_producto  WHERE id_producto = :id_producto";
+        $stmt = $this->conn->prepare($query);
+
+        if (htmlspecialchars(strip_tags($this->valor_producto))!="") {
+            if (is_numeric(htmlspecialchars(strip_tags($this->valor_producto))) ) {
+                if (htmlspecialchars(strip_tags($this->valor_producto))>=0) {
+                    $this->valor_producto = htmlspecialchars(strip_tags($this->valor_producto));
+                }else {
+                    $validador=false;
+                }
+                
+            }else {
+                $validador=false;
+            }
+        }else {
+            $validador=false;
+        }
+
+        if (!empty(htmlspecialchars(strip_tags($this->nombre_producto)))) {
+            $this->nombre_producto=htmlspecialchars(strip_tags($this->nombre_producto));
+        }else {
+            $validador=false;
+        }
+        if (htmlspecialchars(strip_tags($this->id_producto))!="") {
+            if (is_numeric(htmlspecialchars(strip_tags($this->id_producto))) ) {
+                if (htmlspecialchars(strip_tags($this->id_producto))>=0) {
+                    $this->id_producto = htmlspecialchars(strip_tags($this->id_producto));
+                }else {
+                    $validador=false;
+                }
+                
+            }else {
+                $validador=false;
+            }
+        }else {
+            $validador=false;
+        }
+
+
+
+        if ($validador==true) {
+            $stmt-> bindParam(':valor_producto', $this->valor_producto);
+            $stmt-> bindParam(':nombre_producto', $this->nombre_producto);
+            $stmt-> bindParam(':id_producto', $this->id_producto);
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n",$stmt->error);
+               
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+    function buscar_id_producto($id_producto){
+        $query = "SELECT id_producto FROM producto WHERE id_producto = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $id_producto);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+        
+        $numero_comparar= $row['id_producto'];
+
+                if ($numero_comparar==$id_producto) {
+                    return false;
+                }else {
+                    return true;
+                }
+                
+    }
+
+    public function buscar_nombre_producto($nombre_producto)
+    {
+        $query = "SELECT nombre_producto FROM producto WHERE nombre_producto  like '%".$nombre_producto."%'";
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+        
+        $nombre_comparar= $row['nombre_producto'];
+
+                if ($nombre_comparar==$nombre_producto) {
+                    return false;
+                }else {
+                    return true;
+                }
+    }
+
+    public function validador_nombre($nombre)
+    {
+        if (empty($nombre)) {
+            return "ingrese nombre";
+        }else{
+            return "";
+        }
+    }
+    public function Validador_valor_producto($valor_producto)
+    {
+        if (empty($valor_producto)) {
+            return "ingrese un valor producto";
+        }else{
+            if (is_numeric($valor_producto)) {
+                if (!$valor_producto>0) {
+                    return "ingrese un numero mayor a 0";
+                }else {
+                    return "";
+                }
+            }else {
+                return "solo se aceptan numeros";
+            }
+        }
+    }
+}
+
+
+
+?>
