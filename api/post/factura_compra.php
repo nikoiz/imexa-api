@@ -144,11 +144,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'){
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
-
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    $post = new Controller_Factura_Compra($GLOBALS['db']);
+    // GET ID
+    $post->folio_factura = isset($_GET['folio_factura']) ? $_GET['folio_factura'] : die();
+    if (!empty($post->buscar_folio_factura($post->folio_factura))) {
+        echo json_encode(
+            array('message' => 'no se encontro la gasto para eliminar')
+        );
+    } else {
+        if ($post->delete_Factura_Compra()) {
+            echo json_encode(
+                array('message' => 'Post deleted')
+            );
+        } else {
+            echo json_encode(
+                array('message' => 'Post not deleted')
+            );
+        }
+    }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    $validador = true;
+    $post = new Controller_Factura_Compra($GLOBALS['db']);
+    // Get  raw posted data
+
+    // GET ID
+    //$post->folio_factura = isset($_GET['folio_factura']) ? $_GET['folio_factura'] : die();
+    $post->folio_factura = $GLOBALS['data']->folio_factura;
+    $post->total_factura = $GLOBALS['data']->total_factura;
+    /*
+    problema al poner un ej: un 6 que se mande pero que valide que los otros nuemors
+    */
+    //
+
+    if (!$post->Validador_total_factura($post->total_factura) == "") {
+        $validador = false; 
+        echo json_encode(
+            array('Error' => $post->Validador_total_factura($post->total_factura))
+        );
+    }
+    
+    if ($validador==true) {
+        if ($post->update_Factura_Compra()) {
+            echo json_encode(
+                array('message' => 'Post Update')
+            );
+        } else {
+            echo json_encode(
+                array('message' => 'Post not Update')
+            );
+        }
+    }  
+    
+    
 }
 //En caso de que ninguna de las opciones anteriores se haya ejecutado
 header("HTTP/1.1 400 Bad Request");

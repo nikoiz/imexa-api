@@ -400,5 +400,31 @@ class Controller_Trabajador
          //header("Location: ../index.php?error=$error");
         }
     }
+    public function Validacion_parametros($parma)
+    {
+        if ($parma==null) {
+            return false;
+        }else {
+            return true;
+        }
+    }
+    public function Buscar_tipo_trabajador($tipo)
+    {
+        $query = "SELECT id_tipo_trabajador FROM tipo_trabajador WHERE id_tipo_trabajador = ?";
+        $stmt = $this->conn->prepare($query);
 
+        $stmt->bindParam(1, $tipo);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $comparar = $row['id_tipo_trabajador'];
+
+        if ($comparar == $tipo) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

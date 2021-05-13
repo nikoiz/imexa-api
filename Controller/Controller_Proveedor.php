@@ -268,4 +268,12 @@ class Controller_Proveedor
             return false;
         }
     }
+    public function Validador_nombre_proveedor($nombre_proveedor)
+    {
+        if ($nombre_proveedor==null) {
+            return false;
+        }else {
+            return true;
+        }
+    }
 }
