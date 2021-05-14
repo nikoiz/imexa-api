@@ -2,7 +2,7 @@
 class conexion
 {
     private $db_host = "localhost";
-    private $db_nombre = "proyecto_titulo";
+    private $db_nombre = "gpi_db";
     private $db_usuarios = "root";
     private $db_contra = "";
     private $conn;

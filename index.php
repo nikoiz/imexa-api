@@ -1,22 +1,8 @@
 
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<?php
-    //se puede poner en cualquier lado /por mi parte la pondre arriba
-    /*
-    session_start();
-    if (!isset($_SESSION["usuario"])) {
-        header("Location: ../index.php");
-    }
-    
-    */
-    
 
-    
+<?php
+   
 ?>
 <html>
     <head>
@@ -29,10 +15,9 @@ and open the template in the editor.
        // include './Controller/Conexion.php';
         echo "mensaje desde esta pagina";
         ?>
-        <h1>hoal</h1>
+        <h1>Hola</h1>
         <script src="Controller/js/test.js" ></script>
     </body>
-    <p>Este es un mensaje de pruerba para el pagina</p>
     <p>Este es un mensaje de pruerba para el pagina</p>
     <br>
     <br>

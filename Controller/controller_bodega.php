@@ -27,8 +27,8 @@ class controller_bodega
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n",$stmt->error);
-           
+            printf("Error: %s.\n", $stmt->error);
+
             return false;
         }
     }
@@ -46,7 +46,7 @@ class controller_bodega
 
         // set properties
         $this->nombre_bodega = $row['nombre_bodega'];
-        $this->numero_bodega= $row['numero_bodega'];
+        $this->numero_bodega = $row['numero_bodega'];
         $this->id_bodega = $row['id_bodega'];
 
         try {
@@ -54,8 +54,8 @@ class controller_bodega
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n",$stmt->error);
-           
+            printf("Error: %s.\n", $stmt->error);
+
             return false;
         }
 
@@ -67,8 +67,9 @@ class controller_bodega
     }
 
     // Create post      
-    public function create() {// //id_bodega = :id_bodega,
-        $validador=true;
+    public function create()
+    { // //id_bodega = :id_bodega,
+        $validador = true;
         $query = 'INSERT INTO bodega 
         SET 
             
@@ -76,77 +77,50 @@ class controller_bodega
             nombre_bodega = :nombre_bodega';
 
         $stmt = $this->conn->prepare($query);
-        
+
         //$this->id_bodega = htmlspecialchars(strip_tags($this->id_bodega));
-        if (htmlspecialchars(strip_tags($this->numero_bodega))!="") {//campo vasio
-            if (is_numeric(htmlspecialchars(strip_tags($this->numero_bodega))) ) {// si es numerico
+        if (htmlspecialchars(strip_tags($this->numero_bodega)) != "") { //campo vasio
+            if (is_numeric(htmlspecialchars(strip_tags($this->numero_bodega)))) { // si es numerico
                 //que no se repita en la base de datos
                 $this->numero_bodega = htmlspecialchars(strip_tags($this->numero_bodega));
-            }else {
-                $validador=false;
+            } else {
+                $validador = false;
             }
-        }else {
-            $validador=false;
+        } else {
+            $validador = false;
         }
         //utilizar medio para validar metodo empty
         if (!empty(htmlspecialchars(strip_tags($this->nombre_bodega)))) {
             $this->nombre_bodega = htmlspecialchars(strip_tags($this->nombre_bodega));
-        }else {
-            $validador=false;
+        } else {
+            $validador = false;
         }
-        
+
 
         // Bind Data
 
         //$stmt-> bindParam(':id_bodega', $this->id_bodega);
-        $stmt-> bindParam(':numero_bodega', $this->numero_bodega);
-        $stmt-> bindParam(':nombre_bodega', $this->nombre_bodega);
+        $stmt->bindParam(':numero_bodega', $this->numero_bodega);
+        $stmt->bindParam(':nombre_bodega', $this->nombre_bodega);
 
-        if ($validador==true) {
+        if ($validador == true) {
             try {
                 if ($stmt->execute()) {
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n",$stmt->error);
-               
+                printf("Error: %s.\n", $stmt->error);
+
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
-
-        
     }
-    public function buscar_nombre($nombre_bodega)
+
+
+    function buscar_numero($numero_bodega)
     {
-        $query = "SELECT nombre_bodega FROM bodega WHERE nombre_bodega  like '%".$nombre_bodega."%'";
-        $stmt = $this->conn->prepare($query);
-
-        //Bind id
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // set properties
-        if ($row==null) {
-            return exit;
-        }else {
-            $nombre_comparar= $row['nombre_bodega'];
-            if ($nombre_comparar==$nombre_bodega) {
-                return false;
-            }else {
-                return true;
-            }
-        }
-        
-            
-        
-        
-
-                
-    }
-
-     function buscar_numero($numero_bodega){
         $query = "SELECT numero_bodega FROM bodega WHERE numero_bodega = ?";
 
         $stmt = $this->conn->prepare($query);
@@ -157,21 +131,20 @@ class controller_bodega
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-        if ($row==null) {
-            return exit;
-        }else {
-            $numero_comparar= $row['numero_bodega'];
-                if ($numero_comparar==$numero_bodega) {
-                    return false;
-                }else {
-                    return true;
-                }
+        if ($row == null) {
+            return true;
+        } else {
+            $numero_comparar = $row['numero_bodega'];
+            if ($numero_comparar == $numero_bodega) {
+                return false;
+            } else {
+                return true;
+            }
         }
-        
-                
     }
-    function buscar_numero_comprobar_datos($numero_bodega,$nombre_bodega){
-        $validador=true;
+    function buscar_numero_comprobar_datos($numero_bodega, $nombre_bodega)
+    {
+        $validador = true;
         $query = "SELECT numero_bodega,nombre_bodega FROM bodega WHERE numero_bodega = ?";
 
         $stmt = $this->conn->prepare($query);
@@ -182,105 +155,102 @@ class controller_bodega
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-        
-        $numero_comparar= $row['numero_bodega'];
-        $nombre_bodega_comparar= $row['nombre_bodega'];
-        if ($numero_comparar==$numero_bodega) {
-            $validador==false;
+
+        $numero_comparar = $row['numero_bodega'];
+        $nombre_bodega_comparar = $row['nombre_bodega'];
+        if ($numero_comparar == $numero_bodega) {
+            $validador == false;
         }
-        if (strcmp($nombre_bodega,$nombre_bodega_comparar)==0) {
-            $validador=true;
+        if (strcmp($nombre_bodega, $nombre_bodega_comparar) == 0) {
+            $validador = true;
         }
 
-                if ($validador==true ) {
-                    return true;
-                }else {
-                    return false;
-                }
-                
+        if ($validador == true) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
     public function delete_single()
     {
-        $validador=true;
+        $validador = true;
         $query = "DELETE FROM bodega WHERE id_bodega = ?";
 
         $stmt = $this->conn->prepare($query);
 
-        if (htmlspecialchars(strip_tags($this->id_bodega))!="") {
-            $this->id_bodega= htmlspecialchars(strip_tags($this->id_bodega));
-        }else {
-            $validador=false;
+        if (htmlspecialchars(strip_tags($this->id_bodega)) != "") {
+            $this->id_bodega = htmlspecialchars(strip_tags($this->id_bodega));
+        } else {
+            $validador = false;
         }
-        
+
         $stmt->bindParam(1, $this->id_bodega);
-        
-        if ($validador==true) {
+
+        if ($validador == true) {
             try {
                 if ($stmt->execute()) {
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n",$stmt->error);
-               
+                printf("Error: %s.\n", $stmt->error);
+
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
-
-        
-        
     }
 
     public function update()
     {
-        $validador=true;
+        $validador = true;
         //poner atencion a la nomenclatura de las palabas.
         $query = "UPDATE bodega SET numero_bodega =:numero_bodega, nombre_bodega= :nombre_bodega  WHERE id_bodega = :id_bodega";
         $stmt = $this->conn->prepare($query);
 
 
-        if (htmlspecialchars(strip_tags($this->numero_bodega))!="") {
+        if (htmlspecialchars(strip_tags($this->numero_bodega)) != "") {
             $this->numero_bodega = htmlspecialchars(strip_tags($this->numero_bodega));
-        }else {
-            $validador=false;
+        } else {
+            $validador = false;
         }
-        
-        if (htmlspecialchars(strip_tags($this->nombre_bodega))==empty("")) {
+
+        if (htmlspecialchars(strip_tags($this->nombre_bodega)) == empty("")) {
             $this->nombre_bodega = htmlspecialchars(strip_tags($this->nombre_bodega));
-        }else {
-            $validador=false;
+        } else {
+            $validador = false;
         }
-        
-        if (htmlspecialchars(strip_tags($this->id_bodega))!="") {
+
+        if (htmlspecialchars(strip_tags($this->id_bodega)) != "") {
             $this->id_bodega = htmlspecialchars(strip_tags($this->id_bodega));
-        }else {
-            $validador=false;
+        } else {
+            $validador = false;
         }
-        
+
         // Bind Data
 
-        if ($validador==true) {
-            $stmt-> bindParam(':numero_bodega', $this->numero_bodega);
-        $stmt-> bindParam(':nombre_bodega', $this->nombre_bodega);
-       $stmt-> bindParam(':id_bodega', $this->id_bodega);
+        if ($validador == true) {
+            $stmt->bindParam(':numero_bodega', $this->numero_bodega);
+            $stmt->bindParam(':nombre_bodega', $this->nombre_bodega);
+            $stmt->bindParam(':id_bodega', $this->id_bodega);
 
-        try {
-            if ($stmt->execute()) {
-                return true;
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $stmt->error);
+
+                return false;
             }
-        } catch (Exception $e) {
-            printf("Error: %s.\n",$stmt->error);
-           
-            return false;
-        }
-        }else {
+        } else {
             return false;
         }
     }
-    function buscar_id_bodega($id_bodega){
+    function buscar_id_bodega($id_bodega)
+    {
         $query = "SELECT id_bodega FROM bodega WHERE id_bodega = ?";
 
         $stmt = $this->conn->prepare($query);
@@ -291,15 +261,14 @@ class controller_bodega
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-        
-        $numero_comparar= $row['id_bodega'];
 
-                if ($numero_comparar==$id_bodega) {
-                    return false;
-                }else {
-                    return true;
-                }
-                
+        $numero_comparar = $row['id_bodega'];
+
+        if ($numero_comparar == $id_bodega) {
+            return false;
+        } else {
+            return true;
+        }
     }
     function buscar_referncias_tablas($id_bodega)
     {
@@ -308,13 +277,12 @@ class controller_bodega
         $stmt->bindParam(1, $id_bodega);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $numero_comparar= $row['id_bodega'];
+        $numero_comparar = $row['id_bodega'];
 
-        if ($numero_comparar==$id_bodega) {
+        if ($numero_comparar == $id_bodega) {
             return false;
-        }else {
+        } else {
             return true;
         }
     }
-
 }

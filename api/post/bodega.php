@@ -1,9 +1,11 @@
 <?php
-//dejar el local host a puerto 3000
+
 header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
+//En caso de que ninguna de las opciones anteriores se haya ejecutado
+// header("HTTP/1.1 400 Bad Request");
 
 include_once '../../config/conexion.php';
 include_once '../../Controller/controller_bodega.php';
@@ -22,13 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $validador = true;
 
-
-    if ($post->buscar_nombre($post->nombre_bodega) == false) {
-        $validador = false;
-        echo json_encode(
-            array('message' => 'Existe mombre de la bodega')
-        );
-    }
     if ($post->buscar_numero($post->numero_bodega) == false) {
         $validador = false;
         echo json_encode(
@@ -164,12 +159,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
     
     $validador=true;
     
-    if ($post->buscar_nombre($post->nombre_bodega)==false) {
-        $validador=false;
-        echo json_encode(
-            array('message' => 'Existe mombre de la bodega')
-        );
-    } 
     if ($post->buscar_numero_comprobar_datos($post->numero_bodega,$post->nombre_bodega)==false) {
         $validador=false;
         echo json_encode(
@@ -194,6 +183,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
 
     
 }
-//En caso de que ninguna de las opciones anteriores se haya ejecutado
-header("HTTP/1.1 400 Bad Request");
+
 ?>

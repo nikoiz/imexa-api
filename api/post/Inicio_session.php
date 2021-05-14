@@ -2,7 +2,7 @@
 header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Content-Type: application/json');
 
-
+include_once '../../config/conexion.php';
 include_once '../../Controller/Controller_Trabajador.php';
 $database = new conexion();
 $db = $database->connect();
