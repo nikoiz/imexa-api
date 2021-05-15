@@ -2,7 +2,7 @@
 //dejar el local host a puerto 3000
 header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
 include_once '../../config/conexion.php';
@@ -127,6 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     
     // GET ID
     $post->id_producto = isset($_GET['id_producto']) ? $_GET['id_producto'] : die();
+    
     $post->valor_producto = $GLOBALS['data']->valor_producto;
     $post->nombre_producto = $GLOBALS['data']->nombre_producto;
     
@@ -150,5 +151,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         }
     } 
 }
-//En caso de que ninguna de las opciones anteriores se haya ejecutado
-header("HTTP/1.1 400 Bad Request");
+

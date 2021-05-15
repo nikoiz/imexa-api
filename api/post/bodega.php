@@ -2,14 +2,12 @@
 
 header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Methods: POST, PUT, DELETE, GET');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
-//En caso de que ninguna de las opciones anteriores se haya ejecutado
-// header("HTTP/1.1 400 Bad Request");
+
 
 include_once '../../config/conexion.php';
 include_once '../../Controller/controller_bodega.php';
-
 
 $database = new conexion();
 $db = $database->connect();
@@ -30,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             array('message' => 'Existe numero de bodega')
         );
     }
-    if ($validador==true) {
+    if ($validador == true) {
         if ($post->create()) {
             echo json_encode(
                 array('message' => 'Post Created')
@@ -110,12 +108,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 }
-if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
-    $validator=true;
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+
+    $validator = true;
     // Instiate blog post object
     $post = new controller_bodega($GLOBALS['db']);
-
-
     // GET ID
     $post->id_bodega = isset($_GET['id_bodega']) ? $_GET['id_bodega'] : die();
 
@@ -127,13 +124,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
         );
     } else {
         if (empty($post->buscar_referncias_tablas($post->id_bodega))) {
-            $validator=false;
+            $validator = false;
             echo json_encode(
                 array('message' => 'no se puede eliminar esta bodega ya que esta relaciona a un gasto existente')
             );
         }
 
-        if ($validator==true) {
+        if ($validator == true) {
             if ($post->delete_single()) {
                 echo json_encode(
                     array('message' => 'Post deleted')
@@ -147,26 +144,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $post = new controller_bodega($GLOBALS['db']);
 
-    // Get  raw posted data se manda por linkeo - el resto dee parametro es por formulario
-    $post->id_bodega = isset($_GET['id_bodega']) ? $_GET['id_bodega'] : die();
-
-    //$post->id_bodega = $GLOBALS['data']->id_bodega;
+    $post->id_bodega = $GLOBALS['data']->id_bodega;
     $post->numero_bodega = $GLOBALS['data']->numero_bodega;
     $post->nombre_bodega = $GLOBALS['data']->nombre_bodega;
-    
-    $validador=true;
-    
-    if ($post->buscar_numero_comprobar_datos($post->numero_bodega,$post->nombre_bodega)==false) {
-        $validador=false;
+
+    $validador = true;
+
+    if ($post->buscar_numero_comprobar_datos($post->numero_bodega, $post->nombre_bodega) == false) {
+        $validador = false;
         echo json_encode(
             array('message' => 'Existe numero de la bodega')
         );
     }
 
-    if ($validador==true) {
+    if ($validador == true) {
         if ($post->update()) {
             echo json_encode(
                 array('message' => 'Post Update')
@@ -176,12 +170,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
                 array('message' => 'Post not Update')
             );
         }
-    } 
-
-    
-   
-
-    
+    }
 }
-
-?>
