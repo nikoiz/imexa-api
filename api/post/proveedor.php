@@ -2,7 +2,7 @@
 //dejar el local host a puerto 3000
 header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Methods: POST,GET,PUT,DELETE');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
 include_once '../../config/conexion.php';
@@ -184,6 +184,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
         }
     } 
 }
-//En caso de que ninguna de las opciones anteriores se haya ejecutado
-header("HTTP/1.1 400 Bad Request");
+
 ?>

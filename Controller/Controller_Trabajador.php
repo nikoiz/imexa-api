@@ -10,15 +10,11 @@ class Controller_Trabajador
     public $contraseña;
     public $id_tipo_trabajador;
 
-
-
-
     public function __construct($db)
     {
         $this->conn = $db;
     }
     
-
     public function Read_trabajador()
     {
         $query = "SELECT * from trabajador";
@@ -75,7 +71,7 @@ class Controller_Trabajador
             rut_trabajador = :rut_trabajador';
 
         $stmt = $this->conn->prepare($query);
-        
+
         if (!empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
             $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
             $rut =$this->rut_trabajador;

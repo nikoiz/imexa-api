@@ -124,22 +124,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $post = new Controller_Producto($GLOBALS['db']);
 
     // Get  raw posted data
-    
+
     // GET ID
     $post->id_producto = isset($_GET['id_producto']) ? $_GET['id_producto'] : die();
-    
     $post->valor_producto = $GLOBALS['data']->valor_producto;
     $post->nombre_producto = $GLOBALS['data']->nombre_producto;
-    
-    $validador=true;
-    
-    if ($post->buscar_nombre_producto($post->nombre_producto)==false) {
-        $validador=false;
+
+    $validador = true;
+
+    if ($post->buscar_nombre_producto($post->nombre_producto) == false) {
+        $validador = false;
         echo json_encode(
             array('message' => 'Existe mombre del Producto')
         );
-    }  
-    if ($validador==true) {
+    }
+    if ($validador == true) {
         if ($post->update_producto()) {
             echo json_encode(
                 array('message' => 'Post Update')
@@ -149,6 +148,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
                 array('message' => 'Post not Update')
             );
         }
-    } 
+    }
 }
-
