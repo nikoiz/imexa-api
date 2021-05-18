@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $post= new Controller_Proveedor($GLOBALS['db']);
     $post->nombre_proveedor= $GLOBALS['data']->nombre_proveedor;
     $post->rut_proveedor= $GLOBALS['data']->rut_proveedor;
+    $post->contacto= $GLOBALS['data']->contacto;
 
 
     if ($post->Validator_run($post->rut_proveedor)==false) {
@@ -34,6 +35,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             array('message' => 'Error ingrese un nombre proveedor')
         );
     }
+    if ($post->Validador_contacto_proveedor($post->contacto)==false) {
+        $validador=false;
+        echo json_encode(
+            array('message' => 'Error ingrese un contacto del proveedor')
+        );
+    }else{
+        if ($post->validarTelefono($post->contacto)==false) {
+            $validador=false;
+            echo json_encode(
+                array('message' => 'Error numero mal ingrasdo')
+            );
+        }
+    }
+    
 
     if ($validador==true) {
         if ($post->create_producto()) {
@@ -66,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'){
                  if ($post->Read_single_proveedor()) {
                      $post_item = array(
                          'rut_proveedor' => $post->rut_proveedor,
-                         'nombre_proveedor' => $post->nombre_proveedor
+                         'nombre_proveedor' => $post->nombre_proveedor,
+                         'contacto' => $post->contacto
                      );
          
                      //Make JSON
@@ -97,7 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'){
                     extract($row);
                     $post_item = array(
                         'rut_proveedor' => $rut_proveedor,
-                        'nombre_proveedor' => $nombre_proveedor                 
+                        'nombre_proveedor' => $nombre_proveedor,
+                        'contacto' => $contacto                 
                     );
             
                     array_push($posts_arr['data'], $post_item);
@@ -156,6 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
     //$post->rut_proveedor = $GLOBALS['data']->rut_proveedor;
     $post->rut_proveedor = isset($_GET['rut_proveedor']) ? $_GET['rut_proveedor'] : die();
     $post->nombre_proveedor = $GLOBALS['data']->nombre_proveedor;
+    $post->contacto= $GLOBALS['data']->contacto;
     
     $validador=true;
 

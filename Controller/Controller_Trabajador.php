@@ -61,17 +61,16 @@ class Controller_Trabajador
     public function create_trabajador()
     {
         $validador=true;
-        $query = 'INSERT INTO trabajador 
-        SET 
-            id_tipo_trabajador =:id_tipo_trabajador,
-            contraseña =:contraseña,
-            usuario =:usuario,
-            fecha_contratacion =:fecha_contratacion,
-            nombre_trabajador = :nombre_trabajador,
-            rut_trabajador = :rut_trabajador';
 
-        $stmt = $this->conn->prepare($query);
-
+        if (htmlspecialchars(strip_tags($this->contraseña))==null && htmlspecialchars(strip_tags($this->usuario))==null) {
+            $this->contraseña='';
+            $this->usuario='';
+        }else {
+            $this->contraseña=htmlspecialchars(strip_tags($this->contraseña));
+            $this->usuario=htmlspecialchars(strip_tags($this->usuario));
+        }
+        
+        
         if (!empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
             $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
             $rut =$this->rut_trabajador;
@@ -97,6 +96,7 @@ class Controller_Trabajador
                     $dvr = 'K';
     
                 if ($dvr == strtoupper($dv)) {
+                    $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
                     $validador=true;
                 } else {
                     $validador=false;
@@ -118,16 +118,6 @@ class Controller_Trabajador
         }else {
             $validador=false;
         }
-        if (!empty(htmlspecialchars(strip_tags($this->usuario)))) {
-            $this->usuario=htmlspecialchars(strip_tags($this->usuario));
-        }else {
-            $validador=false;
-        }
-        if (!empty(htmlspecialchars(strip_tags($this->contraseña)))) {
-            $this->contraseña=htmlspecialchars(strip_tags($this->contraseña));
-        }else {
-            $validador=false;
-        }
         if (!empty(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
             if (is_numeric(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
                 if (htmlspecialchars(strip_tags($this->id_tipo_trabajador))>=1) {
@@ -142,13 +132,24 @@ class Controller_Trabajador
             $validador=false;
         }
 
+
         if ($validador==true) {
+            $query = "INSERT INTO trabajador
+        SET
+            id_tipo_trabajador = '$this->id_tipo_trabajador',
+            contraseña = '$this->contraseña',
+            usuario = '$this->usuario',
+            fecha_contratacion = '$this->fecha_contratacion',
+            nombre_trabajador = '$this->nombre_trabajador',
+            rut_trabajador = '$this->rut_trabajador'";
+
+        $stmt = $this->conn->prepare($query);
             try {
                 if ($stmt->execute()) {
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n",$stmt->error);
+                printf("Error: %s.\n",$e);
                
                 return false;
             }
@@ -220,13 +221,15 @@ class Controller_Trabajador
     public function update_trabajador()
     {
         $validador=true;
-        $query = "UPDATE trabajador SET id_tipo_trabajador =:id_tipo_trabajador,
-        contraseña =:contraseña,
-        usuario =:usuario,
-        fecha_contratacion =:fecha_contratacion,
-        nombre_trabajador = :nombre_trabajador WHERE rut_trabajador = :rut_trabajador";
-        $stmt = $this->conn->prepare($query);
 
+        if (htmlspecialchars(strip_tags($this->contraseña))==null && htmlspecialchars(strip_tags($this->usuario))==null) {
+            $this->contraseña='""';
+            $this->usuario='""';
+        }else {
+            $this->contraseña=htmlspecialchars(strip_tags($this->contraseña));
+            $this->usuario=htmlspecialchars(strip_tags($this->usuario));
+        }
+        
         
         if (!empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
             $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
@@ -253,6 +256,7 @@ class Controller_Trabajador
                     $dvr = 'K';
     
                 if ($dvr == strtoupper($dv)) {
+                    $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
                     $validador=true;
                 } else {
                     $validador=false;
@@ -274,16 +278,6 @@ class Controller_Trabajador
         }else {
             $validador=false;
         }
-        if (!empty(htmlspecialchars(strip_tags($this->usuario)))) {
-            $this->usuario=htmlspecialchars(strip_tags($this->usuario));
-        }else {
-            $validador=false;
-        }
-        if (!empty(htmlspecialchars(strip_tags($this->contraseña)))) {
-            $this->contraseña=htmlspecialchars(strip_tags($this->contraseña));
-        }else {
-            $validador=false;
-        }
         if (!empty(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
             if (is_numeric(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
                 if (htmlspecialchars(strip_tags($this->id_tipo_trabajador))>=1) {
@@ -299,20 +293,24 @@ class Controller_Trabajador
         }
 
 
-
         if ($validador==true) {
-            $stmt-> bindParam(':id_tipo_trabajador', $this->id_tipo_trabajador);
-            $stmt-> bindParam(':contraseña', $this->contraseña);
-            $stmt-> bindParam(':usuario', $this->usuario);
-            $stmt-> bindParam(':fecha_contratacion', $this->fecha_contratacion);
-            $stmt-> bindParam(':nombre_trabajador', $this->nombre_trabajador);
-            $stmt-> bindParam(':rut_trabajador', $this->rut_trabajador);
+            $query = "UPDATE trabajador
+        SET
+            id_tipo_trabajador = '$this->id_tipo_trabajador',
+            contraseña = '$this->contraseña',
+            usuario = '$this->usuario',
+            fecha_contratacion = '$this->fecha_contratacion',
+            nombre_trabajador = '$this->nombre_trabajador'
+            WHERE
+            rut_trabajador = '$this->rut_trabajador'";
+
+        $stmt = $this->conn->prepare($query);
             try {
                 if ($stmt->execute()) {
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n",$stmt->error);
+                printf("Error: %s.\n",$e);
                
                 return false;
             }
@@ -407,6 +405,25 @@ class Controller_Trabajador
     public function Buscar_tipo_trabajador($tipo)
     {
         $query = "SELECT id_tipo_trabajador FROM tipo_trabajador WHERE id_tipo_trabajador = ?";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(1, $tipo);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $comparar = $row['id_tipo_trabajador'];
+
+        if ($comparar == $tipo) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public function Buscar_rut_trabajador($tipo)
+    {
+        $query = "SELECT rut_trabajador FROM trabajador WHERE rut_trabajador = ?";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(1, $tipo);

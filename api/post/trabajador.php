@@ -21,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $post->rut_trabajador=$GLOBALS['data']->rut_trabajador;
     $post->nombre_trabajador=$GLOBALS['data']->nombre_trabajador;
     $post->fecha_contratacion=$GLOBALS['data']->fecha_contratacion;
-    $post->usuario=$GLOBALS['data']->usuario;
-    $post->contraseña=$GLOBALS['data']->contraseña;
+    $post->usuario="";
+    $post->contraseña="";
     $post->id_tipo_trabajador=$GLOBALS['data']->id_tipo_trabajador;
 
     if ($post->validateDate($post->fecha_contratacion)==false) {
@@ -46,18 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         );
     }
    
-    if ($post->Validacion_parametros($post->usuario)==false) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "ingrese usuario de trabajador")
-        );
-    }
-    if ($post->Validacion_parametros($post->contraseña)==false) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "ingrese conntrseña de trabajador")
-        );
-    }
     if ($post->Buscar_tipo_trabajador($post->id_tipo_trabajador)!=false) {
         $validador = false;
         echo json_encode(
@@ -86,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($post->Validator_run($post->rut_trabajador) == false) {
                 $validador = false;
                 echo json_encode(
-                    array('message' => 'Error ingrese un nombre proveedor')
+                    array('message' => 'Error ingrese un rut trabajador')
                 );
             }else {
                 if ($post->Read_single_trabajador()) {
@@ -149,20 +137,84 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    $post = new Controller_Trabajador($GLOBALS['db']);
+
+
+    // GET ID
+    $post->rut_trabajador = isset($_GET['rut_trabajador']) ? $_GET['rut_trabajador'] : die();
+
+    if (!empty($post->Buscar_rut_trabajador($post->rut_trabajador))) {
+        echo json_encode(
+            array('message' => 'no se encontro el trabajador para eliminar')
+        );
+    } else {
+        if ($post->delete_single_trabajador()) {
+            echo json_encode(
+                array('message' => 'Post deleted')
+            );
+        } else {
+            echo json_encode(
+                array('message' => 'Post not deleted')
+            );
+        }
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    $validador = true;
+    $post = new Controller_Trabajador($GLOBALS['db']);
+    $post->rut_trabajador=$GLOBALS['data']->rut_trabajador;
+    $post->nombre_trabajador=$GLOBALS['data']->nombre_trabajador;
+    $post->fecha_contratacion=$GLOBALS['data']->fecha_contratacion;
+    $post->usuario="";
+    $post->contraseña="";
+    $post->id_tipo_trabajador=$GLOBALS['data']->id_tipo_trabajador;
+
+    if ($post->validateDate($post->fecha_contratacion)==false) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "asd")
+        );
+    }
+    
+    if ($post->Validator_run($post->rut_trabajador)==false) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "Error no se rut mal ingresado")
+        );
+    }
+    if (!$post->Buscar_rut_trabajador($post->rut_trabajador)) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "Error no se encontro el rut del trabajdor")
+        );
+    }
+
+    if ($post->Validacion_parametros($post->nombre_trabajador)==false) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "ingrese nombre de trabajador")
+        );
+    }
+   
+    if ($post->Buscar_tipo_trabajador($post->id_tipo_trabajador)!=false) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "no se establecio el tipo de trabajador")
+        );
+    }
+    if ($validador==true) {
+        if ($post->update_trabajador()) {
+            echo json_encode(
+                array('message' => 'Post Update')
+            );
+        } else {
+            echo json_encode(
+                array('message' => 'Post not Update')
+            );
+        }
+    }
 }
 //En caso de que ninguna de las opciones anteriores se haya ejecutado
 header("HTTP/1.1 400 Bad Request");
 ?>
-/*
-private $conn;
-public $rut_trabajador;
-public $nombre_trabajador;
-public $fecha_contratacion;
-public $usuario;
-public $contraseña;
-public $id_tipo_trabajador;
-
-*/

@@ -102,6 +102,7 @@ class controller_bodega
         //$stmt-> bindParam(':id_bodega', $this->id_bodega);
         $stmt->bindParam(':numero_bodega', $this->numero_bodega);
         $stmt->bindParam(':nombre_bodega', $this->nombre_bodega);
+        printf("Error: %s.\n", $this->nombre_bodega);
 
         if ($validador == true) {
             try {

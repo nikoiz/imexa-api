@@ -6,6 +6,7 @@ class Controller_Proveedor
 
     public $rut_proveedor;
     public $nombre_proveedor;
+    public $contacto;
 
     public function __construct($db)
     {
@@ -40,6 +41,7 @@ class Controller_Proveedor
         // set properties
         $this->nombre_proveedor = $row['nombre_proveedor'];
         $this->rut_proveedor = $row['rut_proveedor'];
+        $this->contacto = $row['contacto'];
 
         try {
             if ($stmt->execute()) {
@@ -59,12 +61,15 @@ class Controller_Proveedor
         SET 
             
             nombre_proveedor = :nombre_proveedor,
-            rut_proveedor = :rut_proveedor';
+            rut_proveedor = :rut_proveedor,
+            contacto = :contacto';
 
         $stmt = $this->conn->prepare($query);
 
         if (htmlspecialchars(strip_tags($this->rut_proveedor)) == "") {
             $validador = false;
+        }else {
+            $this->rut_proveedor = htmlspecialchars(strip_tags($this->rut_proveedor));
         }
 
         if (!empty(htmlspecialchars(strip_tags($this->nombre_proveedor)))) {
@@ -72,11 +77,17 @@ class Controller_Proveedor
         } else {
             $validador = false;
         }
+        if (!empty(htmlspecialchars(strip_tags($this->contacto)))) {
+            $this->contacto = htmlspecialchars(strip_tags($this->contacto));
+        }else {
+            $validador = false;
+        }
 
 
         if ($validador == true) {
             $stmt->bindParam(':nombre_proveedor', $this->nombre_proveedor);
             $stmt->bindParam(':rut_proveedor', $this->rut_proveedor);
+            $stmt->bindParam(':contacto', $this->contacto);
 
             try {
                 if ($stmt->execute()) {
@@ -161,7 +172,7 @@ class Controller_Proveedor
     {
         $validador = true;
         //poner atencion a la nomenclatura de las palabas.
-        $query = "UPDATE proveedor SET rut_proveedor =:rut_proveedor, nombre_proveedor= :nombre_proveedor  WHERE rut_proveedor = :rut_proveedor";
+        $query = "UPDATE proveedor SET rut_proveedor =:rut_proveedor, nombre_proveedor= :nombre_proveedor,contacto= :contacto  WHERE rut_proveedor = :rut_proveedor";
         $stmt = $this->conn->prepare($query);
 
 
@@ -173,11 +184,17 @@ class Controller_Proveedor
         } else {
             $validador = false;
         }
+        if (!empty(htmlspecialchars(strip_tags($this->contacto)))) {
+            $this->contacto = htmlspecialchars(strip_tags($this->contacto));
+        }else {
+            $validador = false;
+        }
         // Bind Data
 
         if ($validador == true) {
             $stmt->bindParam(':nombre_proveedor', $this->nombre_proveedor);
             $stmt->bindParam(':rut_proveedor', $this->rut_proveedor);
+            $stmt->bindParam(':contacto', $this->contacto);
 
             try {
                 if ($stmt->execute()) {
@@ -276,4 +293,21 @@ class Controller_Proveedor
             return true;
         }
     }
+    public function Validador_contacto_proveedor($contacto)
+    {
+        if ($contacto==null) {
+            return false;
+        }else {
+            return true;
+        }
+    }
+    function validarTelefono($numero)
+    {// para chile 
+        $reg = "/^(\+?56)?(\s?)(0?9)(\s?)[9876543]\d{7}$/";
+        if (preg_match($reg, $numero)) {
+                  return true;
+              }else {
+                  return false;
+              }
+      }
 }
