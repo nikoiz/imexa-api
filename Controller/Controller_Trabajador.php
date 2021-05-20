@@ -157,6 +157,104 @@ class Controller_Trabajador
             return false;
         }
     }
+    public function create_registro_usuario()
+    {
+        $validador=true;
+
+        if (htmlspecialchars(strip_tags($this->contraseña))==null && htmlspecialchars(strip_tags($this->usuario))==null) {
+            $this->contraseña='';
+            $this->usuario='';
+        }else {
+            $this->contraseña=htmlspecialchars(strip_tags($this->contraseña));
+            $this->usuario=htmlspecialchars(strip_tags($this->usuario));
+        }
+
+        if (!empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
+            $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
+            $rut =$this->rut_trabajador;
+            if ($rut != "") {
+                $rut = preg_replace('/[^k0-9]/i', '', $rut);
+                $dv  = substr($rut, -1);
+                $numero = substr($rut, 0, strlen($rut) - 1);
+                $i = 2;
+                $suma = 0;
+                foreach (array_reverse(str_split($numero)) as $v) {
+                    if ($i == 8)
+                        $i = 2;
+    
+                    $suma += $v * $i;
+                    ++$i;
+                }
+    
+                $dvr = 11 - ($suma % 11);
+    
+                if ($dvr == 11)
+                    $dvr = 0;
+                if ($dvr == 10)
+                    $dvr = 'K';
+    
+                if ($dvr == strtoupper($dv)) {
+                    $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
+                    $validador=true;
+                } else {
+                    $validador=false;
+                }
+            } else {
+                $validador=false;
+            }
+        }else {
+            $validador=false;
+        }
+
+        if (!empty(htmlspecialchars(strip_tags($this->nombre_trabajador)))) {
+            $this->nombre_trabajador=htmlspecialchars(strip_tags($this->nombre_trabajador));
+        }else {
+            $validador=false;
+        }
+        if (!empty(htmlspecialchars(strip_tags($this->fecha_contratacion)))) {
+            $this->fecha_contratacion=htmlspecialchars(strip_tags($this->fecha_contratacion));
+        }else {
+            $validador=false;
+        }
+        if (!empty(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
+            if (is_numeric(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
+                if (htmlspecialchars(strip_tags($this->id_tipo_trabajador))>=1) {
+                    $this->id_tipo_trabajador=htmlspecialchars(strip_tags($this->id_tipo_trabajador));
+                }else {
+                    $validador=false;
+                }  
+            }else {
+                $validador=false;
+            }  
+        }else {
+            $validador=false;
+        }
+
+
+        if ($validador==true) {
+            $query = "INSERT INTO trabajador
+        SET
+            id_tipo_trabajador = '$this->id_tipo_trabajador',
+            contraseña = '$this->contraseña',
+            usuario = '$this->usuario',
+            fecha_contratacion = '$this->fecha_contratacion',
+            nombre_trabajador = '$this->nombre_trabajador',
+            rut_trabajador = '$this->rut_trabajador'";
+
+        $stmt = $this->conn->prepare($query);
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n",$e);
+               
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
 
     public function delete_single_trabajador()
     {

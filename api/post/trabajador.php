@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $post->fecha_contratacion=$GLOBALS['data']->fecha_contratacion;
     $post->usuario="";
     $post->contraseña="";
-    $post->id_tipo_trabajador=$GLOBALS['data']->id_tipo_trabajador;
+    $post->id_tipo_trabajador=2;
 
     if ($post->validateDate($post->fecha_contratacion)==false) {
         $validador = false;
@@ -216,5 +216,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     }
 }
 //En caso de que ninguna de las opciones anteriores se haya ejecutado
-header("HTTP/1.1 400 Bad Request");
+
 ?>
