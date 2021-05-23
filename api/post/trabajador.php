@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     if ($post->validateDate($post->fecha_contratacion)==false) {
         $validador = false;
         echo json_encode(
-            array('Error' => "asd")
+            array('Error' => "Fecha mal ingresada")
         );
     }
     
@@ -215,6 +215,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         }
     }
 }
-//En caso de que ninguna de las opciones anteriores se haya ejecutado
 
 ?>

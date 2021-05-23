@@ -35,12 +35,12 @@ class controller_bodega
 
     public function read_single()
     {
-        $query = "SELECT * FROM bodega WHERE numero_bodega = ?";
+        $query = "SELECT * FROM bodega WHERE id_bodega = ?";
 
         $stmt = $this->conn->prepare($query);
 
         //Bind id
-        $stmt->bindParam(1, $this->numero_bodega);
+        $stmt->bindParam(1, $this->id_bodega);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -102,7 +102,6 @@ class controller_bodega
         //$stmt-> bindParam(':id_bodega', $this->id_bodega);
         $stmt->bindParam(':numero_bodega', $this->numero_bodega);
         $stmt->bindParam(':nombre_bodega', $this->nombre_bodega);
-        printf("Error: %s.\n", $this->nombre_bodega);
 
         if ($validador == true) {
             try {
@@ -284,6 +283,21 @@ class controller_bodega
             return false;
         } else {
             return true;
+        }
+    }
+
+    function buscar_el_ultimo_id()
+    {
+        $query = "SELECT MAX(id_bodega) AS id_bodega FROM bodega";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $numero_comparar = $row['id_bodega'];
+
+        if ($numero_comparar != null) {
+            return $numero_comparar;
+        } else {
+            return false;
         }
     }
 }

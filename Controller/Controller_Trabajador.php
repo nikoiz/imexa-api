@@ -519,6 +519,25 @@ class Controller_Trabajador
             return true;
         }
     }
+    public function Validar_tipo_trabajador($tipo)
+    {
+        $query = "SELECT rut_trabajador FROM trabajador WHERE id_tipo_trabajador = ?";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(1, $tipo);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $busqeuda = $row['rut_trabajador'];
+
+        if ($busqeuda != "") {
+            return $busqeuda;
+        } else {
+            return null;
+        }
+    }
     public function Buscar_rut_trabajador($tipo)
     {
         $query = "SELECT rut_trabajador FROM trabajador WHERE rut_trabajador = ?";

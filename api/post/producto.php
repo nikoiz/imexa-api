@@ -6,6 +6,7 @@ header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
 include_once '../../config/conexion.php';
+//se usuran 3 innvantario - producto - inventario/bodega
 include_once '../../Controller/Controller_Producto.php';
 
 
