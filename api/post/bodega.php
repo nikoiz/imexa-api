@@ -49,9 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     //accion a trabajador as bodega (rut_trabajador,id_bodega)
                     $rut_trabajador = $pos->Validar_tipo_trabajador($pos->id_tipo_trabajador);
                     $id_bodega=$post->buscar_el_ultimo_id();
-                    echo json_encode(
-                        array('message' => $rut_trabajador."asd".$id_bodega)
-                    );
                     if ($po->create_trabajador_has_bodega($rut_trabajador,$id_bodega)==false) {
                         echo json_encode(
                             array('message' => 'Error en ingreso de datos teniendo en cuenta el rut del trabajador y el codigo de la bodega')
@@ -155,37 +152,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 
     if (!empty($post->buscar_id_bodega($post->id_bodega))) {
+        $validator = false;
         echo json_encode(
             array('message' => 'no se encontro la bodega para eliminar')
         );
-    } else {
-        if (empty($post->buscar_referncias_tablas($post->id_bodega))) {
-            $validator = false;
-            echo json_encode(
-                array('message' => 'no se puede eliminar esta bodega ya que esta relaciona a un gasto existente')
-            );
-        }
+    } 
 
-        if ($validator == true) {
+    if ($post->buscar_referncias_tablas($post->id_bodega)==false) {
+        $validator = false;
+        echo json_encode(
+            array('message' => 'no se puede eliminar esta bodega ya que esta relaciona a un gasto existente')
+        );
+    }
+
+    
+    if ($validator == true) {
+        if ($po->delete_trabajador_has_bodega($post->id_bodega)) {
             if ($post->delete_single()) {
-                if ($po->delete_trabajador_has_bodega($post->id_bodega)==true) {
-                    echo json_encode(
-                        array('message' => 'Post deleted')
-                    );
-                }else {
-                    echo json_encode(
-                        array('messag' => 'Post not deleted')
-                    );
-                }
-               
-                
+                echo json_encode(
+                    array('message' => 'Post deleted')
+                );
             } else {
                 echo json_encode(
                     array('message' => 'Post not deleted')
                 );
-            }
+            }       
+        } else {
+            echo json_encode(
+                array('message' => 'Post not deleted')
+            );
         }
     }
+    
+    
+    
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {

@@ -9,7 +9,8 @@ class Controller_Gasto
     public $descripcion_gastos;
     public $valor_gastos;
     public $estado;
-    public $bodega_id_bodega;
+    public $fecha;//ponner en todas
+    public $id_bodega;
 
 
     public function __construct($db)
@@ -43,7 +44,7 @@ class Controller_Gasto
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-        $this->bodega_id_bodega=$row['bodega_id_bodega'];
+        $this->id_bodega=$row['id_bodega'];
         $this->estado=$row['estado'];
         $this->valor_gastos= $row['valor_gastos'];
         $this->descripcion_gastos = $row['descripcion_gastos'];
@@ -66,7 +67,7 @@ class Controller_Gasto
         $query = 'INSERT INTO gastos 
         SET 
             
-            bodega_id_bodega = :bodega_id_bodega,
+            id_bodega = :id_bodega,
             estado = :estado,
             valor_gastos = :valor_gastos,
             descripcion_gastos = :descripcion_gastos';
@@ -83,15 +84,15 @@ class Controller_Gasto
         if (empty(htmlspecialchars(strip_tags($this->estado)))) {
             $validador = false;
         } 
-        if (empty(htmlspecialchars(strip_tags($this->bodega_id_bodega)))) {
+        if (empty(htmlspecialchars(strip_tags($this->id_bodega)))) {
             $validador = false;
         }else {
-            if(!is_numeric(htmlspecialchars(strip_tags($this->bodega_id_bodega)))){
+            if(!is_numeric(htmlspecialchars(strip_tags($this->id_bodega)))){
                 $validador = false;
             }
         }
         if ($validador == true) {
-            $stmt->bindParam(':bodega_id_bodega', $this->bodega_id_bodega);
+            $stmt->bindParam(':id_bodega', $this->id_bodega);
             $stmt->bindParam(':estado', $this->estado);
             $stmt->bindParam(':valor_gastos', $this->valor_gastos);
             $stmt->bindParam(':descripcion_gastos', $this->descripcion_gastos);
@@ -142,7 +143,7 @@ class Controller_Gasto
     {
         $validador = true;
         //poner atencion a la nomenclatura de las palabas.
-        $query = "UPDATE gastos SET descripcion_gastos =:descripcion_gastos, valor_gastos= :valor_gastos,estado =:estado,bodega_id_bodega =:bodega_id_bodega  WHERE id_gastos = :id_gastos";
+        $query = "UPDATE gastos SET descripcion_gastos =:descripcion_gastos, valor_gastos= :valor_gastos,estado =:estado,id_bodega =:id_bodega  WHERE id_gastos = :id_gastos";
         $stmt = $this->conn->prepare($query);
         if (htmlspecialchars(strip_tags($this->id_gastos)) == "") {
             $validador = false;
@@ -164,11 +165,11 @@ class Controller_Gasto
         if (htmlspecialchars(strip_tags($this->estado)) == "") {
             $validador = false;
         }
-        if (htmlspecialchars(strip_tags($this->bodega_id_bodega)) == "") {
+        if (htmlspecialchars(strip_tags($this->id_bodega)) == "") {
             $validador = false;
         }else {
-            if (is_numeric(htmlspecialchars(strip_tags($this->bodega_id_bodega)))) {
-                if (!htmlspecialchars(strip_tags($this->bodega_id_bodega))>=1) {
+            if (is_numeric(htmlspecialchars(strip_tags($this->id_bodega)))) {
+                if (!htmlspecialchars(strip_tags($this->id_bodega))>=1) {
                     $validador = false;
                 }
             }else {
@@ -177,7 +178,7 @@ class Controller_Gasto
         } 
         // Bind Data
         if ($validador == true) {
-            $stmt->bindParam(':bodega_id_bodega', $this->bodega_id_bodega);
+            $stmt->bindParam(':id_bodega', $this->id_bodega);
             $stmt->bindParam(':estado', $this->estado);
             $stmt->bindParam(':valor_gastos', $this->valor_gastos);
             $stmt->bindParam(':descripcion_gastos', $this->descripcion_gastos);

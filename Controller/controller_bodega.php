@@ -272,13 +272,13 @@ class controller_bodega
     }
     function buscar_referncias_tablas($id_bodega)
     {
-        $query = "SELECT id_bodega FROM bodega INNER JOIN gastos ON bodega.id_bodega=gastos.bodega_id_bodega WHERE id_bodega =?";
+        $query = "SELECT id_bodega FROM gastos WHERE id_bodega=?";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $id_bodega);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $numero_comparar = $row['id_bodega'];
-
+        
         if ($numero_comparar == $id_bodega) {
             return false;
         } else {
