@@ -99,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'descripcion_gastos' => $post->descripcion_gastos,
                     'valor_gastos' => $post->valor_gastos,
                     'estado' => $post->estado,
+                    'fecha' => $post->fecha,
                     'nombre_bodega' =>$post->nombre_bodega,
                     'id_bodega' => $post->id_bodega,
                 );
@@ -128,6 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'descripcion_gastos' => $descripcion_gastos,
                     'valor_gastos' => $valor_gastos,
                     'estado' => $estado,
+                    'fecha' => $fecha,
                     'nombre_bodega' =>$nombre_bodega,
                     'id_bodega' => $id_bodega,
                 );
