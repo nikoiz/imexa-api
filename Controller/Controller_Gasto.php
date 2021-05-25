@@ -11,6 +11,7 @@ class Controller_Gasto
     public $estado;
     public $fecha;//ponner en todas
     public $id_bodega;
+    public $nombre_bodega;
 
 
     public function __construct($db)
@@ -20,7 +21,7 @@ class Controller_Gasto
 
     public function Read_Gasto()
     {
-        $query = "SELECT * from gastos";
+        $query = "SELECT id_gastos,descripcion_gastos,valor_gastos,estado,fecha,nombre_bodega, gastos.id_bodega FROM gastos inner JOIN bodega on bodega.id_bodega=gastos.id_gastos";
         $stmt = $this->conn->prepare($query);
 
         try {
@@ -36,7 +37,8 @@ class Controller_Gasto
 
     public function Read_single_gasto()
     {
-        $query = "SELECT * FROM gastos WHERE id_gastos = ?";
+        $p = new controller_bodega($this->conn);
+        $query = "SELECT id_gastos,descripcion_gastos,valor_gastos,estado,fecha,nombre_bodega, gastos.id_bodega FROM gastos inner JOIN bodega on bodega.id_bodega=gastos.id_gastos WHERE id_gastos = ?";
         $stmt = $this->conn->prepare($query);
         //Bind id
         $stmt->bindParam(1, $this->id_gastos);
@@ -48,7 +50,10 @@ class Controller_Gasto
         $this->estado=$row['estado'];
         $this->valor_gastos= $row['valor_gastos'];
         $this->descripcion_gastos = $row['descripcion_gastos'];
+        $this->fecha = $row['fecha'];
         $this->id_gastos = $row['id_gastos'];
+        $this->nombre_bodega = $row['nombre_bodega'];
+        
 
         try {
             if ($stmt->execute()) {
@@ -70,11 +75,16 @@ class Controller_Gasto
             id_bodega = :id_bodega,
             estado = :estado,
             valor_gastos = :valor_gastos,
-            descripcion_gastos = :descripcion_gastos';
+            descripcion_gastos = :descripcion_gastos,
+            fecha = :fecha';
 
         $stmt = $this->conn->prepare($query);
 
-
+        if (!empty(htmlspecialchars(strip_tags($this->fecha)))) {
+            $this->fecha=htmlspecialchars(strip_tags($this->fecha));
+        }else {
+            $validador=false;
+        }
         if (empty(htmlspecialchars(strip_tags($this->descripcion_gastos)))) {
             $validador = false;
         } 
@@ -96,12 +106,13 @@ class Controller_Gasto
             $stmt->bindParam(':estado', $this->estado);
             $stmt->bindParam(':valor_gastos', $this->valor_gastos);
             $stmt->bindParam(':descripcion_gastos', $this->descripcion_gastos);
+            $stmt->bindParam(':fecha', $this->fecha);
             try {
                 if ($stmt->execute()) {
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n", $stmt->error);
+                printf("Error: %s.\n", $e);
 
                 return false;
             }
@@ -143,45 +154,37 @@ class Controller_Gasto
     {
         $validador = true;
         //poner atencion a la nomenclatura de las palabas.
-        $query = "UPDATE gastos SET descripcion_gastos =:descripcion_gastos, valor_gastos= :valor_gastos,estado =:estado,id_bodega =:id_bodega  WHERE id_gastos = :id_gastos";
+        $query = "UPDATE gastos SET descripcion_gastos =:descripcion_gastos, valor_gastos= :valor_gastos,estado =:estado,fecha = :fecha,id_bodega =:id_bodega  WHERE id_gastos = :id_gastos";
         $stmt = $this->conn->prepare($query);
-        if (htmlspecialchars(strip_tags($this->id_gastos)) == "") {
-            $validador = false;
+
+        if (!empty(htmlspecialchars(strip_tags($this->fecha)))) {
+            $this->fecha=htmlspecialchars(strip_tags($this->fecha));
         }else {
-            if (is_numeric(htmlspecialchars(strip_tags($this->id_gastos)))) {
-                if (!htmlspecialchars(strip_tags($this->id_gastos))>=1) {
-                    $validador = false;
-                }
-            }else {
-                $validador = false;
-            }
+            $validador=false;
         }
-        if (htmlspecialchars(strip_tags($this->descripcion_gastos)) == "") {
+        if (empty(htmlspecialchars(strip_tags($this->descripcion_gastos)))) {
             $validador = false;
-        }
-        if (htmlspecialchars(strip_tags($this->valor_gastos)) == "") {
-            $validador = false;
-        }
-        if (htmlspecialchars(strip_tags($this->estado)) == "") {
-            $validador = false;
-        }
-        if (htmlspecialchars(strip_tags($this->id_bodega)) == "") {
-            $validador = false;
-        }else {
-            if (is_numeric(htmlspecialchars(strip_tags($this->id_bodega)))) {
-                if (!htmlspecialchars(strip_tags($this->id_bodega))>=1) {
-                    $validador = false;
-                }
-            }else {
-                $validador = false;
-            }
         } 
+        if (empty(htmlspecialchars(strip_tags($this->valor_gastos)))) {
+            $validador = false;
+        } 
+        if (empty(htmlspecialchars(strip_tags($this->estado)))) {
+            $validador = false;
+        } 
+        if (empty(htmlspecialchars(strip_tags($this->id_bodega)))) {
+            $validador = false;
+        }else {
+            if(!is_numeric(htmlspecialchars(strip_tags($this->id_bodega)))){
+                $validador = false;
+            }
+        }
         // Bind Data
         if ($validador == true) {
             $stmt->bindParam(':id_bodega', $this->id_bodega);
             $stmt->bindParam(':estado', $this->estado);
             $stmt->bindParam(':valor_gastos', $this->valor_gastos);
             $stmt->bindParam(':descripcion_gastos', $this->descripcion_gastos);
+            $stmt->bindParam(':fecha', $this->fecha);
             $stmt->bindParam(':id_gastos', $this->id_gastos);
             try {
                 if ($stmt->execute()) {
@@ -277,7 +280,17 @@ class Controller_Gasto
                     return false;
                 }else {
                     return true;
-                }
-                
+                }           
+    }
+    function validateDate($date, $format = 'Y-m-d')
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+
+        /*
+        if(validateDate('2012-02-28')==false){
+    $validador=false;
+    }
+        */
     }
 }

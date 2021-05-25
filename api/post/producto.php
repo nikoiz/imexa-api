@@ -95,9 +95,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             if ($post->read_single()) {
                 $post_item = array(
-                    'id_producto' => $post->id_producto,
+                    'producto.id_producto' => $post->id_producto,
                     'valor_producto' => $post->valor_producto,
-                    'nombre_producto' => $post->nombre_producto
+                    'nombre_producto' => $post->nombre_producto,
+                    'cantidad_total' =>$post->cantidad_total
                 );
 
                 //Make JSON
@@ -124,7 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $post_item = array(
                     'id_producto' => $id_producto,
                     'nombre_producto' => $nombre_producto,
-                    'valor_producto' => $valor_producto
+                    'valor_producto' => $valor_producto,
+                    'cantidad_total' => $cantidad_total
                 );
 
                 array_push($posts_arr['data'], $post_item);

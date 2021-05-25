@@ -8,6 +8,7 @@ class Controller_Producto
     public $id_producto;
     public $nombre_producto;
     public $valor_producto;
+    public $cantidad_total;
 
 
 
@@ -20,7 +21,7 @@ class Controller_Producto
 
     public function Read_producto()
     {
-        $query = "SELECT * from producto";
+        $query = "SELECT producto.id_producto,nombre_producto,valor_producto,bodega_has_producto.cantidad_total from producto INNER join bodega_has_producto on producto.id_producto=bodega_has_producto.id_producto";
         $stmt = $this->conn->prepare($query);
 
         try {
@@ -35,7 +36,7 @@ class Controller_Producto
     }
     public function Read_single()
     {
-        $query = "SELECT * FROM producto WHERE id_producto = ?";
+        $query = "SELECT producto.id_producto,nombre_producto,valor_producto,bodega_has_producto.cantidad_total from producto INNER join bodega_has_producto on producto.id_producto=bodega_has_producto.id_producto WHERE id_producto = ?";
         $stmt = $this->conn->prepare($query);
         //Bind id
         $stmt->bindParam(1, $this->id_producto);
@@ -45,7 +46,8 @@ class Controller_Producto
         // set properties
         $this->nombre_producto = $row['nombre_producto'];
         $this->valor_producto = $row['valor_producto'];
-        $this->id_producto = $row['id_producto'];
+        $this->id_producto = $row['producto.id_producto'];
+        $this->cantidad_total = $row['bodega_has_producto.cantidad_total'];
 
         try {
             if ($stmt->execute()) {

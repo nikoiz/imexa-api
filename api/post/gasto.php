@@ -9,6 +9,7 @@ include_once '../../config/conexion.php';
 include_once '../../Controller/Controller_Gasto.php';
 include_once '../../Controller/controller_bodega.php';
 
+
 $database = new conexion();
 $db = $database->connect();
 error_reporting(0);
@@ -22,7 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post->descripcion_gastos = $GLOBALS['data']->descripcion_gastos;
     $post->valor_gastos = $GLOBALS['data']->valor_gastos;
     $post->estado = $GLOBALS['data']->estado;
-    $post->bodega_id_bodega = $GLOBALS['data']->bodega_id_bodega;
+    $post->fecha = $GLOBALS['data']->fecha;
+    $post->id_bodega = $GLOBALS['data']->id_bodega;
+    
 
 
 
@@ -45,20 +48,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         );
         $validador = false;
     }
-    if (!$post->Validador_bodega_id_bodega($post->bodega_id_bodega) == "") {
+    if (!$post->Validador_bodega_id_bodega($post->id_bodega) == "") {
         echo json_encode(
-            array('Error' => $post->Validador_bodega_id_bodega($post->bodega_id_bodega))
+            array('Error' => $post->Validador_bodega_id_bodega($post->id_bodega))
         );
         $validador = false;
     } else {
-        if ($buscar->buscar_id_bodega($post->bodega_id_bodega) == true) {
+        if ($buscar->buscar_id_bodega($post->id_bodega) == true) {
             echo json_encode(
                 array('Error' => 'No se encontro el id de la bodega')
             );
             $validador = false;
         }
     }
-
     if ($validador == true) {
         if ($post->create_gasto()) {
             echo json_encode(
@@ -70,6 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
         }
     }
+    
+    
+    
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -77,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         // Instiate blog post object
         $post = new Controller_Gasto($GLOBALS['db']);
+        $p = new controller_bodega($GLOBALS['db']);
 
         // GET ID
         $post->id_gastos = isset($_GET['id_gastos']) ? $_GET['id_gastos'] : die();
@@ -93,7 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'descripcion_gastos' => $post->descripcion_gastos,
                     'valor_gastos' => $post->valor_gastos,
                     'estado' => $post->estado,
-                    'bodega_id_bodega' => $post->bodega_id_bodega,
+                    'nombre_bodega' =>$post->nombre_bodega,
+                    'id_bodega' => $post->id_bodega,
                 );
                 //Make JSON
 
@@ -121,7 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'descripcion_gastos' => $descripcion_gastos,
                     'valor_gastos' => $valor_gastos,
                     'estado' => $estado,
-                    'bodega_id_bodega' => $bodega_id_bodega,
+                    'nombre_bodega' =>$nombre_bodega,
+                    'id_bodega' => $id_bodega,
                 );
 
                 array_push($posts_arr['data'], $post_item);
@@ -173,10 +181,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $post->descripcion_gastos = $GLOBALS['data']->descripcion_gastos;
     $post->valor_gastos = $GLOBALS['data']->valor_gastos;
     $post->estado = $GLOBALS['data']->estado;
-    $post->bodega_id_bodega = $GLOBALS['data']->bodega_id_bodega;
+    $post->id_bodega = $GLOBALS['data']->id_bodega;
+    $post->fecha = $GLOBALS['data']->fecha;
     
     $validador=true;
-    
+
+    if ($post->validateDate($post->fecha)==false) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "ingrese una fecha valida")
+        );
+    }
     if ($post->Validador_id_gastos($post->id_gastos)==false) {
         echo json_encode(
             array('Error' => 'Falta el id de gasto')
@@ -201,13 +216,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         );
         $validador=false;
     }
-    if (!$post->Validador_bodega_id_bodega($post->bodega_id_bodega)=="") {
+    if (!$post->Validador_bodega_id_bodega($post->id_bodega)=="") {
         echo json_encode(
-            array('Error' =>$post->Validador_bodega_id_bodega($post->bodega_id_bodega))
+            array('Error' =>$post->Validador_bodega_id_bodega($post->id_bodega))
         );
         $validador=false;
     }else {
-        if ($buscar->buscar_id_bodega($post->bodega_id_bodega)==true) {
+        if ($buscar->buscar_id_bodega($post->id_bodega)==true) {
             echo json_encode(
                 array('Error' => 'No se encontro el id de la bodega')
             );

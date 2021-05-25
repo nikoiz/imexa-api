@@ -173,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if ($post->validateDate($post->fecha_contratacion)==false) {
         $validador = false;
         echo json_encode(
-            array('Error' => "asd")
+            array('Error' => "ingrese una fecha valida")
         );
     }
     
