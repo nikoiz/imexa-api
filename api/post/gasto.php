@@ -25,10 +25,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post->estado = $GLOBALS['data']->estado;
     $post->fecha = $GLOBALS['data']->fecha;
     $post->id_bodega = $GLOBALS['data']->id_bodega;
-    
+    echo json_encode(
+        array('Error' => "asd")
+    );
 
 
-
+    if (empty($post->fecha)) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "ingrese una fecha")
+        );
+    }else {
+        if ($post->validateDate($post->fecha)==false) {
+            $validador = false;
+            echo json_encode(
+                array('Error' => "ingrese una fecha valida")
+            );
+        }
+    }
 
     if ($post->Validador_descripcion_gastos($post->descripcion_gastos) == false) {
         echo json_encode(
@@ -60,6 +74,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
             $validador = false;
         }
+    }
+    if (!$post->Validador_valor_gastos($post->valor_gastos)=="") {
+        echo json_encode(
+            array('Error' =>$post->Validador_valor_gastos($post->valor_gastos) )
+        );
+        $validador=false;
     }
     if ($validador == true) {
         if ($post->create_gasto()) {
@@ -188,12 +208,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     
     $validador=true;
 
-    if ($post->validateDate($post->fecha)==false) {
+    if (empty($post->fecha)) {
         $validador = false;
         echo json_encode(
-            array('Error' => "ingrese una fecha valida")
+            array('Error' => "ingrese una fecha")
         );
+    }else {
+        if ($post->validateDate($post->fecha)==false) {
+            $validador = false;
+            echo json_encode(
+                array('Error' => "ingrese una fecha valida")
+            );
+        }
     }
+    
     if ($post->Validador_id_gastos($post->id_gastos)==false) {
         echo json_encode(
             array('Error' => 'Falta el id de gasto')
@@ -244,5 +272,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         }
     }  
 }
-
-?>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class Controller_Gasto
 {
@@ -9,7 +9,7 @@ class Controller_Gasto
     public $descripcion_gastos;
     public $valor_gastos;
     public $estado;
-    public $fecha;//ponner en todas
+    public $fecha; //ponner en todas
     public $id_bodega;
     public $nombre_bodega;
 
@@ -46,14 +46,14 @@ class Controller_Gasto
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-        $this->id_bodega=$row['id_bodega'];
-        $this->estado=$row['estado'];
-        $this->valor_gastos= $row['valor_gastos'];
+        $this->id_bodega = $row['id_bodega'];
+        $this->estado = $row['estado'];
+        $this->valor_gastos = $row['valor_gastos'];
         $this->descripcion_gastos = $row['descripcion_gastos'];
         $this->fecha = $row['fecha'];
         $this->id_gastos = $row['id_gastos'];
         $this->nombre_bodega = $row['nombre_bodega'];
-        
+
 
         try {
             if ($stmt->execute()) {
@@ -81,23 +81,23 @@ class Controller_Gasto
         $stmt = $this->conn->prepare($query);
 
         if (!empty(htmlspecialchars(strip_tags($this->fecha)))) {
-            $this->fecha=htmlspecialchars(strip_tags($this->fecha));
-        }else {
-            $validador=false;
+            $this->fecha = htmlspecialchars(strip_tags($this->fecha));
+        } else {
+            $validador = false;
         }
         if (empty(htmlspecialchars(strip_tags($this->descripcion_gastos)))) {
             $validador = false;
-        } 
+        }
         if (empty(htmlspecialchars(strip_tags($this->valor_gastos)))) {
             $validador = false;
-        } 
+        }
         if (empty(htmlspecialchars(strip_tags($this->estado)))) {
             $validador = false;
-        } 
+        }
         if (empty(htmlspecialchars(strip_tags($this->id_bodega)))) {
             $validador = false;
-        }else {
-            if(!is_numeric(htmlspecialchars(strip_tags($this->id_bodega)))){
+        } else {
+            if (!is_numeric(htmlspecialchars(strip_tags($this->id_bodega)))) {
                 $validador = false;
             }
         }
@@ -120,7 +120,7 @@ class Controller_Gasto
             return false;
         }
     }
-    
+
     public function delete_single_gasto()
     {
         $validador = true;
@@ -158,23 +158,23 @@ class Controller_Gasto
         $stmt = $this->conn->prepare($query);
 
         if (!empty(htmlspecialchars(strip_tags($this->fecha)))) {
-            $this->fecha=htmlspecialchars(strip_tags($this->fecha));
-        }else {
-            $validador=false;
+            $this->fecha = htmlspecialchars(strip_tags($this->fecha));
+        } else {
+            $validador = false;
         }
         if (empty(htmlspecialchars(strip_tags($this->descripcion_gastos)))) {
             $validador = false;
-        } 
+        }
         if (empty(htmlspecialchars(strip_tags($this->valor_gastos)))) {
             $validador = false;
-        } 
+        }
         if (empty(htmlspecialchars(strip_tags($this->estado)))) {
             $validador = false;
-        } 
+        }
         if (empty(htmlspecialchars(strip_tags($this->id_bodega)))) {
             $validador = false;
-        }else {
-            if(!is_numeric(htmlspecialchars(strip_tags($this->id_bodega)))){
+        } else {
+            if (!is_numeric(htmlspecialchars(strip_tags($this->id_bodega)))) {
                 $validador = false;
             }
         }
@@ -198,12 +198,12 @@ class Controller_Gasto
             return false;
         }
     }
-    
+
     public function Validador_estado($estado)
     {
-        if ($estado=="") {
+        if ($estado == "") {
             return false;
-        }else {
+        } else {
             return true;
         }
     }
@@ -211,12 +211,12 @@ class Controller_Gasto
     {
         if ($valor_gastos == "") {
             return "Ingrese un valor para el gasto";
-        }else{
+        } else {
             if (is_numeric($valor_gastos)) {
-                if (!$valor_gastos>=1) {
+                if (!$valor_gastos >= 1) {
                     return "Ingrese solo valores positivos";
                 }
-            }else {
+            } else {
                 return "Ingrese solo numeros";
             }
         }
@@ -225,7 +225,7 @@ class Controller_Gasto
     {
         if ($descripcion_gastos == "") {
             return false;
-        }else {
+        } else {
             return true;
         }
     }
@@ -233,36 +233,37 @@ class Controller_Gasto
     {
         if ($bodega_id == "") {
             return "Falta Id De la bodega";
-        }else {
+        } else {
             if (is_numeric($bodega_id)) {
-                if (!$bodega_id>0) {
+                if (!$bodega_id > 0) {
                     return "Ingrese solo valores positivos";
-                }else {
+                } else {
                     return "";
                 }
-            }else {
+            } else {
                 return "Ingrese solo numeros";
             }
-        } 
+        }
     }
-    
+
     public function Validador_id_gastos()
     {
         if (htmlspecialchars(strip_tags($this->id_gastos)) == "") {
             return false;
-        }else {
+        } else {
             if (is_numeric(htmlspecialchars(strip_tags($this->id_gastos)))) {
-                if (!htmlspecialchars(strip_tags($this->id_gastos))>=1) {
+                if (!htmlspecialchars(strip_tags($this->id_gastos)) >= 1) {
                     return false;
-                }else {
+                } else {
                     return true;
                 }
-            }else {
+            } else {
                 return false;
             }
         }
     }
-    function buscar_id_gastos($id_gastos){
+    function buscar_id_gastos($id_gastos)
+    {
         $query = "SELECT id_gastos FROM gastos WHERE id_gastos = ?";
 
         $stmt = $this->conn->prepare($query);
@@ -273,14 +274,14 @@ class Controller_Gasto
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-        
-        $numero_comparar= $row['id_gastos'];
 
-                if ($numero_comparar==$id_gastos) {
-                    return false;
-                }else {
-                    return true;
-                }           
+        $numero_comparar = $row['id_gastos'];
+
+        if ($numero_comparar == $id_gastos) {
+            return false;
+        } else {
+            return true;
+        }
     }
     function validateDate($date, $format = 'Y-m-d')
     {

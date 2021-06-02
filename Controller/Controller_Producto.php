@@ -70,7 +70,6 @@ class Controller_Producto
             valor_producto = :valor_producto';
 
         $stmt = $this->conn->prepare($query);
-
         if (htmlspecialchars(strip_tags($this->valor_producto)) != "") {
             if (is_numeric(htmlspecialchars(strip_tags($this->valor_producto)))) {
                 if (htmlspecialchars(strip_tags($this->valor_producto)) >= 0) {
@@ -100,7 +99,7 @@ class Controller_Producto
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n", $stmt->error);
+                printf("Error: %s.\n", $e);
 
                 return false;
             }
@@ -189,7 +188,7 @@ class Controller_Producto
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n", $stmt->error);
+                printf("Error: %s.\n", $e);
 
                 return false;
             }

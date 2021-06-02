@@ -21,14 +21,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $post->nombre_proveedor= $GLOBALS['data']->nombre_proveedor;
     $post->rut_proveedor= $GLOBALS['data']->rut_proveedor;
     $post->contacto= $GLOBALS['data']->contacto;
-
-
-    if ($post->Validator_run($post->rut_proveedor)==false) {
+    
+    if ($post->rut_proveedor == "") {
         $validador=false;
         echo json_encode(
-            array('message' => 'Error rut mal ingresado')
+            array('message' => 'Error Ingrese un rut')
         );
+    }else {
+        if ($post->Validator_run($post->rut_proveedor)==false) {
+            $validador=false;
+            echo json_encode(
+                array('message' => 'Error rut mal ingresado')
+            );
+        }
     }
+    
     if ($post->Validador_nombre_proveedor($post->nombre_proveedor)==false) {
         $validador=false;
         echo json_encode(

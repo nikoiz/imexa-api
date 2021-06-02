@@ -47,11 +47,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             array('message' => $po->Validador_cantidad_total($cantidad_total))
         );
     }
-    if ($p->buscar_id_bodega($p->id_bodega)!=false) {
+    if (empty($p->id_bodega)) {
         $validador=false;
         echo json_encode(
-            array('message' => "No existe la bodega")
+            array('message' => "ingrese una bodega")
         );
+    }else {
+        if ($p->buscar_id_bodega($p->id_bodega)!=false) {
+            $validador=false;
+            echo json_encode(
+                array('message' => "No existe la bodega")
+            );
+        }
     }
     
     if ($validador==true) {
@@ -72,9 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
         }
     }
-    
-    
-    
     
     
 }

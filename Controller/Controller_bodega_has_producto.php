@@ -1,6 +1,9 @@
 <?php
 class Controller_bodega_has_producto
 {
+    public $id_bodega;
+    public $id_producto;
+    public $cantidad_total;
 
     private $conn;
 
@@ -26,7 +29,7 @@ class Controller_bodega_has_producto
                 return true;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n", $stmt->error);
+            printf("Error: %s.\n", $e);
 
             return false;
         }
@@ -64,7 +67,7 @@ class Controller_bodega_has_producto
     public function Validador_cantidad_total($cantidad_producto)
     {
         if (empty($cantidad_producto)) {
-            return "ingrese un valor producto";
+            return "ingrese una cantidad del producto ";
         } else {
             if (is_numeric($cantidad_producto)) {
                 if (!$cantidad_producto > 0) {
