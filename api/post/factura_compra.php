@@ -237,6 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { //se hra delete de todas las entidades relacionadas
+    /*
     $post = new Controller_Factura_Compra($GLOBALS['db']);
     $p = new Controller_metodo_pago_compra($GLOBALS['db']);
     $po = new Controller_Proveedor($GLOBALS['db']);
@@ -269,7 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { //se hra delete de todas las entid
                 );
             } else {
                 $a = $post->buscar_las_id_de_todos($post->id_compra);
-                $n = 1;
+                $n = 0;
                 foreach ($a as $a) {
 
                     if ($n == 1) {
@@ -289,7 +290,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { //se hra delete de todas las entid
 
 
 
-                /*
+                
              if ($post->delete_Factura_Compra()) {
                 echo json_encode(
                     array('message' => 'Post deleted')
@@ -299,10 +300,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { //se hra delete de todas las entid
                     array('message' => 'Post not deleted')
                 );
             }
-            */
+            
             }
         }
     }
+    
+    */
+    
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
