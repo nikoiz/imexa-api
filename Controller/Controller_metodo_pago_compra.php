@@ -10,6 +10,43 @@ class Controller_metodo_pago_compra{
     {
         $this->conn = $db;
     }
+    public function read_metodo_pago_compra()
+    {
+        //$query = "SELECT id, descripcion FROM text";
+        $query = "SELECT * from metodo_pago_compra";
+        $stmt = $this->conn->prepare($query);
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $stmt->error);
+
+            return false;
+        }
+    }
+
+    public function Read_single_metodo_pago_compra()
+    {
+        $query = "SELECT * from metodo_pago_compra WHERE id_tipo_compra = ?";
+        $stmt = $this->conn->prepare($query);
+        //Bind id
+        $stmt->bindParam(1, $this->id_tipo_compra);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+        $this->id_tipo_compra = $row['id_tipo_compra'];
+        $this->descripcion_compra = $row['descripcion_compra'];
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $stmt->error);
+            return false;
+        }
+    }
 
     public function buscar_metodo_pago_compra($id_tipo_compra)
     {

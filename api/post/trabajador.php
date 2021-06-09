@@ -67,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['rut_trabajador'])) {
+        $validador = true;
         $post = new Controller_Trabajador($GLOBALS['db']);
         $post->rut_trabajador = isset($_GET['rut_trabajador']) ? $_GET['rut_trabajador'] : die();
 

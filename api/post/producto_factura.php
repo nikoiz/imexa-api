@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { // no lo necesita
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { // se
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { // no lo necesita
 
 
 }
