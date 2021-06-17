@@ -107,7 +107,68 @@ class Controller_Producto
             return false;
         }
     }
+    public function create_producto_factura()
+    {
+        $validador = true;
+        $query = 'INSERT INTO producto 
+        SET 
+            id_producto =:id_producto,
+            nombre_producto = :nombre_producto,
+            valor_producto = :valor_producto';
 
+        $stmt = $this->conn->prepare($query);
+
+        if (htmlspecialchars(strip_tags($this->id_producto)) != "") {
+            if (is_numeric(htmlspecialchars(strip_tags($this->id_producto)))) {
+                if (htmlspecialchars(strip_tags($this->id_producto)) >= 0) {
+                    $this->id_producto = htmlspecialchars(strip_tags($this->id_producto));
+                } else {
+                    $validador = false;
+                }
+            } else {
+                $validador = false;
+            }
+        } else {
+            $validador = false;
+        }
+        if (htmlspecialchars(strip_tags($this->valor_producto)) != "") {
+            if (is_numeric(htmlspecialchars(strip_tags($this->valor_producto)))) {
+                if (htmlspecialchars(strip_tags($this->valor_producto)) >= 0) {
+                    $this->valor_producto = htmlspecialchars(strip_tags($this->valor_producto));
+                } else {
+                    $validador = false;
+                }
+            } else {
+                $validador = false;
+            }
+        } else {
+            $validador = false;
+        }
+
+        if (!empty(htmlspecialchars(strip_tags($this->nombre_producto)))) {
+            $this->nombre_producto = htmlspecialchars(strip_tags($this->nombre_producto));
+        } else {
+            $validador = false;
+        }
+
+        $stmt->bindParam(':id_producto', $this->id_producto);
+        $stmt->bindParam(':nombre_producto', $this->nombre_producto);
+        $stmt->bindParam(':valor_producto', $this->valor_producto);
+
+        if ($validador == true) {
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $e);
+
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
     public function delete_single_producto()
     {
@@ -262,14 +323,15 @@ class Controller_Producto
             }
         }
     }
-    function buscar_el_ultimo_id()
+    //buscar_el_ultimo_id
+    function obtener_el_ultimo_id()// por medio del ultimo id se establecera el poder sumar el ultimo 
     {
         $query = "SELECT MAX(id_producto) AS id_producto FROM producto";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $numero_comparar = $row['id_producto'];
-
+        $numero_comparar += 1;
         if ($numero_comparar != null) {
             return $numero_comparar;
         } else {

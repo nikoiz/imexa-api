@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $factura = new Controller_Factura_Compra($GLOBALS['db']);
 
     //datos de producto
+    $post->id_producto = $post->obtener_el_ultimo_id(); //se obtendra y retornara +1
     $post->nombre_producto = $GLOBALS['data']->nombre_producto;
     $post->valor_producto = $GLOBALS['data']->valor_producto;
 
@@ -40,8 +41,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     //bodega_has_producto
     $b->id_bodega = $GLOBALS['data']->id_bodega;
-    $po->id_producto; //se consigue mas abajo
     $po->cantidad_total = $GLOBALS['data']->cantidad_compra_producto; //preguntar ** 
+    //buscar el ultimo id para el bodega has prod.(esta malo )
+    $po->id_producto = $post->id_producto;
+    // al buscar el id genera el error
+    //buscar el nombre del producto
+    //buscar el ultimo id y sumarlo ponerlo al producto 
 
     if ($post->validador_nombre($post->nombre_producto) != null) {
         $validador = false;
@@ -88,14 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-
     if ($validador == true) {
-        if ($post->create_producto()) {
-
-
-            //buscar el ultimo id para el bodega has prod.
-            $id_producto = $post->buscar_el_ultimo_id();
-            $po->id_producto = $id_producto;
+        if ($post->create_producto_factura()) {
             //buscar id_compra
             $pos->id_compra = $factura->buscar_el_ultimo_id_de_factura_compra();
             //buscar el ultimo id del producto para el detalle
@@ -113,6 +112,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         array('message' => 'Error no se pudo hacer el detalle del producto: ' . $post->nombre_producto)
                     );
                 } else {
+
+                    //crear el detalle del inventario
+                    //comprobar que ese detalle ya exista para sumarlo
+
+
+                    
+
                     echo json_encode(
                         array('message' => 'Post Created')
                     );

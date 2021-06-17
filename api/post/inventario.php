@@ -19,45 +19,7 @@ $data = json_decode(file_get_contents("php://input"));
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $validador = true;
     $post = new Controller_Inventario($GLOBALS['db']);
-    $post->fecha_inventario = $GLOBALS['data']->fecha_inventario;
-    $post->responsable_inventario = $GLOBALS['data']->responsable_inventario;
-    $post->cantidad_inventariada = $GLOBALS['data']->cantidad_inventariada;
     $post->valor_inventario = $GLOBALS['data']->valor_inventario;
-
-
-    if ($post->validateDate($post->fecha_inventario) == false) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "Fecha mal ingresada")
-        );
-    }
-    if ($post->Validacion_parametros($post->responsable_inventario) == false) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "ingrese el responsable del invetario")
-        );
-    }
-
-    if ($post->Validacion_parametros($post->cantidad_inventariada) == false) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "ingrese la cantidad inventariada")
-        );
-    } else {
-        if (!is_numeric($post->cantidad_inventariada)) {
-            $validador = false;
-            echo json_encode(
-                array('Error' => "ingrese solo valores numericos")
-            );
-        } else {
-            if (!$post->cantidad_inventariada > 0) {
-                $validador = false;
-                echo json_encode(
-                    array('Error' => "ingrese un valor mayor a 0 en al cantidad inventariada")
-                );
-            }
-        }
-    }
 
 
     if ($post->Validacion_parametros($post->valor_inventario) == false) {
@@ -80,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
-    if ($validador==true) {
+    if ($validador == true) {
         if ($post->create_invantario()) {
             echo json_encode(
                 array('message' => 'Post Created')
@@ -91,76 +53,82 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
         }
     }
-
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['id_inventario'])) {
-        $post = new Controller_Inventario($GLOBALS['db']);
-        $post->id_inventario = isset($_GET['id_inventario']) ? $_GET['id_inventario'] : die();
-
-        if (!empty($post->id_inventario)) {
-            if (empty($post->id_inventario)) {
-                $validador = false;
-                echo json_encode(
-                    array('message' => 'Error ingrese un rut trabajador')
-                );
-            }else {
-                if ($post->Read_single_inventario()) {
-                    $post_item = array(
-                        'id_inventario' => $post->id_inventario,
-                        'fecha_inventario ' => $post->fecha_inventario,
-                        'responsable_inventario' => $post->responsable_inventario,
-                        'cantidad_inventariada' => $post->cantidad_inventariada,
-                        'valor_inventario' => $post->valor_inventario,
-                    );
-                    //Make JSON
+    //establesco medio en donde al leer el inventario si no existe se creara automaticameente y ejecutara la orden nuevamente para mostrar datos
+    $validador = true;
+    do {
+        if (isset($_GET['id_inventario'])) {
+            $post = new Controller_Inventario($GLOBALS['db']);
+            $post->id_inventario = isset($_GET['id_inventario']) ? $_GET['id_inventario'] : die();
     
-                    print_r(json_encode($post_item));
-                } else {
+            if (!empty($post->id_inventario)) {
+                if (empty($post->id_inventario)) {
+                    $validador = false;
                     echo json_encode(
-                        array('message' => 'No Posts Found')
+                        array('message' => 'Error ingrese un rut trabajador')
                     );
+                } else {
+                    if ($post->Read_single_inventario()) {
+                        $post_item = array(
+                            'id_inventario' => $post->id_inventario,
+                            'valor_inventario' => $post->valor_inventario
+                        );
+                        //Make JSON
+    
+                        print_r(json_encode($post_item));
+                    } else {
+                        echo json_encode(
+                            array('message' => 'No Posts Found')
+                        );
+                        $validador = false;
+                    }
                 }
-            }
-        } else {
-            echo json_encode(
-                array('message' => 'Ingrese un inventario a busacar')
-            );
-        }
-    } else {
-        $post = new Controller_Inventario($GLOBALS['db']);
-        $result = $post->Read_inventario();
-        // Get row count
-        $num = $result->rowCount();
-
-        if ($num > 0) {
-            // Post array
-            $posts_arr = array();
-            $posts_arr['data'] = array();
-
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                extract($row);
-                $post_item = array(
-                    'id_inventario' => $id_inventario,
-                    'fecha_inventario ' => $fecha_inventario,
-                    'responsable_inventario' => $responsable_inventario,
-                    'cantidad_inventariada' => $cantidad_inventariada,
-                    'valor_inventario' => $valor_inventario
+            } else {
+                echo json_encode(
+                    array('message' => 'Ingrese un inventario a busacar')
                 );
-
-                array_push($posts_arr['data'], $post_item);
             }
-
-            echo json_encode($posts_arr);
         } else {
-            // No posts
-            echo json_encode(
-
-                array('message' => 'No Posts Found')
-            );
+            $post = new Controller_Inventario($GLOBALS['db']);
+            $result = $post->Read_inventario();
+            // Get row count
+            $num = $result->rowCount();
+    
+            if ($num > 0) {
+                // Post array
+                $posts_arr = array();
+                $posts_arr['data'] = array();
+    
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    extract($row);
+                    $post_item = array(
+                        'id_inventario' => $id_inventario,
+                        'valor_inventario' => $valor_inventario
+                    );
+    
+                    array_push($posts_arr['data'], $post_item);
+                }
+    
+                echo json_encode($posts_arr);
+            } else {
+                // No posts
+                echo json_encode(
+                    array('message' => 'No Posts Found')
+                );
+                $validador = false;
+                
+                
+            }
         }
-    }
+        if ($validador == false) {
+            if ($post->invantario_por_defecto() == true) {
+            }
+        }
+    } while ($validador!=true);
+
+    
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
@@ -190,54 +158,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $validador = true;
     $post = new Controller_Inventario($GLOBALS['db']);
-    $post->fecha_inventario = $GLOBALS['data']->fecha_inventario;
-    $post->responsable_inventario = $GLOBALS['data']->responsable_inventario;
-    $post->cantidad_inventariada = $GLOBALS['data']->cantidad_inventariada;
     $post->valor_inventario = $GLOBALS['data']->valor_inventario;
-    $post->id_inventario=$GLOBALS['data']->id_inventario;
+    $post->id_inventario = $GLOBALS['data']->id_inventario;
 
-    if ($post->Busacar_id_inventario($post->id_inventario)==true) {
+    if ($post->Busacar_id_inventario($post->id_inventario) == true) {
         $validador = false;
         echo json_encode(
             array('Error' => "No se encuentra el coddigo identificativo del inventario")
         );
     }
-
-    if ($post->validateDate($post->fecha_inventario) == false) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "Fecha mal ingresada")
-        );
-    }
-    if ($post->Validacion_parametros($post->responsable_inventario) == false) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "ingrese el responsable del invetario")
-        );
-    }
-
-    if ($post->Validacion_parametros($post->cantidad_inventariada) == false) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "ingrese la cantidad inventariada")
-        );
-    } else {
-        if (!is_numeric($post->cantidad_inventariada)) {
-            $validador = false;
-            echo json_encode(
-                array('Error' => "ingrese solo valores numericos")
-            );
-        } else {
-            if (!$post->cantidad_inventariada > 0) {
-                $validador = false;
-                echo json_encode(
-                    array('Error' => "ingrese un valor mayor a 0 en al cantidad inventariada")
-                );
-            }
-        }
-    }
-
-
     if ($post->Validacion_parametros($post->valor_inventario) == false) {
         $validador = false;
         echo json_encode(
@@ -260,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     }
 
 
-    if ($validador==true) {
+    if ($validador == true) {
         if ($post->update_inventario()) {
             echo json_encode(
                 array('message' => 'Post Update')
@@ -271,7 +200,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             );
         }
     }
-
 }
 //En caso de que ninguna de las opciones anteriores se haya ejecutado
 //header("HTTP/1.1 400 Bad Request");

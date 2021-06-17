@@ -10,7 +10,8 @@ include_once '../../config/conexion.php';
 include_once '../../Controller/Controller_Producto.php';
 include_once '../../Controller/Controller_bodega_has_producto.php';
 include_once '../../Controller/controller_bodega.php';
-
+include_once '../../Controller/Controller_Inventario.php.php';
+include_once '../../Controller/Controller_detalle_inventario.php';
 
 $database = new conexion();
 $db = $database->connect();
@@ -23,10 +24,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post = new Controller_Producto($GLOBALS['db']);
     $po = new Controller_bodega_has_producto($GLOBALS['db']);
     $p = new controller_bodega($GLOBALS['db']);
+    $di = new Controller_detalle_inventario($GLOBALS['db']);
+    $i = new Controller_Inventario($GLOBALS['db']);
+
     $post->nombre_producto = $GLOBALS['data']->nombre_producto;
     $post->valor_producto = $GLOBALS['data']->valor_producto;
     $cantidad_total = $GLOBALS['data']->cantidad_total;
     $p->id_bodega = $GLOBALS['data']->id_bodega;
+    $id_inventario = 1;
     //$validador=true;
 
     if ($post->validador_nombre($post->nombre_producto)!=null) {
@@ -72,6 +77,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo json_encode(
                     array('message' => 'Error en ingreso de datos teniendo en cuenta el codigo del producto y el codigo de la bodega')
                 );
+            }else {
+                if ($di->create_detalle_inventario($cantidad_total,$post->valor_producto,1,$p->id_bodega,$id_producto)==false) {
+                    echo json_encode(
+                        array('message' => 'Error en ingreso para el inventario')
+                    );
+                }else {
+                    $valor_total_inv =$di->valor_total();
+                    if ($i-> actualizar_valor($valor_total_inv,$id_inventario)==false) {
+                        echo json_encode(
+                            array('message' => 'Error al actualizar el valor del inventario')
+                        );
+                    }
+                }
             }
         } else {
             echo json_encode(
