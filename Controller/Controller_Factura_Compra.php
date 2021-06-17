@@ -35,9 +35,7 @@ class Controller_Factura_Compra
 
     public function Read_Factura_Compra()
     {
-        $query = "SELECT * FROM `factura_compra` 
-        INNER JOIN detalle_compra ON factura_compra.id_compra=detalle_compra.id_compra
-        INNER join producto on detalle_compra.producto_id_producto=producto.id_producto";
+        $query = "SELECT * FROM `factura_compra`";
         $stmt = $this->conn->prepare($query);
 
         try {

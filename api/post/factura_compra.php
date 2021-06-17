@@ -153,12 +153,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidades
-    if (isset($_GET['folio_factura'])) {
+    if (isset($_GET['id_compra'])) {
         // Instiate blog post object
         $post = new Controller_Factura_Compra($GLOBALS['db']);
 
         // GET ID
-        $post->id_gfolio_facturaastos = isset($_GET['folio_factura']) ? $_GET['folio_factura'] : die();
+        $post->id_compra = isset($_GET['id_compra']) ? $_GET['id_compra'] : die();
 
 
         if (!empty($post->buscar_folio_factura($post->folio_factura))) {
@@ -174,6 +174,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                     'estado' => $post->estado,
                     'rut_proveedor' => $post->rut_proveedor,
                     'id_tipo_f_compra' => $post->id_tipo_f_compra,
+
+
 
                     'id_detalle_compra' => $post->id_detalle_compra,
                     'descripcion_compra_producto' => $post->descripcion_compra_producto,
@@ -211,8 +213,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                     'valor_compra' => $valor_compra,
                     'estado' => $estado,
                     'rut_proveedor' => $rut_proveedor,
-                    'id_tipo_f_compra' => $id_tipo_f_compra,
+                    'id_tipo_f_compra' => $id_tipo_f_compra
 
+                    /*
                     'id_detalle_compra' => $id_detalle_compra,
                     'descripcion_compra_producto' => $descripcion_compra_producto,
                     'cantidad_compra_producto' => $cantidad_compra_producto,
@@ -221,6 +224,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                     'id_producto' => $id_producto,
                     'nombre_producto' => $nombre_producto,
                     'valor_producto' => $valor_producto
+                    */
+                    
                 );
                 array_push($posts_arr['data'], $post_item);
             }

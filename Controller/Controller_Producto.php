@@ -346,7 +346,7 @@ class Controller_Producto
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $numero_comparar = $row['id_producto'];
-        if ($numero_comparar != null) {
+        if ($numero_comparar == null) {
             return true;
         } else {
             return false;
