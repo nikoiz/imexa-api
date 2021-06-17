@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         if ($post->validateDate($post->fecha_compra) == false) {
             echo json_encode(
-                array('Error' => $post->validateDate($post->fecha_compra))
+                array('Error' => $post->validateDate($post->fecha_compra))//modificar menaje adecuado
             );
             $validador = false;
         }
