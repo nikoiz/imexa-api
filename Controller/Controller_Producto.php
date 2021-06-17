@@ -338,4 +338,18 @@ class Controller_Producto
             return false;
         }
     }
+    function buscar_random_id($id_random)// por medio del ultimo id se establecera el poder sumar el ultimo 
+    {
+        $query = "SELECT  id_producto FROM producto WHERE id_producto =?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $id_random);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $numero_comparar = $row['id_producto'];
+        if ($numero_comparar != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

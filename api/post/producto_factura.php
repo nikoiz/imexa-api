@@ -32,7 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $i = new Controller_Inventario($GLOBALS['db']);
 
     //datos de producto
-    $post->id_producto = $post->obtener_el_ultimo_id(); //se obtendra y retornara +1
+    
+
+    do {
+        $numero_random = rand();
+    } while ($post->buscar_random_id($numero_random)==true);
+
+    $post->id_producto = $numero_random; //se obtendra y retornara +1
+
     $post->nombre_producto = $GLOBALS['data']->nombre_producto;
     $post->valor_producto = $GLOBALS['data']->valor_producto;
 
@@ -107,6 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 array('message' => "No existe el inventario")
             );
     }
+    
 
     if ($validador == true) {
         if ($post->create_producto_factura()) {
