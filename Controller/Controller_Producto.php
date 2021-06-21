@@ -331,6 +331,19 @@ class Controller_Producto
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $numero_comparar = $row['id_producto'];
+        if ($numero_comparar != null) {
+            return $numero_comparar;
+        } else {
+            return false;
+        }
+    }
+    function obtener_el_ultimo_id_sumado()// por medio del ultimo id se establecera el poder sumar el ultimo 
+    {
+        $query = "SELECT MAX(id_producto) AS id_producto FROM producto";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $numero_comparar = $row['id_producto'];
         $numero_comparar += 1;
         if ($numero_comparar != null) {
             return $numero_comparar;

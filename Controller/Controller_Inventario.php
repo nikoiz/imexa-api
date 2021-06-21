@@ -218,6 +218,7 @@ class Controller_Inventario
     }
     public function actualizar_valor($valor_inventario,$id_inventario)
     {
+        $validador = true;
         $query = "UPDATE inventario
         SET       
         valor_inventario = :valor_inventario
@@ -227,7 +228,7 @@ class Controller_Inventario
         if (!empty($valor_inventario)) {
             if (is_numeric($valor_inventario)) {
                 if ($valor_inventario >= 1) {
-                    $this->valor_inventario = $valor_inventario;
+                    
                 } else {
                     $validador = false;
                 }
@@ -237,21 +238,21 @@ class Controller_Inventario
         } else {
             $validador = false;
         }
-        if (!empty($id_inventario)) {
-            $this->id_inventario = $id_inventario;
-        }else {
+        if (empty($id_inventario)) {
             $validador = false;
+        }else {
+            
         }
         // Bind Data
         if ($validador == true) {
-            $stmt->bindParam(':valor_inventario', $this->valor_inventario);
-            $stmt->bindParam(':id_inventario', $this->id_inventario);
+            $stmt->bindParam(':valor_inventario', $valor_inventario);
+            $stmt->bindParam(':id_inventario', $id_inventario);
             try {
                 if ($stmt->execute()) {
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n", $stmt->error);
+                printf("Error: %s.\n", $e);
                 return false;
             }
         } else {

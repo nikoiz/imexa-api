@@ -24,6 +24,8 @@ class Controller_bodega_has_producto
         $stmt->bindParam(':id_producto', $id_producto);
         $stmt->bindParam(':cantidad_total', $cantidad_total);
 
+
+
         try {
             if ($stmt->execute()) {
                 return true;

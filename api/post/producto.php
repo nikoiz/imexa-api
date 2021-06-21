@@ -10,7 +10,7 @@ include_once '../../config/conexion.php';
 include_once '../../Controller/Controller_Producto.php';
 include_once '../../Controller/Controller_bodega_has_producto.php';
 include_once '../../Controller/controller_bodega.php';
-include_once '../../Controller/Controller_Inventario.php.php';
+include_once '../../Controller/Controller_Inventario.php';
 include_once '../../Controller/Controller_detalle_inventario.php';
 
 $database = new conexion();
@@ -32,8 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cantidad_total = $GLOBALS['data']->cantidad_total;
     $p->id_bodega = $GLOBALS['data']->id_bodega;
     $id_inventario = 1;
+    $fecha = date('Y-m-d');
+    //$fecha = date('d-m-Y');
     //$validador=true;
-
+    
     if ($post->validador_nombre($post->nombre_producto)!=null) {
         $validador=false;
         echo json_encode(
@@ -65,28 +67,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
         }
     }
+
     
     if ($validador==true) {
         if ($post->create_producto()) {
 
-            echo json_encode(
-                array('message' => 'Post Created')
-            );
-            $id_producto=$post->buscar_el_ultimo_id();
-            if ($po->create_bodega_has_producto($p->id_bodega,$id_producto,$cantidad_total)==false) {
+           
+            $id_producto=$post->obtener_el_ultimo_id();//manda
+            if ($po->create_bodega_has_producto($p->id_bodega,$id_producto,$cantidad_total)==false) {//funciona
                 echo json_encode(
                     array('message' => 'Error en ingreso de datos teniendo en cuenta el codigo del producto y el codigo de la bodega')
                 );
             }else {
-                if ($di->create_detalle_inventario($cantidad_total,$post->valor_producto,1,$p->id_bodega,$id_producto)==false) {
+                
+                //buscar el 
+
+                if ($di->create_detalle_inventario($post->nombre_producto,$cantidad_total,$post->valor_producto,1,$p->id_bodega,$id_producto,$fecha)==false) {//listo
                     echo json_encode(
                         array('message' => 'Error en ingreso para el inventario')
                     );
                 }else {
-                    $valor_total_inv =$di->valor_total();
-                    if ($i-> actualizar_valor($valor_total_inv,$id_inventario)==false) {
+
+
+                    $valor_total_inv =$di->valor_total(); //valor total de todo
+                    //multiplicar al cantidad por el valor
+                    //sacar el valor de ese producto
+                    $valor_del_prod = $post->valor_producto * $cantidad_total;
+                    $valor_total_inv +=  $valor_del_prod;
+                    if ($i-> actualizar_valor($valor_total_inv,$id_inventario)==false) {//me falta
                         echo json_encode(
                             array('message' => 'Error al actualizar el valor del inventario')
+                        );
+                    }else {
+                        echo json_encode(
+                            array('message' => 'Post Created')
                         );
                     }
                 }
