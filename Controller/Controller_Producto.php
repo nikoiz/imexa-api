@@ -21,7 +21,7 @@ class Controller_Producto
 
     public function Read_producto() //tirar a produc_has_bodega grupby nombre_producto 
     {
-        $query = "SELECT producto.id_producto,nombre_producto,valor_producto,bodega_has_producto.cantidad_total from producto INNER join bodega_has_producto on producto.id_producto=bodega_has_producto.id_producto";
+        $query = "SELECT producto.id_producto,nombre_producto,valor_producto,bodega_has_producto.cantidad_total from producto";
         $stmt = $this->conn->prepare($query);
 
         try {

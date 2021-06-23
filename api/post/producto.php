@@ -191,8 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $post_item = array(
                     'id_producto' => $id_producto,
                     'nombre_producto' => $nombre_producto,
-                    'valor_producto' => $valor_producto,
-                    'cantidad_total' => $cantidad_total
+                    'valor_producto' => $valor_producto
                 );
 
                 array_push($posts_arr['data'], $post_item);

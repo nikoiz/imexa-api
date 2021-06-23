@@ -65,6 +65,21 @@ class Controller_bodega_has_producto
             return false;
         }
     }
+    public function Read_bodega_has_producto() 
+    {
+        $query = "SELECT producto.id_producto,nombre_producto,valor_producto,bodega_has_producto.cantidad_total from producto INNER join bodega_has_producto on producto.id_producto=bodega_has_producto.id_producto";
+        $stmt = $this->conn->prepare($query);
+
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $stmt->error);
+
+            return false;
+        }
+    }
 
     public function Validador_cantidad_total($cantidad_producto)
     {
