@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         array('message' => 'Error no se pudo hacer el detalle del producto: ' . $post->nombre_producto)
                     );
                 } else {
-
+                    
                     
 
                         //crear el detalle del inventario 
@@ -169,20 +169,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             );
                         } 
                     } else {
+                        
                         //sumar el mismo producto
-                        /*
+                        
+                        echo json_encode(
+                            array('message' => "Producto encontrado")
+                        );
                         $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto,$post->valor_producto);
                         $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto,$post->valor_producto);
-                        */
-                        
-
-                        $obtnecion_datos=array();
-                        $obtnecion_datos=$di->buscardor_producto_array($post->nombre_producto,$post->valor_producto);
-                        foreach ($obtnecion_datos as $obtnecion_datos) {
-                            $di->id_detalle_inventario  = $obtnecion_datos;
-                            $cantidad_d_i =  $obtnecion_datos;
-                        }
-
                         
                         $cantidad_d_i = $cantidad_d_i+ $pos->cantidad_compra_producto;
 
@@ -195,15 +189,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         }
 
 
-                    }
-
-                    //me fala el multiplicar el valor de cada producto junto con la cantidad para el  "inventario"
-                    $a = array();
-                    $a =$di->buscardor_cantidades_producto_array();
-                    foreach ($a as $a ) {
-                        $valor_total = $a;
-                        $cantidades_total =$a;
-                    }
+                    }                
+                    $valor_total = $di->valor_total();
+                    $cantidades_total = $di->cantidad_total();
                     $total_inventario= $valor_total* $cantidades_total;
                     
                     $i->actualizar_valor($total_inventario,1);
@@ -239,6 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { // no lo necesita   no o esta retorna
     if ($di->Read_single_inventario_only($di->nombre_producto, $di->valor)) {
         $post_item = array(
             'nombre_producto' => $di->nombre_producto,
+            'id_detalle_inventario' => $di->id_detalle_inventario
         );
         //Make JSON
 

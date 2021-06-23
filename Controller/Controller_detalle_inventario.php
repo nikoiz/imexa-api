@@ -138,14 +138,10 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
         }
 
         if ($validador == true) {
-            $query = 'UPDATE `detalle_inventario` SET fecha_inventario = "' . $fecha . '" ,cantidad_producto = "' . $cantidad_del_detalle . '" 
+            $query = 'UPDATE `detalle_inventario` SET fecha_inventario = "' . $fecha . '" ,cantidad_producto = ' . $cantidad_del_detalle . '
             WHERE id_detalle_inventario = ' . $id_detalle_inventario . '';
-
+            
             $stmt = $this->conn->prepare($query);
-
-
-
-
             try {
                 if ($stmt->execute()) {
                     return true;
@@ -186,7 +182,6 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
         $nombre_producto = $row['nombre_producto'];
         $id_inventario = $row['id_detalle_inventario'];
         $cantidad_producto = $row['cantidad_producto '];
-        printf("Error: %s.\n", $query);
         if ($nombre_producto != null) {
             return $id_inventario;
         } else {
@@ -211,34 +206,19 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
             return false;
         }
     }
-    public function buscardor_producto_array($nombre_producto_buscar, $valor)
+    public function cantidad_total()
     {
-        $query = "SELECT `nombre_producto`,`id_detalle_inventario`,`cantidad_producto` FROM `detalle_inventario` WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $nombre_producto_buscar);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $nombre_producto = $row['nombre_producto'];
-        $id_inventario = $row['id_detalle_inventario'];
-        $cantidad_producto = $row['cantidad_producto'];
-
-
-        return array($id_inventario,$cantidad_producto);
-    }
-    public function buscardor_cantidades_producto_array()
-    {
-        $query = "SELECT SUM(`cantidad_producto`) as cantidad_producto,SUM(valor) as valor FROM `detalle_inventario`";
+        $query = "SELECT SUM(`cantidad_producto`) FROM `producto`inner join bodega_has_producto on producto.id_producto=bodega_has_producto.id_producto";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $valor = $row['valor'];
-        $cantidad_producto = $row['cantidad_producto'];
-
-
-        return array($valor, $cantidad_producto);
+        $total = $row['SUM(`cantidad_producto`)'];
+        if ($total != null) {
+            return $total;
+        } else {
+            return false;
+        }
     }
-
     public function valor_total()
     {
         $query = "SELECT SUM(valor_producto) FROM `producto`inner join bodega_has_producto on producto.id_producto=bodega_has_producto.id_producto";
@@ -254,7 +234,7 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
     }
     public function Read_single_inventario_only($nombre_producto_buscar, $valor) //quety funcionando
     {
-        $query = "SELECT nombre_producto FROM detalle_inventario WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor";
+        $query = "SELECT nombre_producto,id_detalle_inventario FROM detalle_inventario WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor";
         $stmt = $this->conn->prepare($query);
 
 
@@ -264,9 +244,8 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
 
         // set properties
         $this->nombre_producto = $row['nombre_producto'];
+        $this->id_detalle_inventario = $row['id_detalle_inventario'];
 
-        printf("Error: %s.\n", $this->nombre_producto);
-        printf("Error: %s.\n", $query);
         try {
             if ($stmt->execute()) {
                 return $stmt;

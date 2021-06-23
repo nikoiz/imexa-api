@@ -19,7 +19,7 @@ class Controller_Producto
     }
 
 
-    public function Read_producto()
+    public function Read_producto() //tirar a produc_has_bodega grupby nombre_producto 
     {
         $query = "SELECT producto.id_producto,nombre_producto,valor_producto,bodega_has_producto.cantidad_total from producto INNER join bodega_has_producto on producto.id_producto=bodega_has_producto.id_producto";
         $stmt = $this->conn->prepare($query);
@@ -278,6 +278,7 @@ class Controller_Producto
             return true;
         }
     }
+    
 
     public function buscar_nombre_producto($nombre_producto)
     {
@@ -296,6 +297,42 @@ class Controller_Producto
             return false;
         } else {
             return true;
+        }
+    }
+    public function Obtener_valor_producto($id_producto)
+    {
+        $query = "SELECT valor_producto FROM producto WHERE id_producto = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $id_producto);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $numero_comparar = $row['valor_producto'];
+
+        if ($numero_comparar != null) {
+            return $numero_comparar;
+        } else {
+            return null;
+        }
+    }
+    public function Obtener_nombre_producto($id_producto)
+    {
+        $query = "SELECT nombre_producto FROM producto WHERE id_producto = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $id_producto);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $numero_comparar = $row['nombre_producto'];
+
+        if ($numero_comparar != null) {
+            return $numero_comparar;
+        } else {
+            return null;
         }
     }
 

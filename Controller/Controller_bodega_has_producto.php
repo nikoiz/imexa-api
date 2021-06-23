@@ -82,4 +82,26 @@ class Controller_bodega_has_producto
             }
         }
     }
+
+    function buscar_cantidad_producto($id_producto)
+    {
+        $query = "SELECT cantidad_total FROM bodega_has_producto WHERE id_producto = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $id_producto);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $numero_comparar = $row['cantidad_total'];
+
+        if ($numero_comparar != null) {
+            return $numero_comparar;
+        } else {
+            return null;
+        }
+    }
 }
