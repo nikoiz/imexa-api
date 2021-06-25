@@ -21,7 +21,7 @@ class Controller_Producto
 
     public function Read_producto() //tirar a produc_has_bodega grupby nombre_producto 
     {
-        $query = "SELECT producto.id_producto,nombre_producto,valor_producto,bodega_has_producto.cantidad_total from producto";
+        $query = "SELECT * FROM producto GROUP BY nombre_producto";
         $stmt = $this->conn->prepare($query);
 
         try {
@@ -276,6 +276,27 @@ class Controller_Producto
             return false;
         } else {
             return true;
+        }
+    }
+    function buscar_id_producto_por_nombre($nombre)
+    {
+        $query = "SELECT id_producto FROM producto WHERE nombre_producto = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $nombre);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $numero_comparar = $row['id_producto'];
+
+        if ($numero_comparar == null) {
+            return null;
+        } else {
+            return $numero_comparar;
         }
     }
     

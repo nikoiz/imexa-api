@@ -179,7 +179,7 @@ class Controller_Cliente
             return false;
         }
     }
-    function buscar_id_gastos($rut_cliente)
+    function buscar_rut_cliente($rut_cliente)
     {
         $query = "SELECT rut_cliente FROM cliente WHERE rut_cliente = ?";
 

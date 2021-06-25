@@ -87,18 +87,27 @@ class Controller_Gasto
         }
         if (empty(htmlspecialchars(strip_tags($this->descripcion_gastos)))) {
             $validador = false;
+        }else {
+            $this->descripcion_gastos = htmlspecialchars(strip_tags($this->descripcion_gastos));
         }
         if (empty(htmlspecialchars(strip_tags($this->valor_gastos)))) {
             $validador = false;
+        }else {
+            $this->valor_gastos = htmlspecialchars(strip_tags($this->valor_gastos));
         }
         if (empty(htmlspecialchars(strip_tags($this->estado)))) {
             $validador = false;
+        }else {
+            $this->estado = htmlspecialchars(strip_tags($this->estado));
         }
+
         if (empty(htmlspecialchars(strip_tags($this->id_bodega)))) {
             $validador = false;
         } else {
             if (!is_numeric(htmlspecialchars(strip_tags($this->id_bodega)))) {
                 $validador = false;
+            }else {
+                $this->id_bodega = htmlspecialchars(strip_tags($this->id_bodega));
             }
         }
         if ($validador == true) {

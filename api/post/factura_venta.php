@@ -7,6 +7,10 @@ header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,
 
 include_once '../../config/conexion.php';
 include_once '../../Controller/Controller_Factura_Venta.php';
+include_once '../../Controller/Controller_tipo_factura_venta.php';
+include_once '../../Controller/Controller_metodo_pago_venta.php';
+include_once '../../Controller/Controller_Abono.php';
+include_once '../../Controller/Controller_Cliente.php';
 
 
 $database = new conexion();
@@ -15,34 +19,111 @@ error_reporting(0);
 $data = json_decode(file_get_contents("php://input"));
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-    $validador=true;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $validador = true;
     $post = new Controller_Factura_Venta($GLOBALS['db']);
-    $post->folio_factura_venta = $GLOBALS['data']->folio_factura_venta;
-    $post->nombre_contribuyente = $GLOBALS['data']->nombre_contribuyente;
-    $post->rut_contribuyente = $GLOBALS['data']->rut_contribuyente;
-    $post->total_factura = $GLOBALS['data']->total_factura;
+    $tf = new Controller_tipo_factura_venta($GLOBALS['db']);
+    $mpv = new Controller_metodo_pago_compra($GLOBALS['db']);
+    $ab = new Controller_Abono($GLOBALS['db']);
+    $cl = new Controller_Cliente($GLOBALS['db']);
+
+
+
+
+    $post->id_venta = $GLOBALS['data']->id_venta;
+    $post->fecha_venta = $fecha = date('Y-m-d');
+    $post->valor_venta = $GLOBALS['data']->valor_venta;
+    $post->estado = $GLOBALS['data']->estado;
+    $post->id_tipo_venta = $GLOBALS['data']->id_tipo_venta;
+    $post->rut_cliente = $GLOBALS['data']->rut_cliente;
+    $post->recursiva_id = $post->id_venta;
+    $post->id_tipo_f_venta = $GLOBALS['data']->id_tipo_f_venta;
+
+    if ($post->Validacion_parametro($post->id_venta) == false) {
+        $validador = false;
+        echo json_encode(
+            array('message' => 'Ingrese una codigo de venta')
+        );
+    } else {
+        if ($post->buscar_id_venta($post->id_venta) == false) {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'Existe numero de la factura venta')
+            );
+        }
+    }
+    if ($post->Validador_de_valor_venta($post->valor_venta) == true) {
+        $validador = false;
+        echo json_encode(
+            array('message' => $post->Validador_de_valor_venta($post->valor_venta))
+        );
+    }
+    if ($post->Validacion_parametro($post->estado) == false) {
+        $validador = false;
+        echo json_encode(
+            array('message' => 'Ingrese una estado')
+        );
+    } else {
+        if ($post->estado == "Pagado" || $post->estado == "Pendiente") {
+        } else {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'favor de ingresar un estado de Pagado o Pendiente')
+            );
+        }
+    }
+    if ($post->Validacion_parametro($post->id_tipo_venta) == false) {
+        $validador = false;
+        echo json_encode(
+            array('message' => 'Ingrese un metodo de pago')
+        );
+    } else {
+        if ($mpv->buscar_metodo_pago_venta($post->id_tipo_venta) == false) {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'No existe metodo de pago')
+            );
+        }
+    }
+
+    if ($post->Validacion_parametro($post->rut_cliente) == false) { //validacion mas busqeuda
+        $validador = false;
+        echo json_encode(
+            array('message' => 'Ingrese el rut del cliente')
+        );
+    } else {
+        if ($post->Validator_run($post->rut_cliente) == false) {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'Error rut mal ingresado')
+            );
+        } else {
+            //buscar rut en proveedores
+            if (!empty($cl->buscar_rut_cliente($post->rut_cliente))) {
+                echo json_encode(
+                    array('message' => 'No existe datos del cliente')
+                );
+            }
+        }
+    }
+   
+    if ($post->Validacion_parametro($post->id_tipo_f_venta) == false) {
+        $validador = false;
+        echo json_encode(
+            array('message' => 'Ingrese un tipo de factura')
+        );
+    } else {
+        if ($tf->buscar_tipo_factura_venta($post->id_tipo_f_venta) == false) {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'Error no existe un tipo de factura')
+            );
+        }
+    }
+
     
-    if ($post->Validador_nombre_contribuyente($post->nombre_contribuyente)!="") {
-        $validador=false;
-        echo json_encode(
-            array('Error' =>$post->Validador_nombre_contribuyente($post->nombre_contribuyente))
-        );
-    }
-    if ($post->Validador_folio_factura_venta($post->folio_factura_venta)!="") {
-        $validador=false;
-        echo json_encode(
-            array('Error' =>$post->Validador_folio_factura_venta($post->folio_factura_venta))
-        );
-    }
-    if ($post->Validator_run($post->rut_contribuyente)==false) {
-        $validador=false;
-        echo json_encode(
-            array('Error' =>"Error rut mal ingresado")
-        );
-    }
-    if ($validador==true) {
-        if ($post->create_Factura_Venta()) {
+    if ($validador == true) {
+        if ($post->create_factura_venta()) {
             echo json_encode(
                 array('message' => 'Post Created')
             );
@@ -52,95 +133,88 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             );
         }
     }
+    
+
+    
+
+
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-if (isset($_GET['folio_factura_venta'])){
-    $post = new Controller_Factura_Venta($GLOBALS['db']);
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (isset($_GET['id_venta'])) {
+        $post = new Controller_Factura_Venta($GLOBALS['db']);
+        $post->id_venta = isset($_GET['id_venta']) ? $_GET['id_venta'] : die();
+        if (!empty($post->id_venta)) {
+            if ($post->Read_single_factura()) {
+                $post_item = array(
+                    'id_venta' => $post->id_venta,
+                    'fecha_venta ' => $post->fecha_venta,
+                    'valor_venta' =>$post->valor_venta,
+                    'estado'=>$post->estado,
+                    'id_tipo_venta'=>$post->id_tipo_venta,
+                    'rut_cliente' =>$post->rut_cliente,
+                    'recursiva_id' =>$post->recursiva_id,
+                    'id_tipo_f_venta' =>$post->id_tipo_f_venta
+                );
+                //Make JSON
 
-    // GET ID
-    $post->folio_factura_venta = isset($_GET['folio_factura_venta']) ? $_GET['folio_factura_venta'] : die();
-
-    if (!empty($post->buscar_folio_factura_venta($post->folio_factura_venta))) {
-        echo json_encode(
-            array('message' => 'No existe datos sobre el folio' . $post->folio_factura_venta)
-        );
-    }else{
-        if ($post->Read_single_Factura_Venta()) {
-            $post_item = array(
-                'folio_factura_venta' => $post->folio_factura_venta ,
-                'nombre_contribuyente ' => $post->nombre_contribuyente,
-                'rut_contribuyente' => $post->rut_contribuyente,
-                'total_factura' => $post->total_factura                
-            );
-             //Make JSON
-
-             print_r(json_encode($post_item));
-        }else {
+                print_r(json_encode($post_item));
+            } else {
+                echo json_encode(
+                    array('message' => 'No Posts Found')
+                );
+            }
+        } else {
             echo json_encode(
-                array('message' => 'No Posts Found')
+                array('message' => 'Ingrese rut del cliente')
             );
         }
-    }
-    
-    }else {
+    } else {
         $post = new Controller_Factura_Venta($GLOBALS['db']);
-
-        // Blog post query
-        $result = $post->Read_Factura_Venta();
+        $result = $post->Read_Factura();
         // Get row count
         $num = $result->rowCount();
-        // Check if any posts
-
 
         if ($num > 0) {
             // Post array
             $posts_arr = array();
             $posts_arr['data'] = array();
-
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 extract($row);
                 $post_item = array(
-                    'folio_factura_venta' => $folio_factura_venta ,
-                    'nombre_contribuyente ' => $nombre_contribuyente,
-                    'rut_contribuyente' => $rut_contribuyente,
-                    'total_factura' => $total_factura                
+                        'id_venta' => $id_venta,
+                        'fecha_venta ' => $fecha_venta,
+                        'valor_venta' =>$valor_venta,
+                        'estado'=>$estado,
+                        'id_tipo_venta'=>$id_tipo_venta,
+                        'rut_cliente' =>$rut_cliente,
+                        'recursiva_id' =>$recursiva_id,
+                        'id_tipo_f_venta' =>$id_tipo_f_venta
                 );
                 array_push($posts_arr['data'], $post_item);
             }
-
             echo json_encode($posts_arr);
         } else {
             // No posts
             echo json_encode(
-
                 array('message' => 'No Posts Found')
             );
         }
-
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
-    $validator=true;
-    // Instiate blog post object
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     $post = new Controller_Factura_Venta($GLOBALS['db']);
 
-
-    // GET ID
-    $post->folio_factura_venta = isset($_GET['folio_factura_venta']) ? $_GET['folio_factura_venta'] : die();
-
-
-
-   if ($post->Validador_folio_factura_venta($post->folio_factura_venta)=="") {
-    $validator=false;
-    echo json_encode(
-
-        array('message' => $post->Validador_folio_factura_venta($post->folio_factura_venta))
-    );
-   }
-    if ($validator==true) {
-        if ($post->delete_Factura_Venta()) {
+    $post->id_venta = isset($_GET['id_venta']) ? $_GET['id_venta'] : die();
+    
+    if (!empty($post->buscar_id_venta($post->id_venta))) {
+        echo json_encode(
+            array('message' => 'no se encontro la venta para eliminar')
+        );
+    } else {
+        //hacer delete de detalle con los productos
+        if ($post->delete_single_factura_venta()) {
             echo json_encode(
                 array('message' => 'Post deleted')
             );
@@ -152,37 +226,109 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    $validador = true;
     $post = new Controller_Factura_Venta($GLOBALS['db']);
-    //$post->folio_factura_venta = isset($_GET['folio_factura_venta']) ? $_GET['folio_factura_venta'] : die();
-    $post->folio_factura_venta = $GLOBALS['data']->folio_factura_venta;
-    $post->nombre_contribuyente = $GLOBALS['data']->nombre_contribuyente;
-    $post->rut_contribuyente = $GLOBALS['data']->rut_contribuyente;
-    $post->total_factura = $GLOBALS['data']->total_factura;
+    $tf = new Controller_tipo_factura_venta($GLOBALS['db']);
+    $mpv = new Controller_metodo_pago_compra($GLOBALS['db']);
+    $ab = new Controller_Abono($GLOBALS['db']);
+    $cl = new Controller_Cliente($GLOBALS['db']);
 
-    $validador=true;
 
-    if ($post->Validador_nombre_contribuyente($post->nombre_contribuyente)!="") {
-        $validador=false;
+
+
+    $post->id_venta = $GLOBALS['data']->id_venta;
+    $post->fecha_venta = $fecha = date('Y-m-d'); // preguntar
+    $post->valor_venta = $GLOBALS['data']->valor_venta;
+    $post->estado = $GLOBALS['data']->estado;
+    $post->id_tipo_venta = $GLOBALS['data']->id_tipo_venta;
+    $post->rut_cliente = $GLOBALS['data']->rut_cliente;
+    $post->recursiva_id = $post->id_venta;
+    $post->id_tipo_f_venta = $GLOBALS['data']->id_tipo_f_venta;
+
+    if ($post->Validacion_parametro($post->id_venta) == false) {
+        $validador = false;
         echo json_encode(
-            array('Error' =>$post->Validador_nombre_contribuyente($post->nombre_contribuyente))
+            array('message' => 'Ingrese una codigo de venta')
+        );
+    } else {
+        if ($post->buscar_id_venta($post->id_compra) == true) {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'Existe numero de la factura venta')
+            );
+        }
+    }
+    if ($post->Validador_de_valor_venta($post->valor_venta) == true) {
+        $validador = false;
+        echo json_encode(
+            array('message' => $post->Validador_de_valor_venta($post->valor_venta))
         );
     }
-    if ($post->Validador_folio_factura_venta($post->folio_factura_venta)!="") {
-        $validador=false;
+    if ($post->Validacion_parametro($post->estado) == false) {
+        $validador = false;
         echo json_encode(
-            array('Error' =>$post->Validador_folio_factura_venta($post->folio_factura_venta))
+            array('message' => 'Ingrese una estado')
         );
+    } else {
+        if ($post->estado == "Pagado" || $post->estado == "Pendiente") {
+        } else {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'favor de ingresar un estado de Pagado o Pendiente')
+            );
+        }
     }
-    if ($post->Validator_run($post->rut_contribuyente)==false) {
-        $validador=false;
+    if ($post->Validacion_parametro($post->id_tipo_venta) == false) {
+        $validador = false;
         echo json_encode(
-            array('Error' =>"Error rut mal ingresado")
+            array('message' => 'Ingrese un metodo de pago')
         );
+    } else {
+        if ($mpv->buscar_metodo_pago_venta($post->id_tipo_venta) == false) {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'No existe metodo de pago')
+            );
+        }
     }
 
+    if ($post->Validacion_parametro($post->rut_cliente) == false) { //validacion mas busqeuda
+        $validador = false;
+        echo json_encode(
+            array('message' => 'Ingrese el rut del cliente')
+        );
+    } else {
+        if ($post->Validator_run($post->rut_cliente) == false) {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'Error rut mal ingresado')
+            );
+        } else {
+            //buscar rut en proveedores
+            if (!empty($cl->buscar_rut_cliente($post->rut_cliente))) {
+                echo json_encode(
+                    array('message' => 'No existe datos del cliente')
+                );
+            }
+        }
+    }
+   
+    if ($post->Validacion_parametro($post->id_tipo_f_venta) == false) {
+        $validador = false;
+        echo json_encode(
+            array('message' => 'Ingrese un tipo de factura')
+        );
+    } else {
+        if ($tf->buscar_tipo_factura_venta($post->id_tipo_f_venta) == false) {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'Error no existe un tipo de factura')
+            );
+        }
+    }
     if ($validador==true) {
-        if ($post->update_Factura_Venta()) {
+        if ($post->update_factura_venta()) {
             echo json_encode(
                 array('message' => 'Post Update')
             );
@@ -191,7 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
                 array('message' => 'Post not Update')
             );
         }
-    } 
+    }  
 }
-
-?>
+//En caso de que ninguna de las opciones anteriores se haya ejecutado
+//header("HTTP/1.1 400 Bad Request");

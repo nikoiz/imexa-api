@@ -33,6 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo json_encode(
                 array('Error' => "Error no se rut mal ingresado")
             );
+        }else {
+            //busacar otro rut igual al cliente si es asi que no se cree
+            if ($post->buscar_rut_cliente($post->rut_cliente)==false) {
+                $validador = false;
+                echo json_encode(
+                    array('message' => 'ya existe el cliente')
+                );
+            }
+
         }
     }
     if (empty($post->nombre_cliente)) {
@@ -123,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
     $post->rut_cliente = isset($_GET['rut_cliente']) ? $_GET['rut_cliente'] : die();
     
-    if (!empty($post->buscar_id_gastos($post->id_gastos))) {
+    if (!empty($post->buscar_rut_cliente($post->rut_cliente))) {
         echo json_encode(
             array('message' => 'no se encontro la gasto para eliminar')
         );

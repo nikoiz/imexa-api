@@ -3,19 +3,23 @@ class Controller_Factura_Venta
 {
     private $conn;
 
-    public $nombre_contribuyente;
-    public $folio_factura_venta;
-    public $rut_contribuyente;
-    public $total_factura;
+    public $id_venta;
+    public $fecha_venta;
+    public $valor_venta;
+    public $estado;
+    public $id_tipo_venta;
+    public $rut_cliente;
+    public $recursiva_id;
+    public $id_tipo_f_venta;
 
     public function __construct($db)
     {
         $this->conn = $db;
     }
-    
-    public function Read_Factura_Venta()
+
+    public function Read_Factura()
     {
-        $query = "SELECT * from factura_venta";
+        $query = "SELECT * FROM factura_venta";
         $stmt = $this->conn->prepare($query);
 
         try {
@@ -28,22 +32,24 @@ class Controller_Factura_Venta
             return false;
         }
     }
-
-    public function Read_single_Factura_Venta()
+    public function Read_single_factura()
     {
-        $query = "SELECT * FROM factura_venta WHERE folio_factura_venta = ?";
+        $query = "SELECT * FROM factura_venta WHERE id_venta = ?";
         $stmt = $this->conn->prepare($query);
         //Bind id
-        $stmt->bindParam(1, $this->folio_factura_venta);
+        $stmt->bindParam(1, $this->id_venta);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-        $this->folio_factura_venta = $row['folio_factura_venta'];
-        $this->nombre_contribuyente = $row['nombre_contribuyente'];
-        $this->rut_contribuyente = $row['rut_contribuyente'];
-        $this->total_factura = $row['total_factura'];
-
+        $this->id_venta = $row['id_venta'];
+        $this->fecha_venta = $row['fecha_venta'];
+        $this->valor_venta = $row['valor_venta'];
+        $this->estado = $row['estado'];
+        $this->id_tipo_venta = $row['id_tipo_venta'];
+        $this->rut_cliente = $row['rut_cliente'];
+        $this->recursiva_id = $row['recursiva_id'];
+        $this->id_tipo_f_venta = $row['id_tipo_f_venta'];
         try {
             if ($stmt->execute()) {
                 return $stmt;
@@ -54,66 +60,96 @@ class Controller_Factura_Venta
             return false;
         }
     }
-
-    public function create_Factura_Venta()
+    public function create_factura_venta()
     {
         $validador = true;
+        
         $query = 'INSERT INTO factura_venta 
         SET 
             
-            folio_factura_venta = :folio_factura_venta,
-            nombre_contribuyente = :nombre_contribuyente,
-            rut_contribuyente = :rut_contribuyente,
-            total_factura = :total_factura';
+            id_venta = :id_venta,
+            fecha_venta = :fecha_venta,
+            valor_venta = :valor_venta,
+            estado = :estado,
+            id_tipo_venta = :id_tipo_venta,
+            rut_cliente = :rut_cliente,
+            recursiva_id = :recursiva_id,
+            id_tipo_f_venta = :id_tipo_f_venta';
 
         $stmt = $this->conn->prepare($query);
 
-
-        if (empty(htmlspecialchars(strip_tags($this->folio_factura_venta)))) {
+        if (!empty(htmlspecialchars(strip_tags($this->id_venta)))) {
+            $this->id_venta = htmlspecialchars(strip_tags($this->id_venta));
+        } else {
+            $validador = false;
+        }
+        
+        if (!empty(htmlspecialchars(strip_tags($this->fecha_venta)))) {
+            $this->fecha_venta = htmlspecialchars(strip_tags($this->fecha_venta));
+        } else {
+            $validador = false;
+        }
+        
+        if (empty(htmlspecialchars(strip_tags($this->valor_venta)))) {
             $validador = false;
         } else {
-            if (is_numeric(htmlspecialchars(strip_tags($this->folio_factura_venta)))) {
-                if (htmlspecialchars(strip_tags($this->folio_factura_venta)) > 0) {
-                    //poner mensaje en validador de que solo se aceptan n° positivos
-                } else {
-                    $validador = false;
-                }
-            } else {
+            if (!is_numeric(htmlspecialchars(strip_tags($this->valor_venta)))) {
                 $validador = false;
+            }else {
+                $this->valor_venta = htmlspecialchars(strip_tags($this->valor_venta));
             }
         }
-        if (htmlspecialchars(strip_tags($this->nombre_contribuyente)) == "") {
-            $validador = false;
-        }
-        if (htmlspecialchars(strip_tags($this->rut_contribuyente)) == "") {
-            $validador = false;
-        }
-
-        if (empty(htmlspecialchars(strip_tags($this->total_factura)))) {
+        
+        if (empty(htmlspecialchars(strip_tags($this->estado)))) {
             $validador = false;
         } else {
-            if (is_numeric(htmlspecialchars(strip_tags($this->total_factura)))) {
-                if (htmlspecialchars(strip_tags($this->total_factura)) > 0) {
-                    //poner mensaje en validador de que solo se aceptan n° positivos
-                } else {
-                    $validador = false;
-                }
-            } else {
-                $validador = false;
-            }
+                $this->estado = htmlspecialchars(strip_tags($this->estado));
+            
         }
 
+        
+        if (empty(htmlspecialchars(strip_tags($this->id_tipo_venta)))) {
+            $validador = false;
+        } else {
+            if (!is_numeric(htmlspecialchars(strip_tags($this->id_tipo_venta)))) {
+                $validador = false;
+            }else {
+                $this->id_tipo_venta = htmlspecialchars(strip_tags($this->id_tipo_venta));
+            }
+        }
+        if (!empty(htmlspecialchars(strip_tags($this->rut_cliente)))) {
+            $this->rut_cliente = htmlspecialchars(strip_tags($this->rut_cliente));
+        } else {
+            $validador = false;
+        }
+        if (!empty(htmlspecialchars(strip_tags($this->recursiva_id)))) {
+            $this->recursiva_id = htmlspecialchars(strip_tags($this->recursiva_id));
+        } else {
+            $validador = false;
+        }
+        if (!empty(htmlspecialchars(strip_tags($this->id_tipo_f_venta)))) {
+            $this->id_tipo_f_venta = htmlspecialchars(strip_tags($this->id_tipo_f_venta));
+        } else {
+            $validador = false;
+        }
+
+        
         if ($validador == true) {
-            $stmt->bindParam(':folio_factura_venta', $this->folio_factura_venta);
-            $stmt->bindParam(':nombre_contribuyente', $this->nombre_contribuyente);
-            $stmt->bindParam(':rut_contribuyente', $this->rut_contribuyente);
-            $stmt->bindParam(':total_factura', $this->total_factura);
+            $stmt->bindParam(':id_venta', $this->id_venta);
+            $stmt->bindParam(':fecha_venta', $this->fecha_venta);
+            $stmt->bindParam(':valor_venta', $this->valor_venta);
+            $stmt->bindParam(':estado', $this->estado);
+            $stmt->bindParam(':id_tipo_venta', $this->id_tipo_venta);
+            $stmt->bindParam(':rut_cliente', $this->rut_cliente);
+            $stmt->bindParam(':recursiva_id', $this->recursiva_id);
+            $stmt->bindParam(':id_tipo_f_venta', $this->id_tipo_f_venta);
+            
             try {
                 if ($stmt->execute()) {
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n", $stmt->error);
+                printf("Error: %s.\n", $stmt->e);
 
                 return false;
             }
@@ -121,20 +157,19 @@ class Controller_Factura_Venta
             return false;
         }
     }
-
-    public function delete_Factura_Venta()
+    public function delete_single_factura_venta()
     {
         $validador = true;
-        $query = "DELETE FROM factura_venta WHERE folio_factura_venta = ?";
+        $query = "DELETE FROM factura_venta WHERE id_venta = ?";
         $stmt = $this->conn->prepare($query);
 
-        if (htmlspecialchars(strip_tags($this->folio_factura_venta)) != "") {
-            $this->id_gastos = htmlspecialchars(strip_tags($this->folio_factura_venta));
+        if (htmlspecialchars(strip_tags($this->id_venta)) != "") {
+            $this->id_venta = htmlspecialchars(strip_tags($this->id_venta));
         } else {
             $validador = false;
         }
 
-        $stmt->bindParam(1, $this->folio_factura_venta);
+        $stmt->bindParam(1, $this->id_venta);
 
         if ($validador == true) {
             try {
@@ -150,54 +185,85 @@ class Controller_Factura_Venta
             return false;
         }
     }
-
-    public function update_Factura_Venta()
+    public function update_factura_venta()
     {
         $validador = true;
         //poner atencion a la nomenclatura de las palabas.
-        $query = "UPDATE factura_venta SET nombre_contribuyente =:nombre_contribuyente,rut_contribuyente =:rut_contribuyente,total_factura=:total_factura 
-        WHERE folio_factura_venta = :folio_factura_venta";
+        $query = "UPDATE factura_venta SET    
+        id_venta = :id_venta,
+        fecha_venta = :fecha_venta,
+        valor_venta = :valor_venta,
+        estado = :estado,
+        id_tipo_venta = :id_tipo_venta,
+        rut_cliente = :rut_cliente,
+        recursiva_id = :recursiva_id,
+        id_tipo_f_venta = :id_tipo_f_venta
+          WHERE id_venta = :id_venta";
         $stmt = $this->conn->prepare($query);
-        
-        if (empty(htmlspecialchars(strip_tags($this->folio_factura_venta)))) {
-            $validador = false;
-        } else {
-            if (is_numeric(htmlspecialchars(strip_tags($this->folio_factura_venta)))) {
-                if (htmlspecialchars(strip_tags($this->folio_factura_venta)) > 0) {
-                    //poner mensaje en validador de que solo se aceptan n° positivos
-                } else {
-                    $validador = false;
-                }
-            } else {
-                $validador = false;
-            }
-        }
-        if (htmlspecialchars(strip_tags($this->nombre_contribuyente)) == "") {
-            $validador = false;
-        }
-        if (htmlspecialchars(strip_tags($this->rut_contribuyente)) == "") {
-            $validador = false;
-        }
 
-        if (empty(htmlspecialchars(strip_tags($this->total_factura)))) {
+        if (!empty(htmlspecialchars(strip_tags($this->id_venta)))) {
+            $this->id_venta = htmlspecialchars(strip_tags($this->id_venta));
+        } else {
+            $validador = false;
+        }
+        if (!empty(htmlspecialchars(strip_tags($this->fecha_venta)))) {
+            $this->fecha_venta = htmlspecialchars(strip_tags($this->fecha_venta));
+        } else {
+            $validador = false;
+        }
+        if (empty(htmlspecialchars(strip_tags($this->valor_venta)))) {
             $validador = false;
         } else {
-            if (is_numeric(htmlspecialchars(strip_tags($this->total_factura)))) {
-                if (htmlspecialchars(strip_tags($this->total_factura)) > 0) {
-                    //poner mensaje en validador de que solo se aceptan n° positivos
-                } else {
-                    $validador = false;
-                }
-            } else {
+            if (!is_numeric(htmlspecialchars(strip_tags($this->valor_venta)))) {
                 $validador = false;
+            }else {
+                $this->valor_venta = htmlspecialchars(strip_tags($this->valor_venta));
             }
         }
+        if (empty(htmlspecialchars(strip_tags($this->estado)))) {
+            $validador = false;
+        } else {
+            if (!is_numeric(htmlspecialchars(strip_tags($this->estado)))) {
+                $validador = false;
+            }else {
+                $this->estado = htmlspecialchars(strip_tags($this->estado));
+            }
+        }
+        if (empty(htmlspecialchars(strip_tags($this->id_tipo_venta)))) {
+            $validador = false;
+        } else {
+            if (!is_numeric(htmlspecialchars(strip_tags($this->id_tipo_venta)))) {
+                $validador = false;
+            }else {
+                $this->id_tipo_venta = htmlspecialchars(strip_tags($this->id_tipo_venta));
+            }
+        }
+        if (!empty(htmlspecialchars(strip_tags($this->rut_cliente)))) {
+            $this->rut_cliente = htmlspecialchars(strip_tags($this->rut_cliente));
+        } else {
+            $validador = false;
+        }
+        if (!empty(htmlspecialchars(strip_tags($this->recursiva_id)))) {
+            $this->recursiva_id = htmlspecialchars(strip_tags($this->recursiva_id));
+        } else {
+            $validador = false;
+        }
+        if (!empty(htmlspecialchars(strip_tags($this->id_tipo_f_venta)))) {
+            $this->id_tipo_f_venta = htmlspecialchars(strip_tags($this->id_tipo_f_venta));
+        } else {
+            $validador = false;
+        }
+        
         // Bind Data
         if ($validador == true) {
-            $stmt->bindParam(':folio_factura_venta', $this->folio_factura_venta);
-            $stmt->bindParam(':nombre_contribuyente', $this->nombre_contribuyente);
-            $stmt->bindParam(':rut_contribuyente', $this->rut_contribuyente);
-            $stmt->bindParam(':total_factura', $this->total_factura);
+            $stmt->bindParam(':id_venta', $this->id_venta);
+            $stmt->bindParam(':fecha_venta', $this->fecha_venta);
+            $stmt->bindParam(':valor_venta', $this->valor_venta);
+            $stmt->bindParam(':estado', $this->estado);
+            $stmt->bindParam(':id_tipo_venta', $this->id_tipo_venta);
+            $stmt->bindParam(':rut_cliente', $this->rut_cliente);
+            $stmt->bindParam(':recursiva_id', $this->recursiva_id);
+            $stmt->bindParam(':id_tipo_f_venta', $this->id_tipo_f_venta);
             try {
                 if ($stmt->execute()) {
                     return true;
@@ -210,29 +276,50 @@ class Controller_Factura_Venta
             return false;
         }
     }
-    public function Validador_nombre_contribuyente($nombre_contribuyente)
+    public function Validacion_parametro($parametro)
     {
-        if ($nombre_contribuyente == "") {
-            return "Falta el nombre del contribuyente";
-        }else {
-            return "";
-        } 
+        if (empty($parametro)) {
+            return false;
+        } else {
+            return true;
+        }
     }
-    public function Validador_folio_factura_venta($folio_factura_venta)
+    function buscar_id_venta($id_venta)
     {
-        if ($folio_factura_venta == "") {
-            return "Falta el total de la factura venta";
-        }else {
-            if (is_numeric($folio_factura_venta)) {
-                if (!$folio_factura_venta>0) {
+        $query = "SELECT id_venta FROM factura_venta WHERE id_venta = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $id_venta);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $numero_comparar = $row['id_venta'];
+
+        if ($numero_comparar == $id_venta) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public function Validador_de_valor_venta($numero)
+    {
+        if ($numero == "") {
+            return "Falta el valor venta";
+        } else {
+            if (is_numeric($numero)) {
+                if (!$numero > 0) {
                     return "Ingrese solo valores positivos";
-                }else {
+                } else {
                     return "";
                 }
-            }else {
+            } else {
                 return "Ingrese solo numeros";
             }
-        } 
+        }
     }
     public function Validator_run($rut) //
     {
@@ -271,32 +358,18 @@ class Controller_Factura_Venta
             return false;
         }
     }
-
-    public function buscar_folio_factura_venta($folio_factura_venta)
+    function buscar_el_ultimo_id_de_factura_venta()
     {
-        $query = "SELECT folio_factura_venta FROM factura_venta WHERE folio_factura_venta  like '%" . $folio_factura_venta . "%'";
+        $query = "SELECT MAX(id_venta) AS id_venta FROM factura_venta";
         $stmt = $this->conn->prepare($query);
-
-        //Bind id
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $numero_comparar = $row['id_venta'];
 
-        // set properties
-
-        $folio_comparar = $row['folio_factura_venta'];
-
-        if ($folio_comparar == $folio_factura_venta) {
-            return false;
+        if ($numero_comparar != null) {
+            return $numero_comparar;
         } else {
-            return true;
+            return false;
         }
     }
-
-
-
 }
-
-
-
-
-?>
