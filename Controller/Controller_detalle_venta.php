@@ -152,5 +152,21 @@ class Controller_detalle_venta
             }
         }
     }
+    public function Validador_id_detalle_producto($id_detalle_producto)
+    {
+        if (empty($id_detalle_producto)) {
+            return "ingrese una el codigo del detalle producto";
+        } else {
+            if (is_numeric($id_detalle_producto)) {
+                if (!$id_detalle_producto > 0) {
+                    return "ingrese un numero mayor a 0";
+                } else {
+                    return "";
+                }
+            } else {
+                return "solo se aceptan numeros";
+            }
+        }
+    }
     
 }

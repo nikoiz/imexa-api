@@ -154,7 +154,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'id_tipo_venta'=>$post->id_tipo_venta,
                     'rut_cliente' =>$post->rut_cliente,
                     'recursiva_id' =>$post->recursiva_id,
-                    'id_tipo_f_venta' =>$post->id_tipo_f_venta
+                    'id_tipo_f_venta' =>$post->id_tipo_f_venta,
+
+                    'id_detalle_venta'=>$post->id_detalle_venta,
+                    'descripcion_producto'=>$post->descripcion_producto,
+                    'cantidad_producto'=>$post->cantidad_producto,
+                    'valor'=>$post->valor,
+                    'producto_id_producto'=>$post->producto_id_producto
+
+
                 );
                 //Make JSON
 

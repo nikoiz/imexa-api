@@ -12,6 +12,14 @@ class Controller_Factura_Venta
     public $recursiva_id;
     public $id_tipo_f_venta;
 
+    //datos de detalle compra
+    public $id_detalle_venta;
+    public $descripcion_producto;
+    public $cantidad_producto;
+    public $valor;
+    //public $id_venta;
+    public $producto_id_producto;
+
     public function __construct($db)
     {
         $this->conn = $db;
@@ -34,7 +42,7 @@ class Controller_Factura_Venta
     }
     public function Read_single_factura()
     {
-        $query = "SELECT * FROM factura_venta WHERE id_venta = ?";
+        $query = "SELECT * FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where factura_venta.id_venta=?";
         $stmt = $this->conn->prepare($query);
         //Bind id
         $stmt->bindParam(1, $this->id_venta);
@@ -42,6 +50,7 @@ class Controller_Factura_Venta
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
+        //factura
         $this->id_venta = $row['id_venta'];
         $this->fecha_venta = $row['fecha_venta'];
         $this->valor_venta = $row['valor_venta'];
@@ -50,6 +59,14 @@ class Controller_Factura_Venta
         $this->rut_cliente = $row['rut_cliente'];
         $this->recursiva_id = $row['recursiva_id'];
         $this->id_tipo_f_venta = $row['id_tipo_f_venta'];
+
+        //detalle venta (no mostrar el producto como tal)
+        $this->id_detalle_venta = $row['id_detalle_venta'];
+        $this->descripcion_producto = $row['descripcion_producto'];
+        $this->cantidad_producto = $row['cantidad_producto'];
+        $this->valor = $row['valor'];
+        $this->producto_id_producto = $row['producto_id_producto'];
+
         try {
             if ($stmt->execute()) {
                 return $stmt;
