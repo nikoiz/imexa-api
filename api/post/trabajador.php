@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 if ($post->Read_single_trabajador()) {
                     $post_item = array(
                         'rut_trabajador' => $post->rut_trabajador,
-                        'nombre_trabajador ' => $post->nombre_trabajador,
+                        'nombre_trabajador' => $post->nombre_trabajador,
                         'fecha_contratacion' => $post->fecha_contratacion,
                         'usuario' => $post->usuario,
                         'contraseña' => $post->contraseña,
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 extract($row);
                 $post_item = array(
                     'rut_trabajador' => $rut_trabajador,
-                    'nombre_trabajador ' => $nombre_trabajador,
+                    'nombre_trabajador' => $nombre_trabajador,
                     'fecha_contratacion' => $fecha_contratacion,
                     'usuario' => $usuario,
                     'contraseña' => $contraseña,

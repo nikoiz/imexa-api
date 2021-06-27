@@ -77,10 +77,37 @@ class Controller_Asistencia{
         }else {
             $this->fecha = htmlspecialchars(strip_tags($this->fecha));
         }
-        if (empty(htmlspecialchars(strip_tags($this->descripcion_gastos)))) {
+        if (empty(htmlspecialchars(strip_tags($this->cantidad_dias_fallados)))) {
             $validador = false;
         }else {
             $this->cantidad_dias_fallados = htmlspecialchars(strip_tags($this->cantidad_dias_fallados));
+        }
+        if (empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
+            $validador = false;
+        }else {
+            $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
+        }
+        if (empty(htmlspecialchars(strip_tags($this->id_detalle_asistencia)))) {
+            $validador = false;
+        }else {
+            $this->id_detalle_asistencia = htmlspecialchars(strip_tags($this->id_detalle_asistencia));
+        }
+        if ($validador == true) {
+            $stmt->bindParam(':fecha', $this->fecha);
+            $stmt->bindParam(':cantidad_dias_fallados', $this->cantidad_dias_fallados);
+            $stmt->bindParam(':rut_trabajador', $this->rut_trabajador);
+            $stmt->bindParam(':id_detalle_asistencia', $this->id_detalle_asistencia);
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $e);
+
+                return false;
+            }
+        } else {
+            return false;
         }
 
     }
