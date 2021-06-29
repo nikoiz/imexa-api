@@ -19,7 +19,52 @@ class Controller_detalle_inventario
     {
         $this->conn = $db;
     }
+    public function Read_single_detalle_invetario()
+    {
+        $query = "SELECT * from detalle_inventario where cantidad_producto >=1 AND id_bodega =?";
+        $stmt = $this->conn->prepare($query);
+        //Bind id
+        $stmt->bindParam(1, $this->id_bodega);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        // set properties
+        $this->id_detalle_inventario = $row['id_detalle_inventario'];
+        $this->nombre_producto = $row['nombre_producto'];
+        $this->cantidad_producto = $row['cantidad_producto'];
+        $this->valor = $row['valor'];
+        $this->fecha_inventario = $row['fecha_inventario'];
+        $this->id_inventario = $row['id_inventario'];
+        $this->id_bodega = $row['id_bodega'];
+        $this->id_producto = $row['id_producto'];
+
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return false;
+        }
+    }
+
+    public function Read_producto_detalle_invetario() //tirar a produc_has_bodega grupby nombre_producto 
+    {
+        $query = "SELECT * from detalle_inventario where cantidad_producto >=1";
+        $stmt = $this->conn->prepare($query);
+
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return false;
+        }
+    }
+    
     public function create_detalle_inventario($nombre_producto, $cantidad_producto, $valor, $id_inventario, $id_bodega, $id_producto, $fecha)
     { //esto se realizara en el metodo producto
         $validador = true;
@@ -216,6 +261,23 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
         }
         
     }
+    public function buscardor_valor_producto_por_bodega($id_bodega)
+    {
+        $id_bodega = '"' . $id_bodega . '"';
+
+        $query = "SELECT SUM(valor) FROM `detalle_inventario` WHERE `id_bodega`= $id_bodega";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $valor = $row['SUM(valor)'];
+        if ($valor== null) {
+            return "";
+        }else {
+            return $valor;
+        }
+        
+    }
     public function buscardor_igual_producto_id($nombre_producto_buscar, $valor)
     {
         $nombre_producto_buscar = '"' . $nombre_producto_buscar . '"';
@@ -248,7 +310,7 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
         if ($nombre_producto != null) {
             return $cantidad_producto;
         } else {
-            return false;
+            return "";
         }
     }
     public function buscardor_cantidad_producto($nombre_producto_buscar)
@@ -316,6 +378,25 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
             printf("Error: %s.\n", $stmt->error);
 
             return false;
+        }
+    }
+    public function Obtener_nombre_producto_por_inv($id_producto)
+    {
+        $query = "SELECT nombre_producto FROM id_detalle_inventario WHERE id_detalle_inventario = ?";
+        printf("Error: %s.\n", $query);
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $id_producto);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $numero_comparar = $row['nombre_producto'];
+        printf("Error: %s.\n", $numero_comparar);
+
+        if ($numero_comparar != null) {
+            return $numero_comparar;
+        } else {
+            return null;
         }
     }
 }

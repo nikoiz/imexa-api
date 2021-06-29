@@ -259,4 +259,23 @@ class Controller_Inventario
             return false;
         }
     }
+    public function Obtner_valor_inventario()
+    {
+        $query = "SELECT valor_inventario FROM inventario WHERE id_inventario = 1";
+        $stmt = $this->conn->prepare($query);
+
+
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $comparar = $row['valor_inventario'];
+
+        if ($comparar == null) {
+            return null;
+        } else {
+            return $comparar;
+        }
+    }
 }

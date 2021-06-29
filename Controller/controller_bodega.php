@@ -202,6 +202,35 @@ class controller_bodega
             return false;
         }
     }
+    public function delete_single_detalle_inventario()
+    {
+        $validador = true;
+        $query = "DELETE FROM bodega WHERE id_bodega = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        if (htmlspecialchars(strip_tags($this->id_bodega)) != "") {
+            $this->id_bodega = htmlspecialchars(strip_tags($this->id_bodega));
+        } else {
+            $validador = false;
+        }
+
+        $stmt->bindParam(1, $this->id_bodega);
+
+        if ($validador == true) {
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $stmt->error);
+
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
     public function update()
     {

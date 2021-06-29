@@ -303,4 +303,27 @@ class Controller_Gasto
     }
         */
     }
+    public function delete_single_gasto_por_bodega($id_bodega)
+    {
+        $validador = true;
+        $query = "DELETE FROM gastos WHERE id_bodega = ?";
+        $stmt = $this->conn->prepare($query);
+
+
+        $stmt->bindParam(1, $id_bodega);
+
+        if ($validador == true) {
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $e);
+
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }

@@ -238,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
         $cantidad_d_i = $cantidad_d_i - $po->cantidad_total;
         //se obtiene el id
         $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto, $post->valor_producto);
-
+        
 
         if ($di->Sumar_mismo_producto($di->id_detalle_inventario, $cantidad_d_i, $fecha) == false) {
             echo json_encode(
@@ -246,15 +246,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
             );
         } else {
             if ($po->delete_bodega_has_producto($post->id_producto)) {
-                if ($post->delete_single_producto()) {
-                    echo json_encode(
-                        array('message' => 'Post deleted')
-                    );
-                } else {
-                    echo json_encode(
-                        array('message' => 'Post not deleted')
-                    );
-                }
+                echo json_encode(
+                    array('message' => 'Post deleted')
+                );
             } else {
                 echo json_encode(
                     array('message' => 'Post not deleted')
