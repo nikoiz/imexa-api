@@ -197,43 +197,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     
     // GET ID
     $post->id_gastos = isset($_GET['id_gastos']) ? $_GET['id_gastos'] : die();
-    $post->descripcion_gastos = $GLOBALS['data']->descripcion_gastos;
-    $post->valor_gastos = $GLOBALS['data']->valor_gastos;
     $post->estado = $GLOBALS['data']->estado;
-    $post->id_bodega = $GLOBALS['data']->id_bodega;
-    $post->fecha = $GLOBALS['data']->fecha;
+
     
     $validador=true;
 
-    if (empty($post->fecha)) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "ingrese una fecha")
-        );
-    }else {
-        if ($post->validateDate($post->fecha)==false) {
-            $validador = false;
-            echo json_encode(
-                array('Error' => "ingrese una fecha valida")
-            );
-        }
-    }
-    
+
     if ($post->Validador_id_gastos($post->id_gastos)==false) {
         echo json_encode(
             array('Error' => 'Falta el id de gasto')
-        );
-        $validador=false;
-    }
-    if ($post->Validador_descripcion_gastos($post->descripcion_gastos)==false) {
-        echo json_encode(
-            array('Error' => 'Falta la descripcion de gastos')
-        );
-        $validador=false;
-    }
-    if (!$post->Validador_valor_gastos($post->valor_gastos)=="") {
-        echo json_encode(
-            array('Error' =>$post->Validador_valor_gastos($post->valor_gastos) )
         );
         $validador=false;
     }
@@ -242,20 +214,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             array('Error' => 'Falta establecer el estado')
         );
         $validador=false;
-    }
-    if (!$post->Validador_bodega_id_bodega($post->id_bodega)=="") {
-        echo json_encode(
-            array('Error' =>$post->Validador_bodega_id_bodega($post->id_bodega))
-        );
-        $validador=false;
-    }else {
-        if ($buscar->buscar_id_bodega($post->id_bodega)==true) {
-            echo json_encode(
-                array('Error' => 'No se encontro el id de la bodega')
-            );
-            $validador=false;
-        }
-        
     }
     if ($validador==true) {
         if ($post->update_gasto()) {
