@@ -25,10 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post->estado = $GLOBALS['data']->estado;
     $post->fecha = $GLOBALS['data']->fecha;
     $post->id_bodega = $GLOBALS['data']->id_bodega;
-    echo json_encode(
-        array('Error' => "asd")
-    );
-
 
     if (empty($post->fecha)) {
         $validador = false;
@@ -105,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $p = new controller_bodega($GLOBALS['db']);
 
         // GET ID
+        //se puede cambiar por el id_bodega (decir a compañeero para ver quer le parece)
         $post->id_gastos = isset($_GET['id_gastos']) ? $_GET['id_gastos'] : die();
 
 

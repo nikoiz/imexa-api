@@ -16,6 +16,45 @@ $data = json_decode(file_get_contents("php://input"));
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+    $post= new Controller_Asistencia($GLOBALS['db']);
+    $post->fecha =$fecha = date('Y-m-d');
+    $post->cantidad_dias_fallados =0;
+    $post->rut_trabajador= $GLOBALS['data']->rut_trabajador;
+    $post->id_detalle_asistencia = null;
+    $validador=true;
+
+    if ($post->Validacion_parametro($post->rut_trabajador)==false) {
+        $validador=false;
+        echo json_encode(
+            array('Error' => 'ingrese el rut del trabajador')
+        );
+    }else {
+        if ($post->Validator_run($post->rut_trabajador)==false) {
+            $validador=false;
+            echo json_encode(
+                array('Error' => 'rut mal ingresado')
+            );
+        }
+    }
+
+    if ($validador==true) {
+        if ($post->Create_asistencia()) {
+            echo json_encode(
+                array('message' => 'Post Update')
+            );
+        } else {
+            echo json_encode(
+                array('message' => 'Post not Update')
+            );
+        }
+    }  
+
+
+
+
+
+    
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET'){

@@ -23,11 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post = new controller_bodega($GLOBALS['db']);
     $pos = new Controller_Trabajador($GLOBALS['db']);
     $po = new Controller_trabajador_has_bodega($GLOBALS['db']);
+    $g = new Controller_Gasto($GLOBALS['db']);
 
     $post->numero_bodega = $GLOBALS['data']->numero_bodega;
     $post->nombre_bodega = $GLOBALS['data']->nombre_bodega;
+    
     $pos->id_tipo_trabajador = 1;
     $validador = true;
+    $g->descripcion_gastos = $GLOBALS['data']->descripcion_gastos;
+    $g->fecha=$fecha = date('Y-m-d');
+    $g->estado =1;
 
     if ($post->buscar_numero($post->numero_bodega) == false) {
         $validador = false;
@@ -56,10 +61,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         );
                     }else {
                         //crear gasto de esa bodega con margen 0 de gasto
+                        if ($g->create_gasto_desde_bodega($id_bodega,$g->estado,$g->descripcion_gastos,$g->fecha)==false) {
+                            echo json_encode(
+                                array('message' => 'Error no se creo el gasto')
+                            );
+                        }else {
+                            echo json_encode(
+                                array('message' => 'Post Created')
+                            );
+                        }
                         
-                        echo json_encode(
-                            array('message' => 'Post Created')
-                        );
+                       
                     }
                 } else {
                     echo json_encode(
@@ -84,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id_bodega'])) {
         // Instiate blog post object
         $post = new controller_bodega($GLOBALS['db']);
+        $g = new Controller_Gasto($GLOBALS['db']);
 
         // GET ID
         $post->id_bodega = isset($_GET['id_bodega']) ? $_GET['id_bodega'] : die();
@@ -94,24 +107,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 array('message' => 'No existe datos sobre la bodega N°' . $post->id_bodega)
             );
         } else {
-            //obtenr los gastos de esa bodega y actualizar datos de estos 
+            /*
+            //obtenr los gastos de esa bodega y actualizar datos de estos a gastos
+            $g->valor_gastos=$g->Obtener_total_gasto_only($post->id_bodega);
 
-
+            if ($g->update_gasto_por_bodega($post->id_bodega,$g->valor_gastos)== false) {
+                echo json_encode(
+                    array('message' => 'no se pudo actualizar los gastos')
+                );
+            }else {
+               
+            }
+            */
+            $g->valor_gastos=$g->Obtener_total_gasto_only($post->id_bodega);
+            //obtner el gasto de esa bodega 
+            $valor_del_inventario = 'gasto bodega :'.$g->valor_gastos;
             if ($post->read_single()) {
                 $post_item = array(
                     'id_bodega' => $post->id_bodega,
                     'numero_bodega' => $post->numero_bodega,
                     'nombre_bodega' => $post->nombre_bodega
+                    
                 );
-
+                
                 //Make JSON
 
                 print_r(json_encode($post_item));
+                print_r(json_encode($valor_del_inventario));
             } else {
                 echo json_encode(
                     array('message' => 'No Posts Found')
                 );
             }
+            
         }
     } else {
         $post =  new controller_bodega($GLOBALS['db']);

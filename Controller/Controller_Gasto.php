@@ -326,4 +326,130 @@ class Controller_Gasto
             return false;
         }
     }
+    public function create_gasto_desde_bodega($id_bodega,$estado,$descripcion_gastos,$fecha,$valor_gastos=0)
+    {
+        $validador = true;
+        $query = 'INSERT INTO gastos 
+        SET 
+            
+            id_bodega = :id_bodega,
+            estado = :estado,
+            valor_gastos = :valor_gastos,
+            descripcion_gastos = :descripcion_gastos,
+            fecha = :fecha';
+
+        $stmt = $this->conn->prepare($query);
+
+        if (!empty($fecha)) {
+            $this->fecha = $fecha;
+        } else {
+            $validador = false;
+        }
+        if (empty($descripcion_gastos)) {
+            $validador = false;
+        }else {
+            $this->descripcion_gastos = $descripcion_gastos;
+        }
+        if (empty($valor_gastos)) {
+            $validador = false;
+        }else {
+            $this->valor_gastos = $valor_gastos;
+        }
+        if (empty($estado)) {
+            $validador = false;
+        }else {
+            $this->estado = $estado;
+        }
+
+        if (empty($id_bodega)) {
+            $validador = false;
+        } else {
+            if (!is_numeric($id_bodega)) {
+                $validador = false;
+            }else {
+                $this->id_bodega = $id_bodega;
+            }
+        }
+        if ($validador == true) {
+            $stmt->bindParam(':id_bodega', $this->id_bodega);
+            $stmt->bindParam(':estado', $this->estado);
+            $stmt->bindParam(':valor_gastos', $this->valor_gastos);
+            $stmt->bindParam(':descripcion_gastos', $this->descripcion_gastos);
+            $stmt->bindParam(':fecha', $this->fecha);
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $e);
+
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    function Obtener_total_gasto_only($id_bodega)
+    {
+        $query = "SELECT SUM(detalle_inventario.cantidad_producto)*SUM(producto.valor_producto) as total FROM `detalle_inventario`
+        inner JOIN bodega_has_producto ON detalle_inventario.id_producto = bodega_has_producto.id_producto
+        INNER JOIN producto ON bodega_has_producto.id_producto =producto.id_producto
+        where detalle_inventario.id_bodega=?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $id_bodega);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $numero_comparar = $row['total'];
+
+        if ($numero_comparar !=null) {
+            return $numero_comparar;
+        } else {
+            return null;
+        }
+    }
+    public function update_gasto_por_bodega($id_bodega,$valor_gastos)
+    {
+        $validador = true;
+        //poner atencion a la nomenclatura de las palabas.
+        $query = "UPDATE gastos SET  valor_gastos= :valor_gastos WHERE id_bodega = :id_bodega";
+        $stmt = $this->conn->prepare($query);
+
+        if (empty($id_bodega)) {
+            $validador = false;
+        } else {
+            if (!is_numeric($id_bodega)) {
+                $validador = false;
+            }else {
+                $this->id_bodega = $id_bodega;
+            }
+        }
+        if (empty($valor_gastos)) {
+            $validador = false;
+        }else {
+            $this->valor_gastos = $valor_gastos;
+        }
+        // Bind Data
+        if ($validador == true) {
+            $stmt->bindParam(':id_bodega', $this->id_bodega);
+            $stmt->bindParam(':valor_gastos', $this->valor_gastos);
+   
+
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $stmt->error);
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
