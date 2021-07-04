@@ -163,20 +163,9 @@ class Controller_Gasto
     {
         $validador = true;
         //poner atencion a la nomenclatura de las palabas.
-        $query = "UPDATE gastos SET descripcion_gastos =:descripcion_gastos, valor_gastos= :valor_gastos,estado =:estado,fecha = :fecha,id_bodega =:id_bodega  WHERE id_gastos = :id_gastos";
+        $query = "UPDATE gastos SET estado =:estado WHERE id_gastos = :id_gastos";
         $stmt = $this->conn->prepare($query);
 
-        if (!empty(htmlspecialchars(strip_tags($this->fecha)))) {
-            $this->fecha = htmlspecialchars(strip_tags($this->fecha));
-        } else {
-            $validador = false;
-        }
-        if (empty(htmlspecialchars(strip_tags($this->descripcion_gastos)))) {
-            $validador = false;
-        }
-        if (empty(htmlspecialchars(strip_tags($this->valor_gastos)))) {
-            $validador = false;
-        }
         if (empty(htmlspecialchars(strip_tags($this->estado)))) {
             $validador = false;
         }
@@ -189,11 +178,7 @@ class Controller_Gasto
         }
         // Bind Data
         if ($validador == true) {
-            $stmt->bindParam(':id_bodega', $this->id_bodega);
             $stmt->bindParam(':estado', $this->estado);
-            $stmt->bindParam(':valor_gastos', $this->valor_gastos);
-            $stmt->bindParam(':descripcion_gastos', $this->descripcion_gastos);
-            $stmt->bindParam(':fecha', $this->fecha);
             $stmt->bindParam(':id_gastos', $this->id_gastos);
             try {
                 if ($stmt->execute()) {
