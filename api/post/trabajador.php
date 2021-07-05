@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post->nombre_trabajador = $GLOBALS['data']->nombre_trabajador;
     $post->fecha_contratacion = $GLOBALS['data']->fecha_contratacion;
     $post->valor_dia = $GLOBALS['data']->valor_dia;
-    $post->sueldo = $GLOBALS['data']->sueldo;
+    $post->sueldo = null;
     $post->usuario = "";
     $post->contraseña = "";
     $post->id_tipo_trabajador = 2;
@@ -67,19 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
         }
     }
-    if ($post->Validacion_parametros($post->sueldo) == false) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "ingrese un valor del dia")
-        );
-    } else {
-        if (is_numeric($post->sueldo)==false) {
-            $validador = false;
-            echo json_encode(
-                array('Error' => "ingrese solo numeros para el saldo")
-            );
-        }
-    }
+
     if ($validador==true) {
         if ($post->create_trabajador()) {
             echo json_encode(
