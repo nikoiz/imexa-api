@@ -15,42 +15,70 @@ error_reporting(0);
 $data = json_decode(file_get_contents("php://input"));
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $validador = true;
     $post = new Controller_Trabajador($GLOBALS['db']);
-    $post->rut_trabajador=$GLOBALS['data']->rut_trabajador;
-    $post->nombre_trabajador=$GLOBALS['data']->nombre_trabajador;
-    $post->fecha_contratacion=$GLOBALS['data']->fecha_contratacion;
-    $post->usuario="";
-    $post->contraseña="";
-    $post->id_tipo_trabajador=2;
+    $post->rut_trabajador = $GLOBALS['data']->rut_trabajador;
+    $post->nombre_trabajador = $GLOBALS['data']->nombre_trabajador;
+    $post->fecha_contratacion = $GLOBALS['data']->fecha_contratacion;
+    $post->valor_dia = $GLOBALS['data']->valor_dia;
+    $post->sueldo = $GLOBALS['data']->sueldo;
+    $post->usuario = "";
+    $post->contraseña = "";
+    $post->id_tipo_trabajador = 2;
 
-    if ($post->validateDate($post->fecha_contratacion)==false) {
+    if ($post->validateDate($post->fecha_contratacion) == false) {
         $validador = false;
         echo json_encode(
             array('Error' => "Fecha mal ingresada")
         );
     }
-    
-    if ($post->Validator_run($post->rut_trabajador)==false) {
+
+    if ($post->Validator_run($post->rut_trabajador) == false) {
         $validador = false;
         echo json_encode(
             array('Error' => "Error no se rut mal ingresado")
         );
     }
 
-    if ($post->Validacion_parametros($post->nombre_trabajador)==false) {
+    if ($post->Validacion_parametros($post->nombre_trabajador) == false) {
         $validador = false;
         echo json_encode(
             array('Error' => "ingrese nombre de trabajador")
         );
     }
-   
-    if ($post->Buscar_tipo_trabajador($post->id_tipo_trabajador)!=false) {
+
+    if ($post->Buscar_tipo_trabajador($post->id_tipo_trabajador) != false) {
         $validador = false;
         echo json_encode(
             array('Error' => "no se establecio el tipo de trabajador")
         );
+    }
+    if ($post->Validacion_parametros($post->valor_dia) == false) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "ingrese un valor del dia")
+        );
+    } else {
+        if (is_numeric($post->valor_dia)==false) {
+            $validador = false;
+            echo json_encode(
+                array('Error' => "ingrese solo numeros para el valor dia")
+            );
+        }
+    }
+    if ($post->Validacion_parametros($post->sueldo) == false) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "ingrese un valor del dia")
+        );
+    } else {
+        if (is_numeric($post->sueldo)==false) {
+            $validador = false;
+            echo json_encode(
+                array('Error' => "ingrese solo numeros para el saldo")
+            );
+        }
     }
     if ($validador==true) {
         if ($post->create_trabajador()) {
@@ -77,18 +105,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(
                     array('message' => 'Error ingrese un rut trabajador')
                 );
-            }else {
+            } else {
                 if ($post->Read_single_trabajador()) {
                     $post_item = array(
                         'rut_trabajador' => $post->rut_trabajador,
                         'nombre_trabajador' => $post->nombre_trabajador,
                         'fecha_contratacion' => $post->fecha_contratacion,
+                        'valor_dia' => $post->valor_dia,
+                        'sueldo' => $post->sueldo,
                         'usuario' => $post->usuario,
                         'contraseña' => $post->contraseña,
                         'id_tipo_trabajador' => $post->id_tipo_trabajador
                     );
                     //Make JSON
-    
+
                     print_r(json_encode($post_item));
                 } else {
                     echo json_encode(
@@ -118,6 +148,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'rut_trabajador' => $rut_trabajador,
                     'nombre_trabajador' => $nombre_trabajador,
                     'fecha_contratacion' => $fecha_contratacion,
+                    'valor_dia' => $valor_dia,
+                    'sueldo' => $sueldo,
                     'usuario' => $usuario,
                     'contraseña' => $contraseña,
                     'id_tipo_trabajador' => $id_tipo_trabajador
@@ -164,47 +196,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $validador = true;
     $post = new Controller_Trabajador($GLOBALS['db']);
-    $post->rut_trabajador=$GLOBALS['data']->rut_trabajador;
-    $post->nombre_trabajador=$GLOBALS['data']->nombre_trabajador;
-    $post->fecha_contratacion=$GLOBALS['data']->fecha_contratacion;
-    $post->usuario="";
-    $post->contraseña="";
-    $post->id_tipo_trabajador=$GLOBALS['data']->id_tipo_trabajador;
+    $post->rut_trabajador = $GLOBALS['data']->rut_trabajador;
+    $post->valor_dia = $GLOBALS['data']->valor_dia;
 
-    if ($post->validateDate($post->fecha_contratacion)==false) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "ingrese una fecha valida")
-        );
-    }
-    
-    if ($post->Validator_run($post->rut_trabajador)==false) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "Error no se rut mal ingresado")
-        );
-    }
-    if (!$post->Buscar_rut_trabajador($post->rut_trabajador)) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "Error no se encontro el rut del trabajdor")
-        );
-    }
 
-    if ($post->Validacion_parametros($post->nombre_trabajador)==false) {
+
+    if ($post->Validator_run($post->rut_trabajador) == false) {
         $validador = false;
         echo json_encode(
-            array('Error' => "ingrese nombre de trabajador")
+            array('Error' => "Error rut mal ingresado")
         );
+    }else {
+        if (!$post->Buscar_rut_trabajador($post->rut_trabajador)) {
+            $validador = false;
+            echo json_encode(
+                array('Error' => "Error no se encontro el rut del trabajdor")
+            );
+        }
     }
-   
-    if ($post->Buscar_tipo_trabajador($post->id_tipo_trabajador)!=false) {
+    if ($post->Validacion_parametros($post->valor_dia) == false) {
         $validador = false;
         echo json_encode(
-            array('Error' => "no se establecio el tipo de trabajador")
+            array('Error' => "ingrese un valor del dia")
         );
+    } else {
+        if (is_numeric($post->valor_dia)==false) {
+            $validador = false;
+            echo json_encode(
+                array('Error' => "ingrese solo numeros para el valor dia")
+            );
+        }
     }
-    if ($validador==true) {
+    if ($validador == true) {
         if ($post->update_trabajador()) {
             echo json_encode(
                 array('message' => 'Post Update')
@@ -216,5 +239,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         }
     }
 }
-
-?>

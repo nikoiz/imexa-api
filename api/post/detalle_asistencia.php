@@ -23,6 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $t = new Controller_Trabajador($GLOBALS['db']);
 
     $post->falta_laboral = $GLOBALS['data']->falta_laboral;
+    //se identifiac con un date
+    $a->fecha = $GLOBALS['data']->fecha;
+
+    //trabajador
+    $t->rut_trabajador = $GLOBALS['data']->rut_trabajador;
+
+
+
+
     $validador = true;
 
     if (empty($post->falta_laboral)) {
@@ -31,7 +40,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             array('message' => "ingrese una descripcion del producto")
         );
     }
+    if (empty($a->fecha)) {
+        $validador = false;
+        echo json_encode(
+            array('message' => "ingrese una fecha")
+        );
+    } else {
+        if ($post->validateDate($a->fecha) == false) {
+            echo json_encode(
+                array('Error' => "fecha mal ingresada")
+            );
+            $validador = false;
+        }
+    }
+    if (empty($t->rut_trabajador)) {
+        $validador = false;
+        echo json_encode(
+            array('message' => "ingrese un rut del trabajador")
+        );
+    } else {
+        if ($t->Validator_run($t->rut_trabajador) == false) {
+            $validador = false;
+            echo json_encode(
+                array('Error' => "Error rut mal ingresado")
+            );
+        }
+    }
     if ($validador == true) {
+        //obtener el id de la asistencia  por el medio de la fecha y el rut del trabajador
+        
+        
         if ($post->Create_detalle_asistencia()) {
             echo json_encode(
                 array('message' => 'Post Created')
@@ -51,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
         // GET ID
-        //se puede cambiar por el id_bodega (decir a compañeero para ver quer le parece)
         $post->id_detalle_asistencia = isset($_GET['id_detalle_asistencia']) ? $_GET['id_detalle_asistencia'] : die();
 
 
@@ -116,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
         echo json_encode(
             array('message' => 'ingrese solo numeros')
         );
-    }else {
+    } else {
         if (!empty($post->id_detalle_asistencia)) {
             $validador == false;
             echo json_encode(
@@ -131,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
             }
         }
     }
-    
+
     if ($validador == true) {
         if ($post->delete_single_detalle_asistencia()) {
             echo json_encode(

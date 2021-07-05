@@ -6,6 +6,8 @@ class Controller_Trabajador
     public $rut_trabajador;
     public $nombre_trabajador;
     public $fecha_contratacion;
+    public $valor_dia;
+    public $sueldo;
     public $usuario;
     public $contraseña;
     public $id_tipo_trabajador;
@@ -45,6 +47,8 @@ class Controller_Trabajador
          $this->contraseña=$row['contraseña'];
          $this->usuario=$row['usuario'];
          $this->fecha_contratacion = $row['fecha_contratacion'];
+         $this->valor_dia= $row['valor_dia'];
+         $this->sueldo= $row['sueldo'];
          $this->nombre_trabajador= $row['nombre_trabajador'];
          $this->rut_trabajador = $row['rut_trabajador'];
 
@@ -131,7 +135,17 @@ class Controller_Trabajador
         }else {
             $validador=false;
         }
-
+        if (!empty(htmlspecialchars(strip_tags($this->valor_dia)))) {
+            $this->valor_dia=htmlspecialchars(strip_tags($this->valor_dia));
+        }else {
+            $validador=false;
+        }
+        
+        if (!empty(htmlspecialchars(strip_tags($this->sueldo)))) {
+            $this->sueldo=htmlspecialchars(strip_tags($this->sueldo));
+        }else {
+            $validador=false;
+        }
 
         if ($validador==true) {
             $query = "INSERT INTO trabajador
@@ -141,7 +155,9 @@ class Controller_Trabajador
             usuario = '$this->usuario',
             fecha_contratacion = '$this->fecha_contratacion',
             nombre_trabajador = '$this->nombre_trabajador',
-            rut_trabajador = '$this->rut_trabajador'";
+            rut_trabajador = '$this->rut_trabajador',
+            valor_dia = '$this->valor_dia',
+            sueldo = '$this->sueldo'";
 
         $stmt = $this->conn->prepare($query);
             try {
@@ -319,15 +335,6 @@ class Controller_Trabajador
     public function update_trabajador()
     {
         $validador=true;
-
-        if (htmlspecialchars(strip_tags($this->contraseña))==null && htmlspecialchars(strip_tags($this->usuario))==null) {
-            $this->contraseña='""';
-            $this->usuario='""';
-        }else {
-            $this->contraseña=htmlspecialchars(strip_tags($this->contraseña));
-            $this->usuario=htmlspecialchars(strip_tags($this->usuario));
-        }
-        
         
         if (!empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
             $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
@@ -366,39 +373,16 @@ class Controller_Trabajador
             $validador=false;
         }
 
-        if (!empty(htmlspecialchars(strip_tags($this->nombre_trabajador)))) {
-            $this->nombre_trabajador=htmlspecialchars(strip_tags($this->nombre_trabajador));
+        if (!empty(htmlspecialchars(strip_tags($this->valor_dia)))) {
+            $this->valor_dia=htmlspecialchars(strip_tags($this->valor_dia));
         }else {
             $validador=false;
         }
-        if (!empty(htmlspecialchars(strip_tags($this->fecha_contratacion)))) {
-            $this->fecha_contratacion=htmlspecialchars(strip_tags($this->fecha_contratacion));
-        }else {
-            $validador=false;
-        }
-        if (!empty(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
-            if (is_numeric(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
-                if (htmlspecialchars(strip_tags($this->id_tipo_trabajador))>=1) {
-                    $this->id_tipo_trabajador=htmlspecialchars(strip_tags($this->id_tipo_trabajador));
-                }else {
-                    $validador=false;
-                }  
-            }else {
-                $validador=false;
-            }  
-        }else {
-            $validador=false;
-        }
-
 
         if ($validador==true) {
             $query = "UPDATE trabajador
         SET
-            id_tipo_trabajador = '$this->id_tipo_trabajador',
-            contraseña = '$this->contraseña',
-            usuario = '$this->usuario',
-            fecha_contratacion = '$this->fecha_contratacion',
-            nombre_trabajador = '$this->nombre_trabajador'
+            valor_dia = '$this->valor_dia'
             WHERE
             rut_trabajador = '$this->rut_trabajador'";
 
@@ -540,16 +524,16 @@ class Controller_Trabajador
     }
     public function Buscar_rut_trabajador($tipo)
     {
-        $query = "SELECT rut_trabajador FROM trabajador WHERE rut_trabajador = ?";
+        $query = 'SELECT rut_trabajador FROM trabajador WHERE rut_trabajador = "'.$tipo.'"';
+        printf("Error: %s.\n",$query);
         $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(1, $tipo);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-
-        $comparar = $row['id_tipo_trabajador'];
+        
+        $comparar = $row['rut_trabajador'];
 
         if ($comparar == $tipo) {
             return false;

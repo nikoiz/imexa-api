@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['id'])) {
+    if (isset($_GET['id_gastos'])) {
 
         // Instiate blog post object
         $post = new Controller_Gasto($GLOBALS['db']);
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'estado' => $post->estado,
                     'fecha' => $post->fecha,
                     'nombre_bodega' =>$post->nombre_bodega,
-                    'id_bodega' => $post->id_bodega,
+                    'id_bodega' => $post->id_bodega
                 );
                 //Make JSON
 
@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'estado' => $estado,
                     'fecha' => $fecha,
                     'nombre_bodega' =>$nombre_bodega,
-                    'id_bodega' => $id_bodega,
+                    'id_bodega' => $id_bodega
                 );
 
                 array_push($posts_arr['data'], $post_item);

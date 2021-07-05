@@ -164,4 +164,9 @@ class Controller_detalle_asistencia
             return true;
         }
     }
+    function validateDate($date, $format = 'Y-m-d H:i:s')
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+    }
 }

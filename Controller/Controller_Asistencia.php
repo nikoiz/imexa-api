@@ -1,5 +1,6 @@
-<?php 
-class Controller_Asistencia{
+<?php
+class Controller_Asistencia
+{
 
     private $conn;
 
@@ -35,7 +36,7 @@ class Controller_Asistencia{
     public function Read_single_asistencia()
     {
         $p = new controller_bodega($this->conn);
-        $query = "SELECT * FROM asistencia WHERE rut_trabajador = ?";
+        $query = "SELECT * FROM asistencia WHERE id_asistencia = ?";
         $stmt = $this->conn->prepare($query);
         //Bind id
         $stmt->bindParam(1, $this->rut_trabajador);
@@ -47,7 +48,7 @@ class Controller_Asistencia{
         $this->fecha = $row['fecha'];
         $this->cantidad_dias_fallados = $row['cantidad_dias_fallados'];
         $this->rut_trabajador = $row['rut_trabajador'];
-        $this->id_detalle_asistencia =$row['id_detalle_asistencia'];
+        $this->id_detalle_asistencia = $row['id_detalle_asistencia'];
         try {
             if ($stmt->execute()) {
                 return $stmt;
@@ -74,22 +75,22 @@ class Controller_Asistencia{
         //validadores
         if (htmlspecialchars(strip_tags($this->fecha)) == "") {
             $validador = false;
-        }else {
+        } else {
             $this->fecha = htmlspecialchars(strip_tags($this->fecha));
         }
         if (empty(htmlspecialchars(strip_tags($this->cantidad_dias_fallados)))) {
             $validador = false;
-        }else {
+        } else {
             $this->cantidad_dias_fallados = htmlspecialchars(strip_tags($this->cantidad_dias_fallados));
         }
         if (empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
             $validador = false;
-        }else {
+        } else {
             $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
         }
         if (empty(htmlspecialchars(strip_tags($this->id_detalle_asistencia)))) {
             $validador = false;
-        }else {
+        } else {
             $this->id_detalle_asistencia = htmlspecialchars(strip_tags($this->id_detalle_asistencia));
         }
         if ($validador == true) {
@@ -109,9 +110,92 @@ class Controller_Asistencia{
         } else {
             return false;
         }
-
     }
+    public function Update_asistencia()
+    {
+        $validador = true;
+        $query = 'UPDATE asistencia 
+        SET 
+            fecha = :fecha,
+            cantidad_dias_fallados = :cantidad_dias_fallados,
+            rut_trabajador = :rut_trabajador,
+            id_detalle_asistencia = :id_detalle_asistencia
+        WHERE id_asistencia = :id_asistencia';
 
+        $stmt = $this->conn->prepare($query);
+        //validadores
+        if (htmlspecialchars(strip_tags($this->fecha)) == "") {
+            $validador = false;
+        } else {
+            $this->fecha = htmlspecialchars(strip_tags($this->fecha));
+        }
+        if (empty(htmlspecialchars(strip_tags($this->cantidad_dias_fallados)))) {
+            $validador = false;
+        } else {
+            $this->cantidad_dias_fallados = htmlspecialchars(strip_tags($this->cantidad_dias_fallados));
+        }
+        if (empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
+            $validador = false;
+        } else {
+            $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
+        }
+        if (empty(htmlspecialchars(strip_tags($this->id_detalle_asistencia)))) {
+            $validador = false;
+        } else {
+            $this->id_detalle_asistencia = htmlspecialchars(strip_tags($this->id_detalle_asistencia));
+        }
+        if (empty(htmlspecialchars(strip_tags($this->id_asistencia)))) {
+            $validador = false;
+        } else {
+            $this->id_asistencia = htmlspecialchars(strip_tags($this->id_asistencia));
+        }
+        if ($validador == true) {
+            $stmt->bindParam(':fecha', $this->fecha);
+            $stmt->bindParam(':cantidad_dias_fallados', $this->cantidad_dias_fallados);
+            $stmt->bindParam(':rut_trabajador', $this->rut_trabajador);
+            $stmt->bindParam(':id_detalle_asistencia', $this->id_detalle_asistencia);
+            $stmt->bindParam(':id_asistencia', $this->id_asistencia);
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $e);
+
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    public function Delete_asistencia()
+    {
+        $validador = true;
+        $query = "DELETE FROM asistencia WHERE id_asistencia = ?";
+        $stmt = $this->conn->prepare($query);
+
+        if (htmlspecialchars(strip_tags($this->id_asistencia)) != "") {
+            $this->id_asistencia = htmlspecialchars(strip_tags($this->id_asistencia));
+        } else {
+            $validador = false;
+        }
+
+        $stmt->bindParam(1, $this->id_asistencia);
+
+        if ($validador == true) {
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $stmt->error);
+
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
     public function Validacion_parametro($parametro)
     {
         if (empty($parametro)) {
@@ -157,5 +241,25 @@ class Controller_Asistencia{
             return false;
         }
     }
+    function buscar_id_asistencia($id_asistencia)
+    {
+        $query = "SELECT id_asistencia FROM asistencia WHERE id_asistencia = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $id_asistencia);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $numero_comparar = $row['id_asistencia'];
+
+        if ($numero_comparar == $id_asistencia) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
-?>
