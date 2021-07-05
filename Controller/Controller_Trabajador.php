@@ -140,12 +140,7 @@ class Controller_Trabajador
         }else {
             $validador=false;
         }
-        
-        if (!empty(htmlspecialchars(strip_tags($this->sueldo)))) {
-            $this->sueldo=htmlspecialchars(strip_tags($this->sueldo));
-        }else {
-            $validador=false;
-        }
+
 
         if ($validador==true) {
             $query = "INSERT INTO trabajador
