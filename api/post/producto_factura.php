@@ -178,6 +178,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         if ($di->buscardor_igual_producto_id($post->nombre_producto,$post->valor_producto)!= null) {
                             $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto,$post->valor_producto);
+                            echo json_encode(
+                                array('message' => "codigo del detalle inv.:".$di->id_detalle_inventario)
+                            );
                         }else {
                             echo json_encode(
                                 array('message' => "no se pudo obtener el codigo del producto")
@@ -185,6 +188,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         }
                         if ($di->buscardor_igual_producto_cantidad($post->nombre_producto,$post->valor_producto)!= null) {
                             $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto,$post->valor_producto);
+                            echo json_encode(
+                                array('message' => "cantidad del producto del inv.:".$cantidad_d_i)
+                            );
                         }else {
                             echo json_encode(
                                 array('message' => "no se pudo obtener la cantidad del producto")
