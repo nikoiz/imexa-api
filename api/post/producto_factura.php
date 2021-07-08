@@ -175,8 +175,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         echo json_encode(
                             array('message' => "Producto encontrado")
                         );
-                        $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto,$post->valor_producto);
-                        $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto,$post->valor_producto);
+
+                        if ($di->buscardor_igual_producto_id($post->nombre_producto,$post->valor_producto)!= null) {
+                            $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto,$post->valor_producto);
+                        }else {
+                            echo json_encode(
+                                array('message' => "no se pudo obtener el codigo del producto")
+                            );
+                        }
+                        if ($di->buscardor_igual_producto_cantidad($post->nombre_producto,$post->valor_producto)!= null) {
+                            $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto,$post->valor_producto);
+                        }else {
+                            echo json_encode(
+                                array('message' => "no se pudo obtener la cantidad del producto")
+                            );
+                        }
+                        
+                        
                         
                         $cantidad_d_i = $cantidad_d_i+ $pos->cantidad_compra_producto;
 
@@ -188,10 +203,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             echo json_encode(
                                 array('message' => 'no se pudo actualizar el detalle del inventario')
                             );
+                        }else {
+                            if ($di->valor_total() != null) {
+                                $valor_total = $di->valor_total();
+                            }else {
+                                echo json_encode(
+                                    array('message' => "no se pudo obtener el valo total")
+                                );
+                            }
+                            if ($di->cantidad_total() != null) {
+                                $cantidades_total = $di->cantidad_total();
+                            }else {
+                                echo json_encode(
+                                    array('message' => "no se pudo obtener la cantidad total")
+                                );
+                            }
+                            
                         }
                     }                
-                    $valor_total = $di->valor_total();
-                    $cantidades_total = $di->cantidad_total();
+                    
+
+                    
                     $total_inventario= $valor_total* $cantidades_total;
                     
                     $i->actualizar_valor($total_inventario,1);
