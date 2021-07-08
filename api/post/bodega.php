@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     $pos->id_tipo_trabajador = 1;
     $validador = true;
-    $g->descripcion_gastos = $GLOBALS['data']->descripcion_gastos;
     $g->fecha=$fecha = date('Y-m-d');
     $g->estado =1;
 
@@ -60,18 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             array('message' => 'Error en ingreso de datos teniendo en cuenta el rut del trabajador y el codigo de la bodega')
                         );
                     }else {
-                        //crear gasto de esa bodega con margen 0 de gasto
-                        if ($g->create_gasto_desde_bodega($id_bodega,$g->estado,$g->descripcion_gastos,$g->fecha)==false) {
-                            echo json_encode(
-                                array('message' => 'Error no se creo el gasto')
-                            );
-                        }else {
                             echo json_encode(
                                 array('message' => 'Post Created')
-                            );
-                        }
-                        
-                       
+                            ); 
                     }
                 } else {
                     echo json_encode(
@@ -220,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
         }
         $vi = $vi -$valor_di;
         $i -> actualizar_valor($vi,1);
-        
+
         if ($g ->delete_single_gasto_por_bodega($post->id_bodega)==false) {
             echo json_encode(
                 array('message' => 'No se elimino el gasto de la bodega')
