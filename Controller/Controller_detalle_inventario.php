@@ -228,6 +228,29 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
             return true;
         }
     }
+
+    public function buscardor_igual_producto_id($nombre_producto_buscar, $valor)
+    {
+        $nombre_producto_buscar = '"' . $nombre_producto_buscar . '"';
+        $query = "SELECT nombre_producto,id_detalle_inventario,cantidad_producto FROM detalle_inventario WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor";
+      
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $nombre_producto = $row['nombre_producto'];
+        $id_inventario = $row['id_detalle_inventario'];
+        $cantidad_producto = $row['cantidad_producto '];
+
+        printf("Nombre del producto desde controller: " . $nombre_producto);
+
+        if ($nombre_producto != null) {
+                printf("Inventarios desde controller: " . $id_inventario);
+            return $id_inventario;
+        } else {
+            return false;
+        }
+    }
+
     public function buscardor_id_detalle($nombre_producto_buscar)
     {
         $nombre_producto_buscar = '"' . $nombre_producto_buscar . '"';
@@ -274,33 +297,15 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
             return $valor;
         }
     }
-    public function buscardor_igual_producto_id($nombre_producto_buscar, $valor)
-    {
-        $nombre_producto_buscar = '"' . $nombre_producto_buscar . '"';
-        $query = "SELECT nombre_producto,id_detalle_inventario,cantidad_producto FROM detalle_inventario WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $nombre_producto_buscar);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $nombre_producto = $row['nombre_producto'];
-        $id_inventario = $row['id_detalle_inventario'];
-        $cantidad_producto = $row['cantidad_producto '];
-        if ($nombre_producto != null) {
-            return $id_inventario;
-        } else {
-            return false;
-        }
-    }
+  
     public function buscardor_igual_producto_cantidad($nombre_producto_buscar, $valor)
     {
         $nombre_producto_buscar = '"' . $nombre_producto_buscar . '"';
         $query = "SELECT `nombre_producto`,`id_detalle_inventario`,`cantidad_producto` FROM `detalle_inventario` WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $nombre_producto_buscar);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $nombre_producto = $row['nombre_producto'];
-        $id_inventario = $row['id_detalle_inventario'];
         $cantidad_producto = $row['cantidad_producto'];
 
         if ($nombre_producto != null) {
