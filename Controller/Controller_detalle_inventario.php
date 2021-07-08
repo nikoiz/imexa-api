@@ -279,12 +279,11 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
         $nombre_producto_buscar = '"' . $nombre_producto_buscar . '"';
         $query = "SELECT nombre_producto,id_detalle_inventario,cantidad_producto FROM detalle_inventario WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $nombre_producto_buscar);
+
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $nombre_producto = $row['nombre_producto'];
         $id_inventario = $row['id_detalle_inventario'];
-        $cantidad_producto = $row['cantidad_producto '];
         if ($nombre_producto != null) {
             return $id_inventario;
         } else {
@@ -296,11 +295,9 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
         $nombre_producto_buscar = '"' . $nombre_producto_buscar . '"';
         $query = "SELECT `nombre_producto`,`id_detalle_inventario`,`cantidad_producto` FROM `detalle_inventario` WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $nombre_producto_buscar);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $nombre_producto = $row['nombre_producto'];
-        $id_inventario = $row['id_detalle_inventario'];
         $cantidad_producto = $row['cantidad_producto'];
 
         if ($nombre_producto != null) {
@@ -314,7 +311,6 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
         $nombre_producto_buscar = '"' . $nombre_producto_buscar . '"';
         $query = "SELECT `nombre_producto`,`id_detalle_inventario`,`cantidad_producto` FROM `detalle_inventario` WHERE nombre_producto = $nombre_producto_buscar";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $nombre_producto_buscar);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $cantidad_producto = $row['cantidad_producto'];
@@ -346,7 +342,7 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $total = $row['valor_producto'];
-        printf("Error:" . $total);
+
 
         if ($total != null) {
             return $total;
