@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $a = new Controller_Asistencia($GLOBALS['db']);
     $t = new Controller_Trabajador($GLOBALS['db']);
 
-    $post->falta_laboral = $GLOBALS['data']->falta_laboral;
+    $post->falla_laboral = $GLOBALS['data']->falla_laboral;
     //se identifiac con un date
     $a->fecha = $GLOBALS['data']->fecha;
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $validador = true;
 
-    if (empty($post->falta_laboral)) {
+    if (empty($post->falla_laboral)) {
         $validador = false;
         echo json_encode(
             array('message' => "ingrese una descripcion del producto")
@@ -68,8 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if ($validador == true) {
         //obtener el id de la asistencia  por el medio de la fecha y el rut del trabajador
-        
-        
+
+
         if ($post->Create_detalle_asistencia()) {
             echo json_encode(
                 array('message' => 'Post Created')
@@ -83,35 +83,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['id_detalle_asistencia'])) {
-        // Instiate blog post object
-        $post = new Controller_detalle_asistencia($GLOBALS['db']);
+    echo json_encode(
 
-
-        // GET ID
-        $post->id_detalle_asistencia = isset($_GET['id_detalle_asistencia']) ? $_GET['id_detalle_asistencia'] : die();
-
-
-        if (!empty($post->buscar_id_detalle_asistencia($post->id_detalle_asistencia))) {
-            echo json_encode(
-                array('message' => 'No se encontro el detalle de la asistencia')
-            );
-        } else {
-            if ($post->Read_single_detalle_asistencia()) {
-                $post_item = array(
-                    'id_detalle_asistencia' => $post->id_detalle_asistencia,
-                    'falta_laboral' => $post->falta_laboral
-                );
-                //Make JSON
-
-                print_r(json_encode($post_item));
-            } else {
-                echo json_encode(
-                    array('message' => 'No Posts Found')
-                );
-            }
-        }
-    } else {
+        array('message' => 'asd')
+    );
+    $validador = true;
+    do {
         $post = new Controller_detalle_asistencia($GLOBALS['db']);
         $result = $post->Read_Detalle_asistencia();
         $num = $result->rowCount();
@@ -125,21 +102,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 extract($row);
                 $post_item = array(
                     'id_detalle_asistencia' => $id_detalle_asistencia,
-                    'falta_laboral' => $falta_laboral
+                    'falla_laboral' => $falla_laboral
                 );
 
                 array_push($posts_arr['data'], $post_item);
             }
 
             echo json_encode($posts_arr);
+            $validador = true;
         } else {
             // No posts
+            /*
             echo json_encode(
 
                 array('message' => 'No Posts Found')
             );
+            */
+            
+            $validador = false;
         }
-    }
+
+        if ($validador == false) {
+            if ($post->Create_detalle_asistencia_automatico() == true) {
+            }
+        }
+    } while ($validador!=true);
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
@@ -188,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $t = new Controller_Trabajador($GLOBALS['db']);
 
     $post->id_detalle_asistencia = $GLOBALS['data']->id_detalle_asistencia;
-    $post->falta_laboral = $GLOBALS['data']->falta_laboral;
+    $post->falla_laboral = $GLOBALS['data']->falla_laboral;
     $validador = true;
 
     if (empty($post->id_detalle_asistencia)) {
@@ -205,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         );
     }
 
-    if (empty($post->falta_laboral)) {
+    if (empty($post->falla_laboral)) {
         $validador = false;
         echo json_encode(
             array('message' => "ingrese una descripcion del producto")

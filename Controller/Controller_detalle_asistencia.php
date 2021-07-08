@@ -4,7 +4,7 @@ class Controller_detalle_asistencia
     private $conn;
 
     public $id_detalle_asistencia;
-    public $falta_laboral;
+    public $falla_laboral;
 
     public function __construct($db)
     {
@@ -65,6 +65,29 @@ class Controller_detalle_asistencia
         }
         if ($validador == true) {
             $stmt->bindParam(':falla_laboral', $this->falla_laboral);
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $e);
+
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    public function Create_detalle_asistencia_automatico()
+    {
+        $validador = true;
+        $query = 'INSERT INTO detalle_asistencia (id_detalle_asistencia,falla_laboral)
+        values 
+        (1,1),
+        (2,2)';
+
+        $stmt = $this->conn->prepare($query);
+        if ($validador == true) {
             try {
                 if ($stmt->execute()) {
                     return true;

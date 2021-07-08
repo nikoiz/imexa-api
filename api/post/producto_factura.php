@@ -180,15 +180,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         
                         $cantidad_d_i = $cantidad_d_i+ $pos->cantidad_compra_producto;
 
-                        
+                        echo json_encode(
+                            array('message' => "la cantidad de total de ese producto es: ".$cantidad_d_i)
+                        );
                         
                         if ($di->Sumar_mismo_producto($di->id_detalle_inventario, $cantidad_d_i,$fecha) == false) {
                             echo json_encode(
                                 array('message' => 'no se pudo actualizar el detalle del inventario')
                             );
                         }
-
-
                     }                
                     $valor_total = $di->valor_total();
                     $cantidades_total = $di->cantidad_total();
@@ -320,7 +320,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') { //se
     if ($pos->buscar_id_detalle_compra($pos->id_detalle_compra) != false) {
         $validador = false;
         echo json_encode(
-            array('message' => "No existe la bodega")
+            array('message' => "No existe el detalle compra")
         );
     }
 

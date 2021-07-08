@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (isset($_GET['id_inventario'])) {
             $post = new Controller_Inventario($GLOBALS['db']);
             $post->id_inventario = isset($_GET['id_inventario']) ? $_GET['id_inventario'] : die();
-    
+
             if (!empty($post->id_inventario)) {
                 if (empty($post->id_inventario)) {
                     $validador = false;
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             'valor_inventario' => $post->valor_inventario
                         );
                         //Make JSON
-    
+
                         print_r(json_encode($post_item));
                     } else {
                         echo json_encode(
@@ -95,40 +95,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $result = $post->Read_inventario();
             // Get row count
             $num = $result->rowCount();
-    
+
             if ($num > 0) {
                 // Post array
                 $posts_arr = array();
                 $posts_arr['data'] = array();
-    
+
                 while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                     extract($row);
                     $post_item = array(
                         'id_inventario' => $id_inventario,
                         'valor_inventario' => $valor_inventario
                     );
-    
+
                     array_push($posts_arr['data'], $post_item);
                 }
-    
+
                 echo json_encode($posts_arr);
+                $validador = true;
             } else {
                 // No posts
-                echo json_encode(
-                    array('message' => 'No Posts Found')
-                );
+                /*
+            echo json_encode(
+
+                array('message' => 'No Posts Found')
+            );
+            */
                 $validador = false;
-                
-                
             }
         }
         if ($validador == false) {
             if ($post->invantario_por_defecto() == true) {
             }
         }
-    } while ($validador!=true);
-
-    
+    } while ($validador != true);
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {

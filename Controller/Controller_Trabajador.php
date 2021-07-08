@@ -520,7 +520,7 @@ class Controller_Trabajador
     public function Buscar_rut_trabajador($tipo)
     {
         $query = 'SELECT rut_trabajador FROM trabajador WHERE rut_trabajador = "'.$tipo.'"';
-        printf("Error: %s.\n",$query);
+
         $stmt = $this->conn->prepare($query);
 
         $stmt->execute();

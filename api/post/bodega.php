@@ -220,27 +220,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
         }
         $vi = $vi -$valor_di;
         $i -> actualizar_valor($vi,1);
+        
         if ($g ->delete_single_gasto_por_bodega($post->id_bodega)==false) {
             echo json_encode(
                 array('message' => 'No se elimino el gasto de la bodega')
             );
-        }else {
-            if ($po->delete_trabajador_has_bodega($post->id_bodega)) {
-                if ($post->delete_single()) {
-                    
-                    echo json_encode(
-                        array('message' => 'Post deleted')
-                    );
-                } else {
-                    echo json_encode(
-                        array('message' => 'Post not deleted')
-                    );
-                }       
+        }
+
+        if ($po->delete_trabajador_has_bodega($post->id_bodega)) {
+            if ($post->delete_single()) {
+                
+                echo json_encode(
+                    array('message' => 'Post deleted')
+                );
             } else {
                 echo json_encode(
                     array('message' => 'Post not deleted')
                 );
-            }
+            }       
+        } else {
+            echo json_encode(
+                array('message' => 'Post not deleted')
+            );
         }
     }
     

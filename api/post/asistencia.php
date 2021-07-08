@@ -8,6 +8,7 @@ header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,
 include_once '../../config/conexion.php';
 include_once '../../Controller/Controller_Asistencia.php';
 include_once '../../Controller/Controller_Trabajador.php';
+include_once '../../Controller/Controller_detalle_asistencia.php';
 
 $database = new conexion();
 $db = $database->connect();
@@ -18,11 +19,12 @@ $data = json_decode(file_get_contents("php://input"));
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $post = new Controller_Asistencia($GLOBALS['db']);
+    $dta = new Controller_detalle_asistencia($GLOBALS['db']);
     $t = new Controller_Trabajador($GLOBALS['db']);
     $post->fecha = $fecha = date('Y-m-d');
-    $post->cantidad_dias_fallados = 0;
+    $post->cant_dias_fallados = 0;
     $post->rut_trabajador = $GLOBALS['data']->rut_trabajador;
-    $post->id_detalle_asistencia = null;
+    $post->id_detalle_asistencia = $GLOBALS['data']->id_detalle_asistencia;
     $validador = true;
 
     if ($post->Validacion_parametro($post->rut_trabajador) == false) {
@@ -46,14 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
     }
+
     if ($validador == true) {
         if ($post->Create_asistencia()) {
             echo json_encode(
-                array('message' => 'Post Update')
+                array('message' => 'Post Created')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'Post not Created')
             );
         }
     }
@@ -78,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $post_item = array(
                     'id_asistencia' => $post->id_asistencia,
                     'fecha' => $post->fecha,
-                    'cantidad_dias_fallados' => $post->cantidad_dias_fallados,
+                    'cant_dias_fallados' => $post->cant_dias_fallados,
                     'rut_trabajador' => $post->rut_trabajador,
                     'id_detalle_asistencia' => $post->id_detalle_asistencia
                 );
@@ -106,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $post_item = array(
                     'id_asistencia' => $id_asistencia,
                     'fecha' => $fecha,
-                    'cantidad_dias_fallados' => $cantidad_dias_fallados,
+                    'cant_dias_fallados' => $cant_dias_fallados,
                     'rut_trabajador' => $rut_trabajador,
                     'id_detalle_asistencia' => $id_detalle_asistencia
                 );
@@ -153,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $post = new Controller_Asistencia($GLOBALS['db']);
     $post->fecha = $fecha = date('Y-m-d');
-    $post->cantidad_dias_fallados = 0;
+    $post->cant_dias_fallados = 0;
     $post->rut_trabajador = $GLOBALS['data']->rut_trabajador;
     $post->id_detalle_asistencia = null;
     $validador = true;

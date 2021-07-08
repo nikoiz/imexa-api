@@ -6,7 +6,7 @@ class Controller_Asistencia
 
     public $id_asistencia;
     public $fecha;
-    public $cantidad_dias_fallados;
+    public $cant_dias_fallados;
     public $rut_trabajador;
     public $id_detalle_asistencia;
 
@@ -46,7 +46,7 @@ class Controller_Asistencia
         // set properties
         $this->id_asistencia = $row['id_asistencia'];
         $this->fecha = $row['fecha'];
-        $this->cantidad_dias_fallados = $row['cantidad_dias_fallados'];
+        $this->cant_dias_fallados = $row['cant_dias_fallados'];
         $this->rut_trabajador = $row['rut_trabajador'];
         $this->id_detalle_asistencia = $row['id_detalle_asistencia'];
         try {
@@ -62,42 +62,41 @@ class Controller_Asistencia
     public function Create_asistencia()
     {
         $validador = true;
-        $query = 'INSERT INTO asistencia 
+        $query = "INSERT INTO asistencia 
         SET 
-            
-
             fecha = :fecha,
-            cantidad_dias_fallados = :cantidad_dias_fallados,
+            cant_dias_fallados = :cant_dias_fallados,
             rut_trabajador = :rut_trabajador,
-            id_detalle_asistencia = :id_detalle_asistencia';
+            id_detalle_asistencia = :id_detalle_asistencia";
 
         $stmt = $this->conn->prepare($query);
+        
         //validadores
         if (htmlspecialchars(strip_tags($this->fecha)) == "") {
             $validador = false;
         } else {
             $this->fecha = htmlspecialchars(strip_tags($this->fecha));
         }
-        if (empty(htmlspecialchars(strip_tags($this->cantidad_dias_fallados)))) {
+        if (htmlspecialchars(strip_tags($this->cant_dias_fallados))=="") {
             $validador = false;
         } else {
-            $this->cantidad_dias_fallados = htmlspecialchars(strip_tags($this->cantidad_dias_fallados));
+            $this->cant_dias_fallados = htmlspecialchars(strip_tags($this->cant_dias_fallados));
         }
+
         if (empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
             $validador = false;
         } else {
             $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
         }
-        if (empty(htmlspecialchars(strip_tags($this->id_detalle_asistencia)))) {
-            $validador = false;
-        } else {
-            $this->id_detalle_asistencia = htmlspecialchars(strip_tags($this->id_detalle_asistencia));
-        }
+        
+
+        $this->id_detalle_asistencia = htmlspecialchars(strip_tags($this->id_detalle_asistencia));
         if ($validador == true) {
-            $stmt->bindParam(':fecha', $this->fecha);
-            $stmt->bindParam(':cantidad_dias_fallados', $this->cantidad_dias_fallados);
+            $stmt->bindParam(':fecha',$this->fecha );
+            $stmt->bindParam(':cant_dias_fallados',$this->cant_dias_fallados );
             $stmt->bindParam(':rut_trabajador', $this->rut_trabajador);
-            $stmt->bindParam(':id_detalle_asistencia', $this->id_detalle_asistencia);
+            $stmt->bindParam(':id_detalle_asistencia',$this->id_detalle_asistencia );
+        
             try {
                 if ($stmt->execute()) {
                     return true;
@@ -117,7 +116,7 @@ class Controller_Asistencia
         $query = 'UPDATE asistencia 
         SET 
             fecha = :fecha,
-            cantidad_dias_fallados = :cantidad_dias_fallados,
+            cant_dias_fallados = :cant_dias_fallados,
             rut_trabajador = :rut_trabajador,
             id_detalle_asistencia = :id_detalle_asistencia
         WHERE id_asistencia = :id_asistencia';
@@ -129,10 +128,10 @@ class Controller_Asistencia
         } else {
             $this->fecha = htmlspecialchars(strip_tags($this->fecha));
         }
-        if (empty(htmlspecialchars(strip_tags($this->cantidad_dias_fallados)))) {
+        if (empty(htmlspecialchars(strip_tags($this->cant_dias_fallados)))) {
             $validador = false;
         } else {
-            $this->cantidad_dias_fallados = htmlspecialchars(strip_tags($this->cantidad_dias_fallados));
+            $this->cant_dias_fallados = htmlspecialchars(strip_tags($this->cant_dias_fallados));
         }
         if (empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
             $validador = false;
@@ -151,7 +150,7 @@ class Controller_Asistencia
         }
         if ($validador == true) {
             $stmt->bindParam(':fecha', $this->fecha);
-            $stmt->bindParam(':cantidad_dias_fallados', $this->cantidad_dias_fallados);
+            $stmt->bindParam(':cant_dias_fallados', $this->cant_dias_fallados);
             $stmt->bindParam(':rut_trabajador', $this->rut_trabajador);
             $stmt->bindParam(':id_detalle_asistencia', $this->id_detalle_asistencia);
             $stmt->bindParam(':id_asistencia', $this->id_asistencia);
