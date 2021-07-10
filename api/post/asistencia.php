@@ -21,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post = new Controller_Asistencia($GLOBALS['db']);
     $dta = new Controller_detalle_asistencia($GLOBALS['db']);
     $t = new Controller_Trabajador($GLOBALS['db']);
-    $post->fecha = $fecha = date('Y-m-d');
-    $post->cant_dias_fallados = 0;
+    $post->fecha =  $GLOBALS['data']->fecha; //hacer validacion
+    $post->cant_dias_fallados = 1;
     $post->rut_trabajador = $GLOBALS['data']->rut_trabajador;
     $post->id_detalle_asistencia = $GLOBALS['data']->id_detalle_asistencia;
     $validador = true;
@@ -62,36 +62,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['id_asistencia'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'GET') { //enel get actualize el sueldo por el valor de dias de atraso del trabajador (aplicar formula)
+    $t = new Controller_Trabajador($GLOBALS['db']);
+    $validador = true;
+    if (isset($_GET['fecha_incio']) && isset($_GET['fecha_termino']) && isset($_GET['rut_trabajador'])) { //fecha busqueda prrinciapl y termino
         // Instiate blog post object
         $post = new Controller_Asistencia($GLOBALS['db']);
 
-        // GET ID
-        //se puede cambiar por el id_bodega (decir a compañeero para ver quer le parece)
-        $post->id_asistencia = isset($_GET['id_asistencia']) ? $_GET['id_asistencia'] : die();
+        //GET ID
+        //se buscara la cantidad de inasistencia 
 
-
-        if (!empty($post->buscar_id_asistencia($post->id_asistencia))) {
+        $post->fecha_incio = isset($_GET['fecha_incio']) ? $_GET['fecha_incio'] : die();
+        $post->fecha_termino = isset($_GET['fecha_termino']) ? $_GET['fecha_termino'] : die();
+        $post->rut_trabajador = isset($_GET['rut_trabajador']) ? $_GET['rut_trabajador'] : die();
+        if ($post->validateDate($post->fecha_incio) == false) {
+            $validador = false;
             echo json_encode(
-                array('message' => 'No existe datos sobre la asistencia')
+                array('Error' => "Fecha mal ingresada para la fecha inicio")
             );
-        } else {
-            if ($post->Read_single_asistencia()) {
-                $post_item = array(
-                    'id_asistencia' => $post->id_asistencia,
-                    'fecha' => $post->fecha,
-                    'cant_dias_fallados' => $post->cant_dias_fallados,
-                    'rut_trabajador' => $post->rut_trabajador,
-                    'id_detalle_asistencia' => $post->id_detalle_asistencia
-                );
-                //Make JSON
-
-                print_r(json_encode($post_item));
-            } else {
+        }
+        if ($post->validateDate($post->fecha_termino) == false) {
+            $validador = false;
+            echo json_encode(
+                array('Error' => "Fecha mal ingresada para la fecha termino")
+            );
+        }
+        if ($validador == true) {
+            $separa = explode("-", $post->fecha_termino);
+            $ano = $separa[0];
+            $mes = $separa[1];
+            $dia = $separa[2];
+            
+            if (!empty($post->Buscar_rut_trabajador($post->rut_trabajador))) {
                 echo json_encode(
-                    array('message' => 'No Posts Found')
+                    array('message' => 'No existe datos sobre la asistencia')
                 );
+            } else {
+                if ($post->Read_single_asistencia()) {
+                    $post_item = array(
+
+                        'cant_dias_fallados' => $post->cant_dias_fallados,
+                        'rut_trabajador' => $post->rut_trabajador
+                    );
+                    //Make JSON
+
+                    print_r(json_encode($post_item));
+                    print_r(json_encode("el dia ".$dia = $separa[2]));
+                    //actualizar el sueldo del trabajor de ese mes
+                    $total_sueldo = $mes-$post->cant_dias_fallados * $post->Buscar_rut_trabajador($post->rut_trabajador);
+                    if ($t->update_trabajador_para_asistencia_del_mes($post->rut_trabajador,$total_sueldo)==false) {
+                        echo json_encode(
+                            array('message' => 'No se actualizo el rut del trabajador')
+                        );
+                    }
+
+                } else {
+                    echo json_encode(
+                        array('message' => 'No Posts Found')
+                    );
+                }
             }
         }
     } else {
@@ -155,10 +184,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $post = new Controller_Asistencia($GLOBALS['db']);
-    $post->fecha = $fecha = date('Y-m-d');
-    $post->cant_dias_fallados = 0;
+    $post->fecha = $GLOBALS['data']->fecha;
+    $post->cant_dias_fallados;
     $post->rut_trabajador = $GLOBALS['data']->rut_trabajador;
-    $post->id_detalle_asistencia = null;
+    $post->id_detalle_asistencia = $GLOBALS['data']->id_detalle_asistencia;
     $validador = true;
 
     if ($post->Validacion_parametro($post->rut_trabajador) == false) {
@@ -173,6 +202,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
                 array('Error' => 'rut mal ingresado')
             );
         }
+    }
+    if ($post->Validacion_parametro($post->id_detalle_asistencia) == false) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => 'ingrese si existio una falta')
+        );
+    } else {
+        $post->cant_dias_fallados = 0; // 0 = significa que no ahi falta en ese dia
     }
     if ($validador == true) {
         if ($post->Update_asistencia()) {

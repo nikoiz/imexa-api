@@ -267,46 +267,12 @@ class Controller_Proveedor
     }
     function validarTelefono($numero)
     {// para chile 
-        $reg = "/^(\+?56)?(\s?)(0?9)(\s?)[9876543]\d{7}$/";
+        //$reg = "/^(\+?56)?(\s?)(0?9)(\s?)[9876543]\d{7}$/";
+        $reg = "#^\(?\d{2}\)?[\s\.-]?\d{4}[\s\.-]?\d{4}$#";
         if (preg_match($reg, $numero)) {
                   return true;
               }else {
                   return false;
               }
       }
-      /*
-        if (htmlspecialchars(strip_tags($this->rut_proveedor))!="") {
-        
-            $rut=htmlspecialchars(strip_tags($this->rut_proveedor));
-            $rut = preg_replace('/[^k0-9]/i', '', $rut);
-            $dv  = substr($rut, -1);
-            $numero = substr($rut, 0, strlen($rut)-1);
-            $i = 2;
-            $suma = 0;
-        foreach(array_reverse(str_split($numero)) as $v)
-        {
-             if($i==8)
-            $i = 2;
-
-            $suma += $v * $i;
-            ++$i;
-        }
-
-        $dvr = 11 - ($suma % 11);
-    
-        if($dvr == 11)
-        $dvr = 0;
-        if($dvr == 10)
-        $dvr = 'K';
-
-        if($dvr == strtoupper($dv)){
-            $validador=true;
-        }else{
-            $validador=false;
-        }
-        
-        }else {
-            $validador=false;
-        }
-        */
 }

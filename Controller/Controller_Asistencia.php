@@ -10,6 +10,10 @@ class Controller_Asistencia
     public $rut_trabajador;
     public $id_detalle_asistencia;
 
+    //para buscador de asistencia
+    public $fecha_incio;
+    public $fecha_termino;
+
 
 
 
@@ -20,7 +24,7 @@ class Controller_Asistencia
 
     public function Read_Asistencia()
     {
-        $query = "SELECT * FROM asistencia";
+        $query = "SELECT * FROM `asistencia` WHERE `id_detalle_asistencia` = 1";
         $stmt = $this->conn->prepare($query);
 
         try {
@@ -35,20 +39,22 @@ class Controller_Asistencia
     }
     public function Read_single_asistencia()
     {
-        $p = new controller_bodega($this->conn);
-        $query = "SELECT * FROM asistencia WHERE id_asistencia = ?";
+        //SELECT SUM(`cant_dias_fallados`) as cant_dias_fallados,`rut_trabajador` FROM `asistencia` WHERE `fecha` BETWEEN '2021-07-01' AND '2021-07-31' and `rut_trabajador`="11344366-9"
+
+        $query = "SELECT SUM(`cant_dias_fallados`) as cant_dias_fallados,`rut_trabajador` FROM `asistencia` WHERE `fecha` BETWEEN ? AND ? and `rut_trabajador`=?";
+        //$query = "SELECT * FROM asistencia WHERE id_asistencia = ?";
         $stmt = $this->conn->prepare($query);
         //Bind id
-        $stmt->bindParam(1, $this->rut_trabajador);
+        $stmt->bindParam(1, $this->fecha_incio);
+        $stmt->bindParam(2, $this->fecha_termino);
+        $stmt->bindParam(3, $this->rut_trabajador);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-        $this->id_asistencia = $row['id_asistencia'];
-        $this->fecha = $row['fecha'];
+
         $this->cant_dias_fallados = $row['cant_dias_fallados'];
         $this->rut_trabajador = $row['rut_trabajador'];
-        $this->id_detalle_asistencia = $row['id_detalle_asistencia'];
         try {
             if ($stmt->execute()) {
                 return $stmt;
@@ -70,14 +76,14 @@ class Controller_Asistencia
             id_detalle_asistencia = :id_detalle_asistencia";
 
         $stmt = $this->conn->prepare($query);
-        
+
         //validadores
         if (htmlspecialchars(strip_tags($this->fecha)) == "") {
             $validador = false;
         } else {
             $this->fecha = htmlspecialchars(strip_tags($this->fecha));
         }
-        if (htmlspecialchars(strip_tags($this->cant_dias_fallados))=="") {
+        if (htmlspecialchars(strip_tags($this->cant_dias_fallados)) == "") {
             $validador = false;
         } else {
             $this->cant_dias_fallados = htmlspecialchars(strip_tags($this->cant_dias_fallados));
@@ -88,15 +94,15 @@ class Controller_Asistencia
         } else {
             $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
         }
-        
+
 
         $this->id_detalle_asistencia = htmlspecialchars(strip_tags($this->id_detalle_asistencia));
         if ($validador == true) {
-            $stmt->bindParam(':fecha',$this->fecha );
-            $stmt->bindParam(':cant_dias_fallados',$this->cant_dias_fallados );
+            $stmt->bindParam(':fecha', $this->fecha);
+            $stmt->bindParam(':cant_dias_fallados', $this->cant_dias_fallados);
             $stmt->bindParam(':rut_trabajador', $this->rut_trabajador);
-            $stmt->bindParam(':id_detalle_asistencia',$this->id_detalle_asistencia );
-        
+            $stmt->bindParam(':id_detalle_asistencia', $this->id_detalle_asistencia);
+
             try {
                 if ($stmt->execute()) {
                     return true;
@@ -256,6 +262,37 @@ class Controller_Asistencia
         $numero_comparar = $row['id_asistencia'];
 
         if ($numero_comparar == $id_asistencia) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    function validateDate($date, $format = 'Y-m-d')
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+
+        /*
+        if(validateDate('2012-02-28')==false){
+    $validador=false;
+    }
+        */
+    }
+    public function Buscar_rut_trabajador($tipo)
+    {
+        $query = 'SELECT rut_trabajador,valor_dia FROM trabajador WHERE rut_trabajador = "'.$tipo.'"';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+        
+        $comparar = $row['rut_trabajador'];
+        $valor_dia =$row['valor_dia'];
+
+        if ($comparar == $tipo) {
             return false;
         } else {
             return true;

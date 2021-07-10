@@ -83,10 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    echo json_encode(
-
-        array('message' => 'asd')
-    );
     $validador = true;
     do {
         $post = new Controller_detalle_asistencia($GLOBALS['db']);

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class Controller_Trabajador
 {
@@ -16,7 +16,7 @@ class Controller_Trabajador
     {
         $this->conn = $db;
     }
-    
+
     public function Read_trabajador()
     {
         $query = "SELECT * from trabajador";
@@ -27,8 +27,8 @@ class Controller_Trabajador
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n",$stmt->error);
-           
+            printf("Error: %s.\n", $stmt->error);
+
             return false;
         }
     }
@@ -37,47 +37,47 @@ class Controller_Trabajador
     {
         $query = "SELECT * FROM trabajador WHERE rut_trabajador = ?";
         $stmt = $this->conn->prepare($query);
-         //Bind id
-         $stmt->bindParam(1, $this->rut_trabajador);
-         $stmt->execute();
-         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        //Bind id
+        $stmt->bindParam(1, $this->rut_trabajador);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-         // set properties
-         $this->id_tipo_trabajador=$row['id_tipo_trabajador'];
-         $this->contraseña=$row['contraseña'];
-         $this->usuario=$row['usuario'];
-         $this->fecha_contratacion = $row['fecha_contratacion'];
-         $this->valor_dia= $row['valor_dia'];
-         $this->sueldo= $row['sueldo'];
-         $this->nombre_trabajador= $row['nombre_trabajador'];
-         $this->rut_trabajador = $row['rut_trabajador'];
+        // set properties
+        $this->id_tipo_trabajador = $row['id_tipo_trabajador'];
+        $this->contraseña = $row['contraseña'];
+        $this->usuario = $row['usuario'];
+        $this->fecha_contratacion = $row['fecha_contratacion'];
+        $this->valor_dia = $row['valor_dia'];
+        $this->sueldo = $row['sueldo'];
+        $this->nombre_trabajador = $row['nombre_trabajador'];
+        $this->rut_trabajador = $row['rut_trabajador'];
 
-         try {
+        try {
             if ($stmt->execute()) {
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n",$stmt->error);
-           
+            printf("Error: %s.\n", $stmt->error);
+
             return false;
         }
     }
     public function create_trabajador()
     {
-        $validador=true;
+        $validador = true;
 
-        if (htmlspecialchars(strip_tags($this->contraseña))==null && htmlspecialchars(strip_tags($this->usuario))==null) {
-            $this->contraseña='';
-            $this->usuario='';
-        }else {
-            $this->contraseña=htmlspecialchars(strip_tags($this->contraseña));
-            $this->usuario=htmlspecialchars(strip_tags($this->usuario));
+        if (htmlspecialchars(strip_tags($this->contraseña)) == null && htmlspecialchars(strip_tags($this->usuario)) == null) {
+            $this->contraseña = '';
+            $this->usuario = '';
+        } else {
+            $this->contraseña = htmlspecialchars(strip_tags($this->contraseña));
+            $this->usuario = htmlspecialchars(strip_tags($this->usuario));
         }
-        
-        
+
+
         if (!empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
-            $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
-            $rut =$this->rut_trabajador;
+            $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
+            $rut = $this->rut_trabajador;
             if ($rut != "") {
                 $rut = preg_replace('/[^k0-9]/i', '', $rut);
                 $dv  = substr($rut, -1);
@@ -87,62 +87,62 @@ class Controller_Trabajador
                 foreach (array_reverse(str_split($numero)) as $v) {
                     if ($i == 8)
                         $i = 2;
-    
+
                     $suma += $v * $i;
                     ++$i;
                 }
-    
+
                 $dvr = 11 - ($suma % 11);
-    
+
                 if ($dvr == 11)
                     $dvr = 0;
                 if ($dvr == 10)
                     $dvr = 'K';
-    
+
                 if ($dvr == strtoupper($dv)) {
-                    $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
-                    $validador=true;
+                    $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
+                    $validador = true;
                 } else {
-                    $validador=false;
+                    $validador = false;
                 }
             } else {
-                $validador=false;
+                $validador = false;
             }
-        }else {
-            $validador=false;
+        } else {
+            $validador = false;
         }
 
         if (!empty(htmlspecialchars(strip_tags($this->nombre_trabajador)))) {
-            $this->nombre_trabajador=htmlspecialchars(strip_tags($this->nombre_trabajador));
-        }else {
-            $validador=false;
+            $this->nombre_trabajador = htmlspecialchars(strip_tags($this->nombre_trabajador));
+        } else {
+            $validador = false;
         }
         if (!empty(htmlspecialchars(strip_tags($this->fecha_contratacion)))) {
-            $this->fecha_contratacion=htmlspecialchars(strip_tags($this->fecha_contratacion));
-        }else {
-            $validador=false;
+            $this->fecha_contratacion = htmlspecialchars(strip_tags($this->fecha_contratacion));
+        } else {
+            $validador = false;
         }
         if (!empty(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
             if (is_numeric(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
-                if (htmlspecialchars(strip_tags($this->id_tipo_trabajador))>=1) {
-                    $this->id_tipo_trabajador=htmlspecialchars(strip_tags($this->id_tipo_trabajador));
-                }else {
-                    $validador=false;
-                }  
-            }else {
-                $validador=false;
-            }  
-        }else {
-            $validador=false;
+                if (htmlspecialchars(strip_tags($this->id_tipo_trabajador)) >= 1) {
+                    $this->id_tipo_trabajador = htmlspecialchars(strip_tags($this->id_tipo_trabajador));
+                } else {
+                    $validador = false;
+                }
+            } else {
+                $validador = false;
+            }
+        } else {
+            $validador = false;
         }
         if (!empty(htmlspecialchars(strip_tags($this->valor_dia)))) {
-            $this->valor_dia=htmlspecialchars(strip_tags($this->valor_dia));
-        }else {
-            $validador=false;
+            $this->valor_dia = htmlspecialchars(strip_tags($this->valor_dia));
+        } else {
+            $validador = false;
         }
 
 
-        if ($validador==true) {
+        if ($validador == true) {
             $query = "INSERT INTO trabajador
         SET
             id_tipo_trabajador = '$this->id_tipo_trabajador',
@@ -154,35 +154,35 @@ class Controller_Trabajador
             valor_dia = '$this->valor_dia',
             sueldo = '$this->sueldo'";
 
-        $stmt = $this->conn->prepare($query);
+            $stmt = $this->conn->prepare($query);
             try {
                 if ($stmt->execute()) {
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n",$e);
-               
+                printf("Error: %s.\n", $e);
+
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
     }
     public function create_registro_usuario()
     {
-        $validador=true;
+        $validador = true;
 
-        if (htmlspecialchars(strip_tags($this->contraseña))==null && htmlspecialchars(strip_tags($this->usuario))==null) {
-            $this->contraseña='';
-            $this->usuario='';
-        }else {
-            $this->contraseña=htmlspecialchars(strip_tags($this->contraseña));
-            $this->usuario=htmlspecialchars(strip_tags($this->usuario));
+        if (htmlspecialchars(strip_tags($this->contraseña)) == null && htmlspecialchars(strip_tags($this->usuario)) == null) {
+            $this->contraseña = '';
+            $this->usuario = '';
+        } else {
+            $this->contraseña = htmlspecialchars(strip_tags($this->contraseña));
+            $this->usuario = htmlspecialchars(strip_tags($this->usuario));
         }
 
         if (!empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
-            $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
-            $rut =$this->rut_trabajador;
+            $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
+            $rut = $this->rut_trabajador;
             if ($rut != "") {
                 $rut = preg_replace('/[^k0-9]/i', '', $rut);
                 $dv  = substr($rut, -1);
@@ -192,57 +192,57 @@ class Controller_Trabajador
                 foreach (array_reverse(str_split($numero)) as $v) {
                     if ($i == 8)
                         $i = 2;
-    
+
                     $suma += $v * $i;
                     ++$i;
                 }
-    
+
                 $dvr = 11 - ($suma % 11);
-    
+
                 if ($dvr == 11)
                     $dvr = 0;
                 if ($dvr == 10)
                     $dvr = 'K';
-    
+
                 if ($dvr == strtoupper($dv)) {
-                    $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
-                    $validador=true;
+                    $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
+                    $validador = true;
                 } else {
-                    $validador=false;
+                    $validador = false;
                 }
             } else {
-                $validador=false;
+                $validador = false;
             }
-        }else {
-            $validador=false;
+        } else {
+            $validador = false;
         }
 
         if (!empty(htmlspecialchars(strip_tags($this->nombre_trabajador)))) {
-            $this->nombre_trabajador=htmlspecialchars(strip_tags($this->nombre_trabajador));
-        }else {
-            $validador=false;
+            $this->nombre_trabajador = htmlspecialchars(strip_tags($this->nombre_trabajador));
+        } else {
+            $validador = false;
         }
         if (!empty(htmlspecialchars(strip_tags($this->fecha_contratacion)))) {
-            $this->fecha_contratacion=htmlspecialchars(strip_tags($this->fecha_contratacion));
-        }else {
-            $validador=false;
+            $this->fecha_contratacion = htmlspecialchars(strip_tags($this->fecha_contratacion));
+        } else {
+            $validador = false;
         }
         if (!empty(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
             if (is_numeric(htmlspecialchars(strip_tags($this->id_tipo_trabajador)))) {
-                if (htmlspecialchars(strip_tags($this->id_tipo_trabajador))>=1) {
-                    $this->id_tipo_trabajador=htmlspecialchars(strip_tags($this->id_tipo_trabajador));
-                }else {
-                    $validador=false;
-                }  
-            }else {
-                $validador=false;
-            }  
-        }else {
-            $validador=false;
+                if (htmlspecialchars(strip_tags($this->id_tipo_trabajador)) >= 1) {
+                    $this->id_tipo_trabajador = htmlspecialchars(strip_tags($this->id_tipo_trabajador));
+                } else {
+                    $validador = false;
+                }
+            } else {
+                $validador = false;
+            }
+        } else {
+            $validador = false;
         }
 
 
-        if ($validador==true) {
+        if ($validador == true) {
             $query = "INSERT INTO trabajador
         SET
             id_tipo_trabajador = '$this->id_tipo_trabajador',
@@ -252,30 +252,30 @@ class Controller_Trabajador
             nombre_trabajador = '$this->nombre_trabajador',
             rut_trabajador = '$this->rut_trabajador'";
 
-        $stmt = $this->conn->prepare($query);
+            $stmt = $this->conn->prepare($query);
             try {
                 if ($stmt->execute()) {
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n",$e);
-               
+                printf("Error: %s.\n", $e);
+
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
     }
 
     public function delete_single_trabajador()
     {
-        $validador=true;
+        $validador = true;
         $query = "DELETE FROM trabajador WHERE rut_trabajador = ?";
         $stmt = $this->conn->prepare($query);
 
         if (!empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
-            $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
-            $rut =$this->rut_trabajador;
+            $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
+            $rut = $this->rut_trabajador;
             if ($rut != "") {
                 $rut = preg_replace('/[^k0-9]/i', '', $rut);
                 $dv  = substr($rut, -1);
@@ -285,55 +285,55 @@ class Controller_Trabajador
                 foreach (array_reverse(str_split($numero)) as $v) {
                     if ($i == 8)
                         $i = 2;
-    
+
                     $suma += $v * $i;
                     ++$i;
                 }
-    
+
                 $dvr = 11 - ($suma % 11);
-    
+
                 if ($dvr == 11)
                     $dvr = 0;
                 if ($dvr == 10)
                     $dvr = 'K';
-    
+
                 if ($dvr == strtoupper($dv)) {
-                    $validador=true;
+                    $validador = true;
                 } else {
-                    $validador=false;
+                    $validador = false;
                 }
             } else {
-                $validador=false;
+                $validador = false;
             }
-        }else {
-            $validador=false;
+        } else {
+            $validador = false;
         }
 
-        
 
-        if ($validador==true) {
+
+        if ($validador == true) {
             $stmt->bindParam(1, $this->rut_trabajador);
             try {
                 if ($stmt->execute()) {
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n",$stmt->error);
-               
+                printf("Error: %s.\n", $stmt->error);
+
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
     }
 
     public function update_trabajador()
     {
-        $validador=true;
-        
+        $validador = true;
+
         if (!empty(htmlspecialchars(strip_tags($this->rut_trabajador)))) {
-            $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
-            $rut =$this->rut_trabajador;
+            $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
+            $rut = $this->rut_trabajador;
             if ($rut != "") {
                 $rut = preg_replace('/[^k0-9]/i', '', $rut);
                 $dv  = substr($rut, -1);
@@ -343,55 +343,55 @@ class Controller_Trabajador
                 foreach (array_reverse(str_split($numero)) as $v) {
                     if ($i == 8)
                         $i = 2;
-    
+
                     $suma += $v * $i;
                     ++$i;
                 }
-    
+
                 $dvr = 11 - ($suma % 11);
-    
+
                 if ($dvr == 11)
                     $dvr = 0;
                 if ($dvr == 10)
                     $dvr = 'K';
-    
+
                 if ($dvr == strtoupper($dv)) {
-                    $this->rut_trabajador=htmlspecialchars(strip_tags($this->rut_trabajador));
-                    $validador=true;
+                    $this->rut_trabajador = htmlspecialchars(strip_tags($this->rut_trabajador));
+                    $validador = true;
                 } else {
-                    $validador=false;
+                    $validador = false;
                 }
             } else {
-                $validador=false;
+                $validador = false;
             }
-        }else {
-            $validador=false;
+        } else {
+            $validador = false;
         }
 
         if (!empty(htmlspecialchars(strip_tags($this->valor_dia)))) {
-            $this->valor_dia=htmlspecialchars(strip_tags($this->valor_dia));
-        }else {
-            $validador=false;
+            $this->valor_dia = htmlspecialchars(strip_tags($this->valor_dia));
+        } else {
+            $validador = false;
         }
 
-        if ($validador==true) {
+        if ($validador == true) {
             $query = "UPDATE trabajador
         SET
             valor_dia = '$this->valor_dia'
             WHERE
             rut_trabajador = '$this->rut_trabajador'";
 
-        $stmt = $this->conn->prepare($query);
+            $stmt = $this->conn->prepare($query);
             try {
                 if ($stmt->execute()) {
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n",$e);
-               
+                printf("Error: %s.\n", $e);
+
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
     }
@@ -457,25 +457,24 @@ class Controller_Trabajador
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $usuario_comparar = $row['usuario'];
-        $contraseña_comprar= $row['contraseña'];
+        $contraseña_comprar = $row['contraseña'];
 
 
 
-        if ($usuario_comparar== $this->usuario && $this->contraseña== $contraseña_comprar) {
+        if ($usuario_comparar == $this->usuario && $this->contraseña == $contraseña_comprar) {
             return true;
+        } else {
 
-        }else {
-            
             return false;
 
-         //header("Location: ../index.php?error=$error");
+            //header("Location: ../index.php?error=$error");
         }
     }
     public function Validacion_parametros($parma)
     {
-        if ($parma==null) {
+        if ($parma == null) {
             return false;
-        }else {
+        } else {
             return true;
         }
     }
@@ -519,7 +518,7 @@ class Controller_Trabajador
     }
     public function Buscar_rut_trabajador($tipo)
     {
-        $query = 'SELECT rut_trabajador FROM trabajador WHERE rut_trabajador = "'.$tipo.'"';
+        $query = 'SELECT rut_trabajador FROM trabajador WHERE rut_trabajador = "' . $tipo . '"';
 
         $stmt = $this->conn->prepare($query);
 
@@ -527,13 +526,81 @@ class Controller_Trabajador
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-        
+
         $comparar = $row['rut_trabajador'];
 
         if ($comparar == $tipo) {
             return false;
         } else {
             return true;
+        }
+    }
+    public function update_trabajador_para_asistencia_del_mes($rut_trabajador,$sueldo)
+    {
+        $validador = true;
+
+        if (!empty($rut_trabajador)) {
+            $this->rut_trabajador = $rut_trabajador;
+            $rut = $this->rut_trabajador;
+            if ($rut != "") {
+                $rut = preg_replace('/[^k0-9]/i', '', $rut);
+                $dv  = substr($rut, -1);
+                $numero = substr($rut, 0, strlen($rut) - 1);
+                $i = 2;
+                $suma = 0;
+                foreach (array_reverse(str_split($numero)) as $v) {
+                    if ($i == 8)
+                        $i = 2;
+
+                    $suma += $v * $i;
+                    ++$i;
+                }
+
+                $dvr = 11 - ($suma % 11);
+
+                if ($dvr == 11)
+                    $dvr = 0;
+                if ($dvr == 10)
+                    $dvr = 'K';
+
+                if ($dvr == strtoupper($dv)) {
+                    $this->rut_trabajador = $rut_trabajador;
+                    $validador = true;
+                } else {
+                    $validador = false;
+                }
+            } else {
+                $validador = false;
+            }
+        } else {
+            $validador = false;
+        }
+
+        if (!empty($sueldo)) {
+            $this->sueldo = $sueldo;
+        } else {
+            $validador = false;
+        }
+
+        if ($validador == true) {
+            $query = "UPDATE trabajador
+        SET
+        sueldo = '$this->sueldo'
+            WHERE
+            rut_trabajador = '$this->rut_trabajador'";
+
+            $stmt = $this->conn->prepare($query);
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $e);
+
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 }

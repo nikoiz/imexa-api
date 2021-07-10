@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 if ($post->Read_single_cliente()) {
                     $post_item = array(
                         'rut_cliente' => $post->rut_cliente,
-                        'nombre_cliente ' => $post->nombre_cliente
+                        'nombre_cliente' => $post->nombre_cliente
                     );
                     //Make JSON
 
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 extract($row);
                 $post_item = array(
                     'rut_cliente' => $rut_cliente,
-                    'nombre_cliente ' => $nombre_cliente
+                    'nombre_cliente' => $nombre_cliente
                 );
 
                 array_push($posts_arr['data'], $post_item);
