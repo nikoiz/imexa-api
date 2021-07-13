@@ -21,10 +21,10 @@ class Controller_detalle_inventario
     }
     public function Read_single_detalle_invetario()
     {
-        $query = "SELECT * from detalle_inventario where cantidad_producto >=1 AND id_bodega =?";
+        $query = "SELECT * from detalle_inventario where cantidad_producto >=1 AND nombre_producto =?";
         $stmt = $this->conn->prepare($query);
         //Bind id
-        $stmt->bindParam(1, $this->id_bodega);
+        $stmt->bindParam(1, $this->nombre_producto);//iva el id_bodega
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -64,7 +64,28 @@ class Controller_detalle_inventario
             return false;
         }
     }
+    function buscar_nombre_producto($nombre_producto)//ver°°
+    {
+       //$query = "SELECT `nombre_producto`,`id_bodega` FROM `detalle_inventario` WHERE nombre_producto = ?";
+        $query = "SELECT `nombre_producto` FROM `detalle_inventario` WHERE nombre_producto = ?";
 
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $nombre_producto);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $numero_comparar = $row['nombre_producto'];
+
+        if ($numero_comparar == $nombre_producto) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     public function create_detalle_inventario($nombre_producto, $cantidad_producto, $valor, $id_inventario, $id_bodega, $id_producto, $fecha)
     { //esto se realizara en el metodo producto
         $validador = true;
