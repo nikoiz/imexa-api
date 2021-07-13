@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($post->Read_single_factura()) {
                 $post_item = array(
                     'id_venta' => $post->id_venta,
-                    'fecha_venta ' => $post->fecha_venta,
+                    'fecha_venta' => $post->fecha_venta,
                     'valor_venta' =>$post->valor_venta,
                     'estado'=>$post->estado,
                     'id_tipo_venta'=>$post->id_tipo_venta,
@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 extract($row);
                 $post_item = array(
                         'id_venta' => $id_venta,
-                        'fecha_venta ' => $fecha_venta,
+                        'fecha_venta' => $fecha_venta,
                         'valor_venta' =>$valor_venta,
                         'estado'=>$estado,
                         'id_tipo_venta'=>$id_tipo_venta,
