@@ -422,4 +422,19 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
             return null;
         }
     }
+    public function Comprobar_existencia_productos($id_bodega)
+    {
+        $id_bodega = '"' . $id_bodega . '"';
+        $query = "SELECT nombre_producto FROM detalle_inventario WHERE id_bodega = $id_bodega";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $nombre_producto = $row['nombre_producto'];
+        if ($nombre_producto == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

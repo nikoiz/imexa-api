@@ -27,11 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $post->numero_bodega = $GLOBALS['data']->numero_bodega;
     $post->nombre_bodega = $GLOBALS['data']->nombre_bodega;
-    
+
     $pos->id_tipo_trabajador = 1;
     $validador = true;
-    $g->fecha=$fecha = date('Y-m-d');
-    $g->estado =1;
+    $g->fecha = $fecha = date('Y-m-d');
+    $g->estado = 1;
 
     if ($post->buscar_numero($post->numero_bodega) == false) {
         $validador = false;
@@ -46,29 +46,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         );
     }
     if ($validador == true) {
-        if ($pos->Validar_tipo_trabajador($pos->id_tipo_trabajador) != null) { 
+        if ($pos->Validar_tipo_trabajador($pos->id_tipo_trabajador) != null) {
             if ($post->create()) {
-                
-            if ($post->buscar_el_ultimo_id() != null) {
-                
+
+                if ($post->buscar_el_ultimo_id() != null) {
+
                     //accion a trabajador as bodega (rut_trabajador,id_bodega)
                     $rut_trabajador = $pos->Validar_tipo_trabajador($pos->id_tipo_trabajador);
-                    $id_bodega=$post->buscar_el_ultimo_id();
-                    if ($po->create_trabajador_has_bodega($rut_trabajador,$id_bodega)==false) {
+                    $id_bodega = $post->buscar_el_ultimo_id();
+                    if ($po->create_trabajador_has_bodega($rut_trabajador, $id_bodega) == false) {
                         echo json_encode(
                             array('message' => 'Error en ingreso de datos teniendo en cuenta el rut del trabajador y el codigo de la bodega')
                         );
-                    }else {
-                            echo json_encode(
-                                array('message' => 'Post Created')
-                            ); 
+                    } else {
+                        echo json_encode(
+                            array('message' => 'Post Created')
+                        );
                     }
                 } else {
                     echo json_encode(
                         array('message' => 'Post not created')
                     );
                 }
-            }else {
+            } else {
                 echo json_encode(
                     array('Error' => 'No existe bodega')
                 );
@@ -109,17 +109,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                
             }
             */
-            $g->valor_gastos=$g->Obtener_total_gasto_only($post->id_bodega);
+            $g->valor_gastos = $g->Obtener_total_gasto_only($post->id_bodega);
             //obtner el gasto de esa bodega 
-            $valor_del_inventario = 'gasto bodega :'.$g->valor_gastos;
+            $valor_del_inventario = 'gasto bodega :' . $g->valor_gastos;
             if ($post->read_single()) {
                 $post_item = array(
                     'id_bodega' => $post->id_bodega,
                     'numero_bodega' => $post->numero_bodega,
                     'nombre_bodega' => $post->nombre_bodega
-                    
+
                 );
-                
+
                 //Make JSON
 
                 print_r(json_encode($post_item));
@@ -129,7 +129,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     array('message' => 'No Posts Found')
                 );
             }
-            
         }
     } else {
         $post =  new controller_bodega($GLOBALS['db']);
@@ -177,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     $di = new Controller_detalle_inventario($GLOBALS['db']);
     $g = new Controller_Gasto($GLOBALS['db']);
 
-    
+
     // GET ID
     $post->id_bodega = isset($_GET['id_bodega']) ? $_GET['id_bodega'] : die();
 
@@ -188,16 +187,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
         echo json_encode(
             array('message' => 'no se encontro la bodega para eliminar')
         );
-    } 
+    }
 
-    if ($post->buscar_referncias_tablas($post->id_bodega)==false) {
+    if ($post->buscar_referncias_tablas($post->id_bodega) == false) {
         $validator = false;
         echo json_encode(
             array('message' => 'no se puede eliminar esta bodega ya que esta relaciona a un gasto existente')
         );
     }
-//eliminar los productos de detalle inv , gastos y actulizar el total del inv.
-    
+    if ($di->Comprobar_existencia_productos($post->id_bodega) != false) { //validar la exitencia de la bodega en cuanto a producto
+        $validator = false;
+        echo json_encode(
+            array('message' => 'no se puede eliminar esta bodega ya que tiene producto')
+        );
+    } 
+    //eliminar los productos de detalle inv , gastos y actulizar el total del inv.
+
     if ($validator == true) {
         $valor_di = $di->buscardor_valor_producto_por_bodega($post->id_bodega);
         //obtenr el valor actual del inventario
@@ -217,6 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
             );
         }
 
+
         if ($po->delete_trabajador_has_bodega($post->id_bodega)) {
             if ($post->delete_single()) {
                 
@@ -234,9 +240,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
             );
         }
     }
-    
-    
-    
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
@@ -267,7 +270,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             echo json_encode(
                 array('message' => 'Post Update')
             );
-
         } else {
             echo json_encode(
                 array('message' => 'Post not Update')
