@@ -21,19 +21,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post = new Controller_Asistencia($GLOBALS['db']);
     $dta = new Controller_detalle_asistencia($GLOBALS['db']);
     $t = new Controller_Trabajador($GLOBALS['db']);
-    $post->fecha =  $GLOBALS['data']->fecha; //hacer validacion
-    $post->cant_dias_fallados = 1;
+    $post->fecha =  $GLOBALS['data']->fecha; 
+    
     $post->rut_trabajador = $GLOBALS['data']->rut_trabajador;
     $post->id_detalle_asistencia = $GLOBALS['data']->id_detalle_asistencia;
     $validador = true;
 
-    if ($post->Validacion_parametro($post->fecha_compra) == false) {
+    if ($post->Validacion_parametro($post->fecha) == false) {
         $validador = false;
         echo json_encode(
             array('message' => 'Ingrese una fecha')
         );
     } else {
-        if ($post->validateDate($post->fecha_compra) == false) {
+        if ($post->validateDate($post->fecha) == false) {
             echo json_encode(
                 array('Error' => "fecha mal ingresada")
             );
@@ -61,6 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 );
             }
         }
+    }
+    if ($post->id_detalle_asistencia == 1) {
+        $post->cant_dias_fallados = 1;
+    }else {
+        $post->cant_dias_fallados = 0;
     }
 
     if ($validador == true) {
