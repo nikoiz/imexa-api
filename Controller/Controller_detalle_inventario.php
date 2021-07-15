@@ -21,10 +21,11 @@ class Controller_detalle_inventario
     }
     public function Read_single_detalle_invetario()
     {
-        $query = "SELECT * from detalle_inventario where cantidad_producto >=1 AND nombre_producto =?";
+        $query = "SELECT * from detalle_inventario where cantidad_producto >=1 AND id_bodega =?";
         $stmt = $this->conn->prepare($query);
         //Bind id
-        $stmt->bindParam(1, $this->nombre_producto);//iva el id_bodega
+        $stmt->bindParam(1, $this->id_bodega);//iva el id_bodega
+        //no se porque le puse nombre_producto (investigar) 
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
