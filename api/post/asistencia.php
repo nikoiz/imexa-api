@@ -27,6 +27,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post->id_detalle_asistencia = $GLOBALS['data']->id_detalle_asistencia;
     $validador = true;
 
+    if ($post->Validacion_parametro($post->fecha_compra) == false) {
+        $validador = false;
+        echo json_encode(
+            array('message' => 'Ingrese una fecha')
+        );
+    } else {
+        if ($post->validateDate($post->fecha_compra) == false) {
+            echo json_encode(
+                array('Error' => "fecha mal ingresada")
+            );
+            $validador = false;
+        }
+    }
+
     if ($post->Validacion_parametro($post->rut_trabajador) == false) {
         $validador = false;
         echo json_encode(

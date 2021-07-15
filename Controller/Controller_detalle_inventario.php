@@ -49,6 +49,36 @@ class Controller_detalle_inventario
             return false;
         }
     }
+    public function Read_single_detalle_invetario_nombre_prod()
+    {
+        $query = "SELECT * from detalle_inventario where cantidad_producto >=1 AND nombre_producto =?";
+        $stmt = $this->conn->prepare($query);
+        //Bind id
+        $stmt->bindParam(1, $this->nombre_producto);
+        // se creo para el mostrar producto
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+        $this->id_detalle_inventario = $row['id_detalle_inventario'];
+        $this->nombre_producto = $row['nombre_producto'];
+        $this->cantidad_producto = $row['cantidad_producto'];
+        $this->valor = $row['valor'];
+        $this->fecha_inventario = $row['fecha_inventario'];
+        $this->id_inventario = $row['id_inventario'];
+        $this->id_bodega = $row['id_bodega'];
+        $this->id_producto = $row['id_producto'];
+
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return false;
+        }
+    }
 
     public function Read_producto_detalle_invetario() //tirar a produc_has_bodega grupby nombre_producto 
     {
