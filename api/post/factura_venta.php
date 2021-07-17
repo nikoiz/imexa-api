@@ -38,6 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post->rut_cliente = $GLOBALS['data']->rut_cliente;
     $post->recursiva_id = $post->id_venta;
     $post->id_tipo_f_venta = $GLOBALS['data']->id_tipo_f_venta;
+    $ab->valor_abono =  $GLOBALS['data']->valor_abono;
+
+    //comprobar el valor abono mandado, pero antes realizar validacion de parametros de ""
+
+
 
     if ($post->Validacion_parametro($post->id_venta) == false) {
         $validador = false;
@@ -100,13 +105,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             //buscar rut en proveedores
             if (!empty($cl->buscar_rut_cliente($post->rut_cliente))) {
+                $validador = false;
                 echo json_encode(
                     array('message' => 'No existe datos del cliente')
                 );
             }
         }
     }
-   
+    if ($ab->valor_abono != "") {
+        if ($ab->obtener_valor_total($post->rut_cliente) != "") {
+            // se obtiene nuevo valor en base a los abonos 
+            $post->valor_venta = $post->valor_venta -$ab->obtener_valor_total($post->rut_cliente);
+        } else {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'No se puedo Restar el valor del abono')
+            );
+        }
+    }
     if ($post->Validacion_parametro($post->id_tipo_f_venta) == false) {
         $validador = false;
         echo json_encode(
@@ -121,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    
+
     if ($validador == true) {
         if ($post->create_factura_venta()) {
             echo json_encode(
@@ -133,11 +149,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
         }
     }
-    
-
-    
-
-
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -149,18 +160,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $post_item = array(
                     'id_venta' => $post->id_venta,
                     'fecha_venta' => $post->fecha_venta,
-                    'valor_venta' =>$post->valor_venta,
-                    'estado'=>$post->estado,
-                    'id_tipo_venta'=>$post->id_tipo_venta,
-                    'rut_cliente' =>$post->rut_cliente,
-                    'recursiva_id' =>$post->recursiva_id,
-                    'id_tipo_f_venta' =>$post->id_tipo_f_venta,
+                    'valor_venta' => $post->valor_venta,
+                    'estado' => $post->estado,
+                    'id_tipo_venta' => $post->id_tipo_venta,
+                    'rut_cliente' => $post->rut_cliente,
+                    'recursiva_id' => $post->recursiva_id,
+                    'id_tipo_f_venta' => $post->id_tipo_f_venta,
 
-                    'id_detalle_venta'=>$post->id_detalle_venta,
-                    'descripcion_producto'=>$post->descripcion_producto,
-                    'cantidad_producto'=>$post->cantidad_producto,
-                    'valor'=>$post->valor,
-                    'producto_id_producto'=>$post->producto_id_producto
+                    'id_detalle_venta' => $post->id_detalle_venta,
+                    'descripcion_producto' => $post->descripcion_producto,
+                    'cantidad_producto' => $post->cantidad_producto,
+                    'valor' => $post->valor,
+                    'producto_id_producto' => $post->producto_id_producto
 
 
                 );
@@ -190,14 +201,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 extract($row);
                 $post_item = array(
-                        'id_venta' => $id_venta,
-                        'fecha_venta' => $fecha_venta,
-                        'valor_venta' =>$valor_venta,
-                        'estado'=>$estado,
-                        'id_tipo_venta'=>$id_tipo_venta,
-                        'rut_cliente' =>$rut_cliente,
-                        'recursiva_id' =>$recursiva_id,
-                        'id_tipo_f_venta' =>$id_tipo_f_venta
+                    'id_venta' => $id_venta,
+                    'fecha_venta' => $fecha_venta,
+                    'valor_venta' => $valor_venta,
+                    'estado' => $estado,
+                    'id_tipo_venta' => $id_tipo_venta,
+                    'rut_cliente' => $rut_cliente,
+                    'recursiva_id' => $recursiva_id,
+                    'id_tipo_f_venta' => $id_tipo_f_venta
                 );
                 array_push($posts_arr['data'], $post_item);
             }
@@ -215,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     $post = new Controller_Factura_Venta($GLOBALS['db']);
 
     $post->id_venta = isset($_GET['id_venta']) ? $_GET['id_venta'] : die();
-    
+
     if (!empty($post->buscar_id_venta($post->id_venta))) {
         echo json_encode(
             array('message' => 'no se encontro la venta para eliminar')
@@ -321,7 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             }
         }
     }
-   
+
     if ($post->Validacion_parametro($post->id_tipo_f_venta) == false) {
         $validador = false;
         echo json_encode(
@@ -335,7 +346,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             );
         }
     }
-    if ($validador==true) {
+    if ($validador == true) {
         if ($post->update_factura_venta()) {
             echo json_encode(
                 array('message' => 'Post Update')
@@ -345,7 +356,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
                 array('message' => 'Post not Update')
             );
         }
-    }  
+    }
 }
 //En caso de que ninguna de las opciones anteriores se haya ejecutado
 //header("HTTP/1.1 400 Bad Request");

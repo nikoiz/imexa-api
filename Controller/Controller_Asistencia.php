@@ -298,4 +298,24 @@ class Controller_Asistencia
             return true;
         }
     }
+    public function Buscar_rut_trabajador_valor_dia($tipo)
+    {
+        $query = 'SELECT rut_trabajador,valor_dia FROM trabajador WHERE rut_trabajador = "'.$tipo.'"';
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+        
+        $comparar = $row['rut_trabajador'];
+        $valor_dia =$row['valor_dia'];
+
+        if ($comparar == $tipo) {
+            return $valor_dia;
+        } else {
+            return "";
+        }
+    }
 }

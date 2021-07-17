@@ -8,6 +8,7 @@ header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,
 include_once '../../config/conexion.php';
 include_once '../../Controller/Controller_Abono.php';
 include_once '../../Controller/Controller_Factura_Venta.php';
+include_once '../../Controller/Controller_Cliente.php';
 
 
 $database = new conexion();
@@ -76,11 +77,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-if (isset($_GET['id_abono'])){
+if (isset($_GET['rut_cliente'])){
     $post = new Controller_Abono($GLOBALS['db']);
-    $post->id_venta = isset($_GET['id_abono']) ? $_GET['id_abono'] : die();
+    $cl = new Controller_Cliente($GLOBALS['db']);
+    $cl->rut_cliente = isset($_GET['rut_cliente']) ? $_GET['rut_cliente'] : die();
     if (!empty($post->rut_cliente)) {
-        if (!empty($post->id_venta)) {
             if ($post->Read_single_abono()) {
                 $post_item = array(
                     'id_abono' => $post->id_abono,
@@ -89,18 +90,15 @@ if (isset($_GET['id_abono'])){
                     'id_venta'=>$post->id_venta
                 );
                 //Make JSON
-
+                //por medio del rut cliente hacer el tan el single y despues mostar el total sumado de los abonos
+                $total_abono=$post->obtener_valor_total($post->rut_cliente);
                 print_r(json_encode($post_item));
+                print_r(json_encode($total_abono));
             } else {
                 echo json_encode(
                     array('message' => 'No Posts Found')
                 );
             }
-        } else {
-            echo json_encode(
-                array('message' => 'Ingrese rut del cliente')
-            );
-        }
     } else {
         echo json_encode(
             array('message' => 'Ingrese rut del cliente')

@@ -29,7 +29,8 @@ class Controller_Abono
     }
     public function Read_single_abono()
     {
-        $query = "SELECT * FROM abono WHERE id_abono = ?";
+        //SELECT  cliente.rut_cliente, abono.id_abono,abono.valor_abono,abono.fecha_abono,abono.id_venta FROM cliente INNER JOIN factura_venta on cliente.rut_cliente=factura_venta.rut_cliente INNER JOIN abono ON factura_venta.id_venta=abono.id_venta WHERE  cliente.rut_cliente  = ?
+        $query = "SELECT  abono.id_abono,abono.valor_abono,abono.fecha_abono,abono.id_venta FROM cliente INNER JOIN factura_venta on cliente.rut_cliente=factura_venta.rut_cliente INNER JOIN abono ON factura_venta.id_venta=abono.id_venta WHERE  cliente.rut_cliente  = ?";
         $stmt = $this->conn->prepare($query);
         //Bind id
         $stmt->bindParam(1, $this->id_abono);
@@ -37,10 +38,10 @@ class Controller_Abono
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-        $this->id_abono = $row['id_abono'];
-        $this->valor_abono = $row['valor_abono'];
-        $this->fecha_abono = $row['fecha_abono'];
-        $this->id_venta = $row['id_venta'];
+        $this->id_abono = $row['abono.id_abono'];
+        $this->valor_abono = $row['abono.valor_abono'];
+        $this->fecha_abono = $row['abono.fecha_abono'];
+        $this->id_venta = $row['abono.id_venta'];
 
         try {
             if ($stmt->execute()) {
@@ -205,6 +206,28 @@ class Controller_Abono
             } else {
                 return "Ingrese solo numeros";
             }
+        }
+    }
+    function obtener_valor_total($rut_cliente)
+    {
+        $query = "SELECT  cliente.rut_cliente,SUM(abono.valor_abono) as total_abono FROM cliente INNER JOIN factura_venta on cliente.rut_cliente=factura_venta.rut_cliente INNER JOIN abono ON factura_venta.id_venta=abono.id_venta WHERE  cliente.rut_cliente =  ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $rut_cliente);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $numero_comparar = $row['rut_cliente'];
+        $total_abono  = $row['total_abono'];
+
+        if ($numero_comparar == $rut_cliente) {
+            return $total_abono;
+        } else {
+            return "";
         }
     }
 }

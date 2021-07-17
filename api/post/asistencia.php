@@ -128,7 +128,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //enel get actualize el sueldo por el
                     print_r(json_encode($post_item));
                     print_r(json_encode("el dia ".$dia = $separa[2]));
                     //actualizar el sueldo del trabajor de ese mes
-                    $total_sueldo = $mes-$post->cant_dias_fallados * $post->Buscar_rut_trabajador($post->rut_trabajador);
+                    $total_sueldo = ($dia-$post->cant_dias_fallados) * $post->Buscar_rut_trabajador_valor_dia($post->rut_trabajador);
+                    echo json_encode(
+                        array('message' => $total_sueldo)
+                    );
                     if ($t->update_trabajador_para_asistencia_del_mes($post->rut_trabajador,$total_sueldo)==false) {
                         echo json_encode(
                             array('message' => 'No se actualizo el rut del trabajador')
