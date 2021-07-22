@@ -333,7 +333,7 @@ class controller_bodega
     }
     function Obtener_total_gasto_only($id_bodega)
     {
-        $query = "SELECT SUM(detalle_inventario.cantidad_producto)*SUM(producto.valor_producto) as total FROM `detalle_inventario`
+        $query = "SELECT SUM(detalle_inventario.cantidad_producto * detalle_inventario.valor) as total FROM `detalle_inventario`
         inner JOIN bodega_has_producto ON detalle_inventario.id_producto = bodega_has_producto.id_producto
         INNER JOIN producto ON bodega_has_producto.id_producto =producto.id_producto
         where detalle_inventario.id_bodega=?";
