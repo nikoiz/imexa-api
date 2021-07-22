@@ -188,28 +188,26 @@ class Controller_Factura_Compra
         $validador = true;
         //poner atencion a la nomenclatura de las palabas.
         $query = "UPDATE factura_compra SET 
-        id_compra = :id_compra,
-            fecha_compra = :fecha_compra,
-            valor_compra =:valor_compra,
-            estado =:estado,
-            rut_proveedor =:rut_proveedor,
-            id_tipo_compra =:id_tipo_compra,
-            recursiva_compra_id =:recursiva_compra_id,
-            id_tipo_f_compra =:id_tipo_f_compra 
+            estado =:estado
         WHERE id_compra = :id_compra";
         $stmt = $this->conn->prepare($query);
 
+        if (!empty(htmlspecialchars(strip_tags($this->id_compra)))) {
+            $this->id_compra = htmlspecialchars(strip_tags($this->id_compra));
+        } else {
+            $validador = false;
+        }
+
+        if (!empty(htmlspecialchars(strip_tags($this->estado)))) {
+            $this->estado = htmlspecialchars(strip_tags($this->estado));
+        } else {
+            $validador = false;
+        }
 
         // Bind Data
         if ($validador == true) {
             $stmt->bindParam(':id_compra', $this->id_compra);
-            $stmt->bindParam(':fecha_compra', $this->fecha_compra);
-            $stmt->bindParam(':valor_compra', $this->valor_compra);
             $stmt->bindParam(':estado', $this->estado);
-            $stmt->bindParam(':rut_proveedor', $this->rut_proveedor);
-            $stmt->bindParam(':recursiva_compra_id', $this->recursiva_compra_id);
-            $stmt->bindParam(':id_tipo_compra', $this->id_tipo_compra);
-            $stmt->bindParam(':id_tipo_f_compra', $this->id_tipo_f_compra);
             try {
                 if ($stmt->execute()) {
                     return true;

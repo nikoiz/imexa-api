@@ -1,4 +1,4 @@
-<?php 
+<?php
 class Controller_Factura_Venta
 {
     private $conn;
@@ -80,7 +80,7 @@ class Controller_Factura_Venta
     public function create_factura_venta()
     {
         $validador = true;
-        
+
         $query = 'INSERT INTO factura_venta 
         SET 
             
@@ -100,37 +100,36 @@ class Controller_Factura_Venta
         } else {
             $validador = false;
         }
-        
+
         if (!empty(htmlspecialchars(strip_tags($this->fecha_venta)))) {
             $this->fecha_venta = htmlspecialchars(strip_tags($this->fecha_venta));
         } else {
             $validador = false;
         }
-        
+
         if (empty(htmlspecialchars(strip_tags($this->valor_venta)))) {
             $validador = false;
         } else {
             if (!is_numeric(htmlspecialchars(strip_tags($this->valor_venta)))) {
                 $validador = false;
-            }else {
+            } else {
                 $this->valor_venta = htmlspecialchars(strip_tags($this->valor_venta));
             }
         }
-        
+
         if (empty(htmlspecialchars(strip_tags($this->estado)))) {
             $validador = false;
         } else {
-                $this->estado = htmlspecialchars(strip_tags($this->estado));
-            
+            $this->estado = htmlspecialchars(strip_tags($this->estado));
         }
 
-        
+
         if (empty(htmlspecialchars(strip_tags($this->id_tipo_venta)))) {
             $validador = false;
         } else {
             if (!is_numeric(htmlspecialchars(strip_tags($this->id_tipo_venta)))) {
                 $validador = false;
-            }else {
+            } else {
                 $this->id_tipo_venta = htmlspecialchars(strip_tags($this->id_tipo_venta));
             }
         }
@@ -150,7 +149,7 @@ class Controller_Factura_Venta
             $validador = false;
         }
 
-        
+
         if ($validador == true) {
             $stmt->bindParam(':id_venta', $this->id_venta);
             $stmt->bindParam(':fecha_venta', $this->fecha_venta);
@@ -160,7 +159,7 @@ class Controller_Factura_Venta
             $stmt->bindParam(':rut_cliente', $this->rut_cliente);
             $stmt->bindParam(':recursiva_id', $this->recursiva_id);
             $stmt->bindParam(':id_tipo_f_venta', $this->id_tipo_f_venta);
-            
+
             try {
                 if ($stmt->execute()) {
                     return true;
@@ -207,14 +206,7 @@ class Controller_Factura_Venta
         $validador = true;
         //poner atencion a la nomenclatura de las palabas.
         $query = "UPDATE factura_venta SET    
-        id_venta = :id_venta,
-        fecha_venta = :fecha_venta,
-        valor_venta = :valor_venta,
-        estado = :estado,
-        id_tipo_venta = :id_tipo_venta,
-        rut_cliente = :rut_cliente,
-        recursiva_id = :recursiva_id,
-        id_tipo_f_venta = :id_tipo_f_venta
+            estado = :estado
           WHERE id_venta = :id_venta";
         $stmt = $this->conn->prepare($query);
 
@@ -223,50 +215,8 @@ class Controller_Factura_Venta
         } else {
             $validador = false;
         }
-        if (!empty(htmlspecialchars(strip_tags($this->fecha_venta)))) {
-            $this->fecha_venta = htmlspecialchars(strip_tags($this->fecha_venta));
-        } else {
-            $validador = false;
-        }
-        if (empty(htmlspecialchars(strip_tags($this->valor_venta)))) {
-            $validador = false;
-        } else {
-            if (!is_numeric(htmlspecialchars(strip_tags($this->valor_venta)))) {
-                $validador = false;
-            }else {
-                $this->valor_venta = htmlspecialchars(strip_tags($this->valor_venta));
-            }
-        }
-        if (empty(htmlspecialchars(strip_tags($this->estado)))) {
-            $validador = false;
-        } else {
-            if (!is_numeric(htmlspecialchars(strip_tags($this->estado)))) {
-                $validador = false;
-            }else {
-                $this->estado = htmlspecialchars(strip_tags($this->estado));
-            }
-        }
-        if (empty(htmlspecialchars(strip_tags($this->id_tipo_venta)))) {
-            $validador = false;
-        } else {
-            if (!is_numeric(htmlspecialchars(strip_tags($this->id_tipo_venta)))) {
-                $validador = false;
-            }else {
-                $this->id_tipo_venta = htmlspecialchars(strip_tags($this->id_tipo_venta));
-            }
-        }
-        if (!empty(htmlspecialchars(strip_tags($this->rut_cliente)))) {
-            $this->rut_cliente = htmlspecialchars(strip_tags($this->rut_cliente));
-        } else {
-            $validador = false;
-        }
-        if (!empty(htmlspecialchars(strip_tags($this->recursiva_id)))) {
-            $this->recursiva_id = htmlspecialchars(strip_tags($this->recursiva_id));
-        } else {
-            $validador = false;
-        }
-        if (!empty(htmlspecialchars(strip_tags($this->id_tipo_f_venta)))) {
-            $this->id_tipo_f_venta = htmlspecialchars(strip_tags($this->id_tipo_f_venta));
+        if (!empty(htmlspecialchars(strip_tags($this->estado)))) {
+            $this->estado = htmlspecialchars(strip_tags($this->estado));
         } else {
             $validador = false;
         }
@@ -274,13 +224,7 @@ class Controller_Factura_Venta
         // Bind Data
         if ($validador == true) {
             $stmt->bindParam(':id_venta', $this->id_venta);
-            $stmt->bindParam(':fecha_venta', $this->fecha_venta);
-            $stmt->bindParam(':valor_venta', $this->valor_venta);
             $stmt->bindParam(':estado', $this->estado);
-            $stmt->bindParam(':id_tipo_venta', $this->id_tipo_venta);
-            $stmt->bindParam(':rut_cliente', $this->rut_cliente);
-            $stmt->bindParam(':recursiva_id', $this->recursiva_id);
-            $stmt->bindParam(':id_tipo_f_venta', $this->id_tipo_f_venta);
             try {
                 if ($stmt->execute()) {
                     return true;

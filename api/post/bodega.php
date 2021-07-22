@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             */
             $g->valor_gastos = $g->Obtener_total_gasto_only($post->id_bodega);
             //obtner el gasto de esa bodega 
-            $valor_del_inventario = 'gasto bodega :' . $g->valor_gastos;
+            $valor_del_inventario = 'total del inventario :' . $g->valor_gastos;
             if ($post->read_single()) {
                 $post_item = array(
                     'id_bodega' => $post->id_bodega,

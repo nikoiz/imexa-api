@@ -248,22 +248,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $validador = true;
     $post = new Controller_Factura_Venta($GLOBALS['db']);
-    $tf = new Controller_tipo_factura_venta($GLOBALS['db']);
-    $mpv = new Controller_metodo_pago_compra($GLOBALS['db']);
-    $ab = new Controller_Abono($GLOBALS['db']);
-    $cl = new Controller_Cliente($GLOBALS['db']);
 
 
 
 
     $post->id_venta = $GLOBALS['data']->id_venta;
-    $post->fecha_venta = $fecha = date('Y-m-d'); // preguntar
-    $post->valor_venta = $GLOBALS['data']->valor_venta;
     $post->estado = $GLOBALS['data']->estado;
-    $post->id_tipo_venta = $GLOBALS['data']->id_tipo_venta;
-    $post->rut_cliente = $GLOBALS['data']->rut_cliente;
-    $post->recursiva_id = $post->id_venta;
-    $post->id_tipo_f_venta = $GLOBALS['data']->id_tipo_f_venta;
 
     if ($post->Validacion_parametro($post->id_venta) == false) {
         $validador = false;
@@ -277,12 +267,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
                 array('message' => 'Existe numero de la factura venta')
             );
         }
-    }
-    if ($post->Validador_de_valor_venta($post->valor_venta) == true) {
-        $validador = false;
-        echo json_encode(
-            array('message' => $post->Validador_de_valor_venta($post->valor_venta))
-        );
     }
     if ($post->Validacion_parametro($post->estado) == false) {
         $validador = false;
@@ -298,54 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             );
         }
     }
-    if ($post->Validacion_parametro($post->id_tipo_venta) == false) {
-        $validador = false;
-        echo json_encode(
-            array('message' => 'Ingrese un metodo de pago')
-        );
-    } else {
-        if ($mpv->buscar_metodo_pago_venta($post->id_tipo_venta) == false) {
-            $validador = false;
-            echo json_encode(
-                array('message' => 'No existe metodo de pago')
-            );
-        }
-    }
-
-    if ($post->Validacion_parametro($post->rut_cliente) == false) { //validacion mas busqeuda
-        $validador = false;
-        echo json_encode(
-            array('message' => 'Ingrese el rut del cliente')
-        );
-    } else {
-        if ($post->Validator_run($post->rut_cliente) == false) {
-            $validador = false;
-            echo json_encode(
-                array('message' => 'Error rut mal ingresado')
-            );
-        } else {
-            //buscar rut en proveedores
-            if (!empty($cl->buscar_rut_cliente($post->rut_cliente))) {
-                echo json_encode(
-                    array('message' => 'No existe datos del cliente')
-                );
-            }
-        }
-    }
-
-    if ($post->Validacion_parametro($post->id_tipo_f_venta) == false) {
-        $validador = false;
-        echo json_encode(
-            array('message' => 'Ingrese un tipo de factura')
-        );
-    } else {
-        if ($tf->buscar_tipo_factura_venta($post->id_tipo_f_venta) == false) {
-            $validador = false;
-            echo json_encode(
-                array('message' => 'Error no existe un tipo de factura')
-            );
-        }
-    }
+    
     if ($validador == true) {
         if ($post->update_factura_venta()) {
             echo json_encode(

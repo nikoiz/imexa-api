@@ -317,20 +317,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { //se hra delete de todas las entid
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $validador = true;
     $post = new Controller_Factura_Compra($GLOBALS['db']);
-    $p = new Controller_metodo_pago_compra($GLOBALS['db']);
-    $po = new Controller_Proveedor($GLOBALS['db']);
-    $pos = new Controller_tipo_factura_compra($GLOBALS['db']);
     // Get  raw posted data
 
     // GET ID
     $post->id_compra = $GLOBALS['data']->id_compra; //folio
-    $post->fecha_compra = $GLOBALS['data']->fecha_compra;
-    $post->valor_compra = $GLOBALS['data']->valor_compra;
     $post->estado = $GLOBALS['data']->estado;
-    $post->rut_proveedor = $GLOBALS['data']->rut_proveedor;
-    $post->id_tipo_compra = $GLOBALS['data']->id_tipo_compra;
-    $post->recursiva_compra_id = $post->id_compra;
-    $post->id_tipo_f_compra = $GLOBALS['data']->id_tipo_f_compra;
 
 
     //validacion de factura compra
@@ -338,25 +329,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         $validador = false;
         echo json_encode(
             array('message' => 'Ingrese una codigo de compra')
-        );
-    }
-    if ($post->Validacion_parametro($post->fecha_compra) == false) {
-        $validador = false;
-        echo json_encode(
-            array('message' => 'Ingrese una fecha')
-        );
-    } else {
-        if ($post->validateDate($post->fecha_compra) == false) {
-            echo json_encode(
-                array('Error' => $post->validateDate($post->fecha_compra))
-            );
-            $validador = false;
-        }
-    }
-    if ($post->Validador_de_valor_compra($post->valor_compra) != "") {
-        $validador = false;
-        echo json_encode(
-            array('message' => $post->Validador_de_valor_compra($post->valor_compra))
         );
     }
     if ($post->Validacion_parametro($post->estado) == false) {
@@ -373,53 +345,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             );
         }
     }
-    if ($post->Validacion_parametro($post->rut_proveedor) == false) { //validacion mas busqeuda
-        $validador = false;
-        echo json_encode(
-            array('message' => 'Ingrese el rut del proveedor')
-        );
-    } else {
-        if ($post->Validator_run($post->rut_proveedor) == false) {
-            $validador = false;
-            echo json_encode(
-                array('message' => 'Error rut mal ingresado')
-            );
-        } else {
-            //buscar rut en proveedores
-            if (!empty($po->buscar_rut_proveedor($post->rut_proveedor))) {
-                echo json_encode(
-                    array('message' => 'No existe datos del provedor')
-                );
-            }
-        }
-    }
-    if ($post->Validacion_parametro($post->id_tipo_compra) == false) {
-        $validador = false;
-        echo json_encode(
-            array('message' => 'Ingrese un metodo de pago')
-        );
-    } else {
-        if ($p->buscar_metodo_pago_compra($post->id_tipo_compra) == false) {
-            $validador = false;
-            echo json_encode(
-                array('message' => 'No existe metodo de pago')
-            );
-        }
-    }
-    if ($post->Validacion_parametro($post->id_tipo_f_compra) == false) {
-        $validador = false;
-        echo json_encode(
-            array('message' => 'Ingrese un tipo de factura')
-        );
-    } else {
-        if ($pos->buscar_tipo_factura_compratipo_factura_compra($post->id_tipo_f_compra) == false) {
-            $validador = false;
-            echo json_encode(
-                array('message' => 'Error no existe un tipo de factura')
-            );
-        }
-    }
-
     if ($validador == true) {
         if ($post->update_Factura_Compra()) {
             echo json_encode(
