@@ -13,6 +13,8 @@ class Controller_Gasto
     public $id_bodega;
     public $nombre_bodega;
 
+    
+
 
     public function __construct($db)
     {

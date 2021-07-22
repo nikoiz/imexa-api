@@ -10,7 +10,9 @@ class controller_bodega
     public $numero_bodega;
     public $nombre_bodega;
 
-    public $valor_gastos;
+    public $valor_gastos;//total del inventario
+
+    public $total_gasto;//de los gastos
 
     // Constructor with DB
 
@@ -348,6 +350,27 @@ class controller_bodega
         // set properties
 
         $numero_comparar = $row['total'];
+
+        if ($numero_comparar !=null) {
+            return $numero_comparar;
+        } else {
+            return null;
+        }
+    }
+    function Obtener_total_gasto_bodega($id_bodega)
+    {
+        $query = "SELECT SUM(gastos.valor_gastos) as total_gasto ,bodega.nombre_bodega FROM `gastos` INNER JOIN bodega ON gastos.id_bodega=bodega.id_bodega WHERE bodega.id_bodega=?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $id_bodega);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $numero_comparar = $row['total_gasto'];
 
         if ($numero_comparar !=null) {
             return $numero_comparar;
