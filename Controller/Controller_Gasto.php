@@ -378,30 +378,7 @@ class Controller_Gasto
             return false;
         }
     }
-    function Obtener_total_gasto_only($id_bodega)
-    {
-        $query = "SELECT SUM(detalle_inventario.cantidad_producto)*SUM(producto.valor_producto) as total FROM `detalle_inventario`
-        inner JOIN bodega_has_producto ON detalle_inventario.id_producto = bodega_has_producto.id_producto
-        INNER JOIN producto ON bodega_has_producto.id_producto =producto.id_producto
-        where detalle_inventario.id_bodega=?";
-
-        $stmt = $this->conn->prepare($query);
-
-        //Bind id
-        $stmt->bindParam(1, $id_bodega);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // set properties
-
-        $numero_comparar = $row['total'];
-
-        if ($numero_comparar !=null) {
-            return $numero_comparar;
-        } else {
-            return null;
-        }
-    }
+    
     public function update_gasto_por_bodega($id_bodega,$valor_gastos)
     {
         $validador = true;

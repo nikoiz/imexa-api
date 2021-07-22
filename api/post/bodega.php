@@ -109,21 +109,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                
             }
             */
-            $g->valor_gastos = $g->Obtener_total_gasto_only($post->id_bodega);
+            $post->valor_gastos = $post->Obtener_total_gasto_only($post->id_bodega);
             //obtner el gasto de esa bodega 
             $valor_del_inventario = 'total_del_inventario :' . $g->valor_gastos;
             if ($post->read_single()) {
                 $post_item = array(
                     'id_bodega' => $post->id_bodega,
                     'numero_bodega' => $post->numero_bodega,
-                    'nombre_bodega' => $post->nombre_bodega
+                    'nombre_bodega' => $post->nombre_bodega,
+                    'total_inventario' =>$post->valor_gastos
 
                 );
 
                 //Make JSON
 
                 print_r(json_encode($post_item));
-                print_r(json_encode($valor_del_inventario));
             } else {
                 echo json_encode(
                     array('message' => 'No Posts Found')
