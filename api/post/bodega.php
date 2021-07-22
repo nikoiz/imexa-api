@@ -150,7 +150,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $post_item = array(
                     'id_bodega' => $id_bodega,
                     'numero_bodega' => $numero_bodega,
-                    'nombre_bodega' => $nombre_bodega
+                    'nombre_bodega' => $nombre_bodega,
+                    'total_inventario' =>$valor_gastos = $post->Obtener_total_gasto_only($id_bodega)
                 );
 
                 array_push($posts_arr['data'], $post_item);
