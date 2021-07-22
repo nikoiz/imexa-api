@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             array('Error' => "Error rut mal ingresado")
         );
     }else {
-        if (!$post->Buscar_rut_trabajador($post->rut_trabajador)) {
+        if ($post->Buscar_rut_trabajador($post->rut_trabajador)==true) {
             $validador = false;
             echo json_encode(
                 array('Error' => "Error no se encontro el rut del trabajdor")
