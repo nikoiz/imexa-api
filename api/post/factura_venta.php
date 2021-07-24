@@ -115,12 +115,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($ab->valor_abono != "") {
         if ($ab->obtener_valor_total($post->rut_cliente) != "") {
             // se obtiene nuevo valor en base a los abonos 
-            $post->valor_venta = $post->valor_venta -$ab->obtener_valor_total($post->rut_cliente);
+            $ab->id_abono=$ab->obtener_codigo_del_abono($post->rut_cliente);
+            //si se resta o no
+            $post->valor_venta =$ab->obtener_valor_total($post->rut_cliente) -$post->valor_venta;
+
+            //actualizar el abono se debe realizar en el update del abono como otro json
+
         } else {
+            
             $validador = false;
             echo json_encode(
                 array('message' => 'No se puedo Restar el valor del abono')
             );
+            
+            //se crea el abono
+
         }
     }
     if ($post->Validacion_parametro($post->id_tipo_f_venta) == false) {

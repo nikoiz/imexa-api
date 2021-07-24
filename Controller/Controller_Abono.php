@@ -114,7 +114,6 @@ class Controller_Abono
         $validador = true;
         //poner atencion a la nomenclatura de las palabas.
         $query = "UPDATE abono SET    
-        id_abono = :id_abono,
         valor_abono = :valor_abono,
         fecha_abono = :fecha_abono,
         id_venta = :id_venta
@@ -226,6 +225,28 @@ class Controller_Abono
 
         if ($numero_comparar == $rut_cliente) {
             return $total_abono;
+        } else {
+            return "";
+        }
+    }
+    function obtener_codigo_del_abono($rut_cliente)
+    {
+        $query = "SELECT abono.id_abono FROM cliente INNER JOIN factura_venta on cliente.rut_cliente=factura_venta.rut_cliente INNER JOIN abono ON factura_venta.id_venta=abono.id_venta WHERE cliente.rut_cliente =  ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $rut_cliente);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $numero_comparar = $row['rut_cliente'];
+        $id_abono  = $row['abono.id_abono'];
+
+        if ($numero_comparar == $rut_cliente) {
+            return $id_abono;
         } else {
             return "";
         }
