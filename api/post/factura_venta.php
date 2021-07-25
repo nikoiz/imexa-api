@@ -115,10 +115,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($ab->valor_abono != "") {
         if ($ab->obtener_valor_total($post->rut_cliente) != "") {
             // se obtiene nuevo valor en base a los abonos 
-            $ab->id_abono=$ab->obtener_codigo_del_abono($post->rut_cliente);
             //si se resta o no
-            $post->valor_venta =$ab->obtener_valor_total($post->rut_cliente) -$post->valor_venta;
-
+            $post->valor_venta =$post->valor_venta-$ab->obtener_valor_total($post->rut_cliente);
             //actualizar el abono se debe realizar en el update del abono como otro json
 
         } else {
