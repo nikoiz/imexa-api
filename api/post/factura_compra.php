@@ -323,7 +323,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
 
     //por linkeo
     $post->id_compra = isset($_GET['id_compra']) ? $_GET['id_compra'] : die();
-    $post->estado = isset($_GET['estado']) ? $_GET['estado'] : die();
+    $post->estado = $GLOBALS['data']->estado;
 
     //validacion de factura compra
     if ($post->Validacion_parametro($post->id_compra) == false) {

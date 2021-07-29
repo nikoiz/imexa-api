@@ -258,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
 
 
     $post->id_venta = isset($_GET['id_venta']) ? $_GET['id_venta'] : die();
-    $post->estado = isset($_GET['estado']) ? $_GET['estado'] : die();
+    $post->estado = $GLOBALS['data']->estado;
 
     if ($post->Validacion_parametro($post->id_venta) == false) {
         $validador = false;
