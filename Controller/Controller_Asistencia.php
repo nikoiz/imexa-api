@@ -14,6 +14,11 @@ class Controller_Asistencia
     public $fecha_incio;
     public $fecha_termino;
 
+    //trabajador
+    public $nombre_trabajador;
+    public $fecha_contratacion;
+    public $valor_dia;
+    public $sueldo;
 
 
 
@@ -41,20 +46,26 @@ class Controller_Asistencia
     {
         //SELECT SUM(`cant_dias_fallados`) as cant_dias_fallados,`rut_trabajador` FROM `asistencia` WHERE `fecha` BETWEEN '2021-07-01' AND '2021-07-31' and `rut_trabajador`="11344366-9"
 
-        $query = "SELECT SUM(`cant_dias_fallados`) as cant_dias_fallados,`rut_trabajador` FROM `asistencia` WHERE `fecha` BETWEEN ? AND ? and `rut_trabajador`=?";
+        $query = "SELECT SUM(asistencia.cant_dias_fallados)as cant_dias_fallados,trabajador.rut_trabajador as rut,trabajador.nombre_trabajador as nombre,trabajador.fecha_contratacion as f_contratacion,trabajador.valor_dia as v_dia,trabajador.sueldo as sueldo FROM trabajador INNER JOIN asistencia on trabajador.rut_trabajador=asistencia.rut_trabajador WHERE `fecha` BETWEEN ? AND ?  GROUP by trabajador.rut_trabajador";
         //$query = "SELECT * FROM asistencia WHERE id_asistencia = ?";
         $stmt = $this->conn->prepare($query);
         //Bind id
         $stmt->bindParam(1, $this->fecha_incio);
         $stmt->bindParam(2, $this->fecha_termino);
-        $stmt->bindParam(3, $this->rut_trabajador);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-
-        $this->cant_dias_fallados = $row['cant_dias_fallados'];
-        $this->rut_trabajador = $row['rut_trabajador'];
+        /* 
+         $this->cant_dias_fallados = $row['cant_dias_fallados'];
+        $this->rut_trabajador = $row['rut'];
+        $this->nombre_trabajador = $row['nombre'];
+        $this->fecha_contratacion =$row['f_contratacion'];
+        $this->valor_dia =$row['v_dia'];
+        $this->sueldo =$row['sueldo'];
+        */ 
+      
+        //nombre_trabajador,trabajador
         try {
             if ($stmt->execute()) {
                 return $stmt;

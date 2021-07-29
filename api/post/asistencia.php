@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if ($_SERVER['REQUEST_METHOD'] == 'GET') { //enel get actualize el sueldo por el valor de dias de atraso del trabajador (aplicar formula)
     $t = new Controller_Trabajador($GLOBALS['db']);
     $validador = true;
-    if (isset($_GET['fecha_incio']) && isset($_GET['fecha_termino']) && isset($_GET['rut_trabajador'])) { //fecha busqueda prrinciapl y termino
+    if (isset($_GET['fecha_incio']) && isset($_GET['fecha_termino']) ) { //fecha busqueda prrinciapl y termino
         // Instiate blog post object
         $post = new Controller_Asistencia($GLOBALS['db']);
 
@@ -93,7 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //enel get actualize el sueldo por el
 
         $post->fecha_incio = isset($_GET['fecha_incio']) ? $_GET['fecha_incio'] : die();
         $post->fecha_termino = isset($_GET['fecha_termino']) ? $_GET['fecha_termino'] : die();
-        $post->rut_trabajador = isset($_GET['rut_trabajador']) ? $_GET['rut_trabajador'] : die();
         if ($post->validateDate($post->fecha_incio) == false) {
             $validador = false;
             echo json_encode(
@@ -111,22 +110,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //enel get actualize el sueldo por el
             $ano = $separa[0];
             $mes = $separa[1];
             $dia = $separa[2];
-            
-            if (!empty($post->Buscar_rut_trabajador($post->rut_trabajador))) {
-                echo json_encode(
-                    array('message' => 'No existe datos sobre la asistencia')
-                );
-            } else {
-                if ($post->Read_single_asistencia()) {
+            $result = $post->Read_single_asistencia();
+            $num = $result->rowCount();
+
+            if ($num > 0) {
+                // Post array
+                $posts_arr = array();
+                $posts_arr['data'] = array();
+    
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    extract($row);
                     $post_item = array(
-
-                        'cant_dias_fallados' => $post->cant_dias_fallados,
-                        'rut_trabajador' => $post->rut_trabajador
+                        'cant_dias_fallados' => $cant_dias_fallados,
+                        'rut_trabajador' => $rut,
+                        'nombre_trabajador'=>$nombre,
+                        'fecha_contratacion'=>$f_contratacion,
+                        'valor_dia'=>$v_dia,
+                        //'sueldo'=>$post->sueldo
+                        'sueldo' =>$total_sueldo = ($dia-$cant_dias_fallados) * $post->Buscar_rut_trabajador_valor_dia($rut)
                     );
-                    //Make JSON
-
-                    print_r(json_encode($post_item));
-                    print_r(json_encode("el dia ".$dia = $separa[2]));
+    
+                    array_push($posts_arr['data'], $post_item);
+                }
+    
+                echo json_encode($posts_arr);
+            } else {
+                // No posts
+                echo json_encode(
+    
+                    array('message' => 'No Posts Found')
+                );
+            }
+             /*
                     //actualizar el sueldo del trabajor de ese mes
                     $total_sueldo = ($dia-$post->cant_dias_fallados) * $post->Buscar_rut_trabajador_valor_dia($post->rut_trabajador);
                     echo json_encode(
@@ -137,13 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //enel get actualize el sueldo por el
                             array('message' => 'No se actualizo el rut del trabajador')
                         );
                     }
-
-                } else {
-                    echo json_encode(
-                        array('message' => 'No Posts Found')
-                    );
-                }
-            }
+                    */
         }
     } else {
         $post = new Controller_Asistencia($GLOBALS['db']);
