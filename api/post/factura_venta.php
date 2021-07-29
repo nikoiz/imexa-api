@@ -257,10 +257,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $post = new Controller_Factura_Venta($GLOBALS['db']);
 
 
-
-
-    $post->id_venta = $GLOBALS['data']->id_venta;
-    $post->estado = $GLOBALS['data']->estado;
+    $post->id_venta = isset($_GET['id_venta']) ? $_GET['id_venta'] : die();
+    $post->estado = isset($_GET['estado']) ? $_GET['estado'] : die();
 
     if ($post->Validacion_parametro($post->id_venta) == false) {
         $validador = false;
