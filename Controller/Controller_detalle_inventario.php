@@ -429,7 +429,7 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n", $stmt->error);
+            printf("Error: %s.\n", $e);
 
             return false;
         }

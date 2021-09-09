@@ -75,7 +75,7 @@ class Controller_bodega_has_producto
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n", $stmt->error);
+            printf("Error: %s.\n", $e);
 
             return false;
         }

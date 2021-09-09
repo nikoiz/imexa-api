@@ -22,7 +22,7 @@ class Controller_Inventario
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n", $stmt->error);
+            printf("Error: %s.\n", $e);
 
             return false;
         }
@@ -45,7 +45,7 @@ class Controller_Inventario
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n", $stmt->error);
+            printf("Error: %s.\n", $e);
             return false;
         }
     }
@@ -81,7 +81,7 @@ class Controller_Inventario
                     return true; //retorna y despues se debe crear el producto inventario
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n", $stmt->error);
+                printf("Error: %s.\n", $e);
 
                 return false;
             }
@@ -110,7 +110,7 @@ class Controller_Inventario
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n", $stmt->error);
+                printf("Error: %s.\n", $e);
 
                 return false;
             }
@@ -150,7 +150,7 @@ class Controller_Inventario
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n", $stmt->error);
+                printf("Error: %s.\n", $e);
                 return false;
             }
         } else {

@@ -35,7 +35,7 @@ class Controller_Factura_Venta
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n", $stmt->error);
+            printf("Error: %s.\n", $e);
 
             return false;
         }
@@ -72,7 +72,7 @@ class Controller_Factura_Venta
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n", $stmt->error);
+            printf("Error: %s.\n", $e);
 
             return false;
         }
@@ -193,7 +193,7 @@ class Controller_Factura_Venta
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n", $stmt->error);
+                printf("Error: %s.\n", $e);
 
                 return false;
             }
@@ -230,7 +230,7 @@ class Controller_Factura_Venta
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n", $stmt->error);
+                printf("Error: %s.\n", $e);
                 return false;
             }
         } else {

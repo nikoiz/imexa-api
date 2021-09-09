@@ -23,7 +23,7 @@ class Controller_Cliente
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n", $stmt->error);
+            printf("Error: %s.\n", $e);
 
             return false;
         }
@@ -46,7 +46,7 @@ class Controller_Cliente
                 return $stmt;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n", $stmt->error);
+            printf("Error: %s.\n", $e);
             return false;
         }
     }
@@ -104,7 +104,7 @@ class Controller_Cliente
                     return true;
                 }
             } catch (Exception $e) {
-                printf("Error: %s.\n", $stmt->error);
+                printf("Error: %s.\n", $e);
 
                 return false;
             }

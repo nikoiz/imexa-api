@@ -21,7 +21,7 @@ class Controller_trabajador_has_bodega{
                 return true;
             }
         } catch (Exception $e) {
-            printf("Error: %s.\n", $stmt->error);
+            printf("Error: %s.\n", $e);
 
             return false;
         }
