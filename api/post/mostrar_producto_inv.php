@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             // No posts
             echo json_encode(
-                array('message' => 'No Posts Found aa')
+                array('message' => 'No se encontro el producto con el nombre: '.$post->nombre_producto)
             );
         }
 
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             // No posts
             echo json_encode(
-                array('message' => 'No Posts Found')
+                array('message' => 'No existe producots del inventario')
             );
         }
     }

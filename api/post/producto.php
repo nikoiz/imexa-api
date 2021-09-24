@@ -133,13 +133,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     );
                 } else {
                     echo json_encode(
-                        array('message' => 'Post Created')
+                        array('message' => 'Se creo el producto')
                     );
                 }
             }
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se creo el producto')
             );
         }
     }
@@ -172,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 print_r(json_encode($post_item));
             } else {
                 echo json_encode(
-                    array('message' => 'No Posts Found')
+                    array('message' => 'No se encontro el producto con el codigo: '.$post->id_producto )
                 );
             }
         }
@@ -202,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // No posts
             echo json_encode(
 
-                array('message' => 'No Posts Found')
+                array('message' => 'No existen productos')
             );
         }
     }
@@ -247,11 +247,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
         } else {
             if ($po->delete_bodega_has_producto($post->id_producto)) {
                 echo json_encode(
-                    array('message' => 'Post deleted')
+                    array('message' => 'Se elimino el producto')
                 );
             } else {
                 echo json_encode(
-                    array('message' => 'Post not deleted')
+                    array('message' => 'No se elimino el producto')
                 );
             }
         }
@@ -316,16 +316,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
                     );
                 }
                 echo json_encode(
-                    array('message' => 'Post Update')
+                    array('message' => 'Se actualizo el producto')
                 );
             } else {
                 echo json_encode(
-                    array('message' => 'Post not Update')
+                    array('message' => 'No se actualizo el producto')
                 );
             }
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'No se actualizo el producto')
             );
         }
     }

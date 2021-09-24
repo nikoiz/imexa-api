@@ -131,12 +131,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 );
             } else {
                 echo json_encode(
-                    array('message' => 'Post Created')
+                    array('message' => 'Se creo el producto venta')
                 );
             }
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se creo el producto venta')
             );
         }
     }
@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 print_r(json_encode($post_item));
             } else {
                 echo json_encode(
-                    array('message' => 'No Posts Found')
+                    array('message' => 'No se encontro la venta')
                 );
             }
         }
@@ -202,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             // No posts
             echo json_encode(
-                array('message' => 'No Posts Found')
+                array('message' => 'No existe ventas')
             );
         }
     }
@@ -333,12 +333,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
                 );
             } else {
                 echo json_encode(
-                    array('message' => 'Post Created')
+                    array('message' => 'Se actualizo la venta')
                 );
             }
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se actualizo la venta')
             );
         }
     }

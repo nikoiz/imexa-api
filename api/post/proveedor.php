@@ -60,11 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     if ($validador==true) {
         if ($post->create_producto()) {
             echo json_encode(
-                array('message' => 'Post Created')
+                array('message' => 'Se creo el proveedor')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se creo el proveedor')
             );
         }
     }
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'){
                      print_r(json_encode($post_item));
                  } else {
                      echo json_encode(
-                         array('message' => 'No Posts Found')
+                         array('message' => 'No se encontro el proveedor con el rut: '.$post->rut_proveedor)
                      );
                  }
              }
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'){
                 // No posts
                 echo json_encode(
             
-                    array('message' => 'No Posts Found')
+                    array('message' => 'No existen proveedores')
                 );
             }
         }
@@ -157,11 +157,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
           } else {
               if ($post->delete_single_proveedor()) {
                   echo json_encode(
-                      array('message' => 'Post deleted')
+                      array('message' => 'se elimino el proveedor')
                   );
               } else {
                   echo json_encode(
-                      array('message' => 'Post not deleted')
+                      array('message' => 'No se elimino el proveedor')
                   );
               }
           }
@@ -200,11 +200,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
     if ($validador==true) {
         if ($post->update_proveedor()) {
             echo json_encode(
-                array('message' => 'Post Update')
+                array('message' => 'Se actualizo el proveedor')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'No se actualizo el proveedor')
             );
         }
     } 

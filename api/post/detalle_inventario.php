@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             // No posts
             echo json_encode(
-                array('message' => 'No Posts Found')
+                array('message' => 'No se encontro el detalle de la asistencia con el codigo de la bodega N° '.$post->id_bodega)
             );
         }
 
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             // No posts
             echo json_encode(
-                array('message' => 'No Posts Found')
+                array('message' => 'No exite detalle de inventario')
             );
         }
     }

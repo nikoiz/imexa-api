@@ -148,11 +148,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($validador == true) {
         if ($post->create_factura_venta()) {
             echo json_encode(
-                array('message' => 'Post Created')
+                array('message' => 'Se creo la factura venta')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se creo la factura venta')
             );
         }
     }
@@ -223,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             // No posts
             echo json_encode(
-                array('message' => 'No Posts Found')
+                array('message' => 'No existen facturas ventas')
             );
         }
     }
@@ -291,11 +291,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if ($validador == true) {
         if ($post->update_factura_venta()) {
             echo json_encode(
-                array('message' => 'Post Update')
+                array('message' => 'Se actualizo la factura venta')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'No se actualizo la factura venta')
             );
         }
     }

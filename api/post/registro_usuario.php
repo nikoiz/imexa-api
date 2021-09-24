@@ -68,11 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     if ($validador==true) {
         if ($post->create_trabajador()) {
             echo json_encode(
-                array('message' => 'Post Created')
+                array('message' => 'Se registro el usuario')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se registro el usuario')
             );
         }
     }

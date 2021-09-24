@@ -72,11 +72,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($post->Create_detalle_asistencia()) {
             echo json_encode(
-                array('message' => 'Post Created')
+                array('message' => 'Se creo el detalle de la asistencia del trabajador')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se creo la asistencia')
             );
         }
     }
@@ -108,12 +108,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $validador = true;
         } else {
             // No posts
-            /*
+            
             echo json_encode(
 
-                array('message' => 'No Posts Found')
+                array('message' => 'No existe detalles de asistencia')
             );
-            */
+            
             
             $validador = false;
         }
@@ -155,11 +155,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     if ($validador == true) {
         if ($post->delete_single_detalle_asistencia()) {
             echo json_encode(
-                array('message' => 'Post deleted')
+                array('message' => 'Se elimino el detalle de la asistencia')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not deleted')
+                array('message' => 'No se elimino el detalle de la asistencia ')
             );
         }
     }
@@ -197,11 +197,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if ($validador == true) {
         if ($post->Update_detalle_asistencia()) {
             echo json_encode(
-                array('message' => 'Post Update')
+                array('message' => 'Se actualizo el detalle de la asistencia')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'No se actualizo el detalle de la asistencia')
             );
         }
     }

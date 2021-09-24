@@ -71,11 +71,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($validador==true) {
         if ($post->create_trabajador()) {
             echo json_encode(
-                array('message' => 'Post Created')
+                array('message' => 'Se creo el trabajador')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se creo el trabajador')
             );
         }
     }
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     print_r(json_encode($post_item));
                 } else {
                     echo json_encode(
-                        array('message' => 'No Posts Found')
+                        array('message' => 'No se encontro al trabajador con el rut: '.$post->rut_trabajador)
                     );
                 }
             }
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // No posts
             echo json_encode(
 
-                array('message' => 'No Posts Found')
+                array('message' => 'No existen trabajadores')
             );
         }
     }
@@ -171,11 +171,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     } else {
         if ($post->delete_single_trabajador()) {
             echo json_encode(
-                array('message' => 'Post deleted')
+                array('message' => 'Se elimino trabajadores')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not deleted')
+                array('message' => 'No se elimino trabajadores')
             );
         }
     }
@@ -218,11 +218,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if ($validador == true) {
         if ($post->update_trabajador()) {
             echo json_encode(
-                array('message' => 'Post Update')
+                array('message' => 'Se actualizo trabajador')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'No se actualizo trabajador')
             );
         }
     }

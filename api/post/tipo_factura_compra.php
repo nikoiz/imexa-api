@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 print_r(json_encode($post_item));
             } else {
                 echo json_encode(
-                    array('message' => 'No Posts Found')
+                    array('message' => 'No se encontro el tipo de la compra')
                 );
             }
         }
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // No posts
             echo json_encode(
 
-                array('message' => 'No Posts Found')
+                array('message' => 'No existen tipos de facturas de la compra')
             );
         }
     }

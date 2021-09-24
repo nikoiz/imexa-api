@@ -2,7 +2,7 @@
 //dejar el local host a puerto 3000
 header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
 include_once '../../config/conexion.php';
@@ -64,11 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     if ($validador == true) {
         if ($post->create_abono()) {
             echo json_encode(
-                array('message' => 'Post Created')
+                array('message' => 'Se creo el abono')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se creo el abono')
             );
         }
     }
@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-if (isset($_GET['rut_cliente'])){
+if (isset($_GET['rut_cliente'])){//por un cliente y junto con ello mostar 
     $post = new Controller_Abono($GLOBALS['db']);
     $cl = new Controller_Cliente($GLOBALS['db']);
     $cl->rut_cliente = isset($_GET['rut_cliente']) ? $_GET['rut_cliente'] : die();
@@ -96,7 +96,7 @@ if (isset($_GET['rut_cliente'])){
                 print_r(json_encode($total_abono));
             } else {
                 echo json_encode(
-                    array('message' => 'No Posts Found')
+                    array('message' => 'No se encontro  abonos del rut: '.$cl->rut_cliente)
                 );
             }
     } else {
@@ -128,7 +128,7 @@ if (isset($_GET['rut_cliente'])){
         } else {
             // No posts
             echo json_encode(
-                array('message' => 'No Posts Found')
+                array('message' => 'No exiten abonos')
             );
         }
     }
@@ -189,11 +189,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
     if ($validador==true) {
         if ($post->update_abono()) {
             echo json_encode(
-                array('message' => 'Post Update')
+                array('message' => 'Se actualizo el abono')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'No se actualizo el abono')
             );
         }
     }  

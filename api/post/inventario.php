@@ -45,11 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($validador == true) {
         if ($post->create_invantario()) {
             echo json_encode(
-                array('message' => 'Post Created')
+                array('message' => 'Se creo el inventario')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se creo el inventario')
             );
         }
     }
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         print_r(json_encode($post_item));
                     } else {
                         echo json_encode(
-                            array('message' => 'No Posts Found')
+                            array('message' => 'No se encontro inventario')
                         );
                         $validador = false;
                     }
@@ -145,11 +145,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     } else {
         if ($post->delete_single_inventario()) {
             echo json_encode(
-                array('message' => 'Post deleted')
+                array('message' => 'Se elimino el inventario')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not deleted')
+                array('message' => 'No se elimino inventario')
             );
         }
     }
@@ -192,11 +192,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if ($validador == true) {
         if ($post->update_inventario()) {
             echo json_encode(
-                array('message' => 'Post Update')
+                array('message' => 'Se actualizo el inventario')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'No se actualizo el inventaria')
             );
         }
     }

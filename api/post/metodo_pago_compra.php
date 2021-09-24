@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 print_r(json_encode($post_item));
             } else {
                 echo json_encode(
-                    array('message' => 'No Posts Found')
+                    array('message' => 'No se encontro el metodo de pago')
                 );
             }
         }
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // No posts
             echo json_encode(
 
-                array('message' => 'No Posts Found')
+                array('message' => 'No existe metodos de pago')
             );
         }
 

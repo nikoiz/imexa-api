@@ -80,11 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($validador == true) {
         if ($post->create_gasto()) {
             echo json_encode(
-                array('message' => 'Post Created')
+                array('message' => 'Se creo el gasto')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se creo la gasto')
             );
         }
     }
@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 print_r(json_encode($post_item));
             } else {
                 echo json_encode(
-                    array('message' => 'No Posts Found')
+                    array('message' => 'No se encontro los gastos del codigo: '.$post->id_gastos )
                 );
             }
         }
@@ -159,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // No posts
             echo json_encode(
 
-                array('message' => 'No Posts Found')
+                array('message' => 'No existe gastos')
             );
         }
     }
@@ -180,11 +180,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
      } else {
          if ($post->delete_single_gasto()) {
              echo json_encode(
-                 array('message' => 'Post deleted')
+                 array('message' => 'Se elimino gastos')
              );
          } else {
              echo json_encode(
-                 array('message' => 'Post not deleted')
+                 array('message' => 'No se elimino gastos')
              );
          }
      }
@@ -218,11 +218,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if ($validador==true) {
         if ($post->update_gasto()) {
             echo json_encode(
-                array('message' => 'Post Update')
+                array('message' => 'Se actualizo gastos')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'No se actualizo gasto')
             );
         }
     }  

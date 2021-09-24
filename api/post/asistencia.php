@@ -71,17 +71,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($validador == true) {
         if ($post->Create_asistencia()) {
             echo json_encode(
-                array('message' => 'Post Created')
+                array('message' => 'Se creo la asistencia del trabajador')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not Created')
+                array('message' => 'No se creo la asistencia del trabajador')
             );
         }
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET') { //enel get actualize el sueldo por el valor de dias de atraso del trabajador (aplicar formula)
+if ($_SERVER['REQUEST_METHOD'] == 'GET') { //enel get actualize el soueldo pr el valor de dias de atraso del trabajador (aplicar formula)
     $t = new Controller_Trabajador($GLOBALS['db']);
     $validador = true;
     if (isset($_GET['fecha_incio']) && isset($_GET['fecha_termino']) ) { //fecha busqueda prrinciapl y termino
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //enel get actualize el sueldo por el
                 // No posts
                 echo json_encode(
     
-                    array('message' => 'No Posts Found')
+                    array('message' => 'No existe asistencia en las fechas dadas')
                 );
             }
              /*
@@ -182,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //enel get actualize el sueldo por el
             // No posts
             echo json_encode(
 
-                array('message' => 'No Posts Found')
+                array('message' => 'No existe asistencias')
             );
         }
     }
@@ -203,11 +203,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     } else {
         if ($post->Delete_asistencia()) {
             echo json_encode(
-                array('message' => 'Post deleted')
+                array('message' => 'Se elimino la asistencia')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not deleted')
+                array('message' => 'No se elimino la asistencia')
             );
         }
     }
@@ -245,11 +245,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if ($validador == true) {
         if ($post->Update_asistencia()) {
             echo json_encode(
-                array('message' => 'Post Update')
+                array('message' => 'Se actualizo la asistencia')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'No se actualizo la asistencia')
             );
         }
     }

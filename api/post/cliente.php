@@ -2,7 +2,7 @@
 //dejar el local host a puerto 3000
 header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Methods: POST, PUT, DELETE, GET');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
 include_once '../../config/conexion.php';
@@ -53,11 +53,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($validador == true) {
         if ($post->create_cliente()) {
             echo json_encode(
-                array('message' => 'Post Created')
+                array('message' => 'Se creo al cliente')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se creo al cliente')
             );
         }
     }
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     print_r(json_encode($post_item));
                 } else {
                     echo json_encode(
-                        array('message' => 'No Posts Found')
+                        array('message' => 'No se encontro datos del rut: '.$post->rut_cliente)
                     );
                 }
             }
@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // No posts
             echo json_encode(
 
-                array('message' => 'No Posts Found')
+                array('message' => 'No ahi datos de clientes')
             );
         }
     }
@@ -139,11 +139,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     } else {
         if ($post->delete_single_cliente()) {
             echo json_encode(
-                array('message' => 'Post deleted')
+                array('message' => 'se elimino al cliente')
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not deleted')
+                array('message' => 'No se elimino al cliente')
             );
         }
     }
@@ -178,11 +178,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     if ($validador==true) {
         if ($post->update_cliente()) {
             echo json_encode(
-                array('message' => 'Post Update')
+                array('message' => 'Se actualizo el cliente del rut: '.$post->rut_cliente)
             );
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'No se actualizo el cliente')
             );
         }
     }  

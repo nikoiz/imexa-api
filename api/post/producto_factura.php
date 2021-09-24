@@ -222,13 +222,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $i->actualizar_valor($total_inventario, 1);
 
                     echo json_encode(
-                        array('message' => 'Post Created')
+                        array('message' => 'Se creo el producto factura')
                     );
                 }
             }
         } else {
             echo json_encode(
-                array('message' => 'Post not created')
+                array('message' => 'No se creo la factura del producto')
             );
         }
     }
@@ -247,6 +247,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { // no lo necesita   no o esta retorna
         //Make JSON
 
         print_r(json_encode($post_item));
+    }else {
+        echo json_encode(
+            array('message' => 'No se encontro datos del producto')
+        );
     }
 }
 
@@ -348,17 +352,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') { //se
 
                 if ($pos->update_detalle_compra($pos->id_detalle_compra, $pos->descripcion_compra_producto, $pos->cantidad_compra_producto, $pos->valor, $pos->id_compra, $pos->producto_id_producto)) {
                     echo json_encode(
-                        array('message' => 'Post Update')
+                        array('message' => 'Se actualizo la factura de la compra')
                     );
                 }
             } else {
                 echo json_encode(
-                    array('message' => 'Post not Update')
+                    array('message' => 'No se actualizo la factura de la compra ')
                 );
             }
         } else {
             echo json_encode(
-                array('message' => 'Post not Update')
+                array('message' => 'No se actualizo la factura de la compra')
             );
         }
     }
