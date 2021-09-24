@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $pos->producto_id_producto = $post->id_producto;
 
             echo json_encode(
-                array('asd' => "$pos->producto_id_producto ")
+                array('asd' => "$pos->producto_id_producto")
             );
 
             if ($po->create_bodega_has_producto($b->id_bodega, $po->id_producto, $po->cantidad_total) == false) {
