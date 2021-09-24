@@ -135,9 +135,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($post->create_producto_factura()) {
             //buscar id_compra
             $pos->id_compra = $factura->buscar_el_ultimo_id_de_factura_compra();
+
             //buscar el ultimo id del producto para el detalle
             $pos->producto_id_producto = $id_producto;
 
+            echo json_encode(
+                array('message' => "$pos->producto_id_producto = $id_producto")
+            );
 
             if ($po->create_bodega_has_producto($b->id_bodega, $po->id_producto, $po->cantidad_total) == false) {
                 echo json_encode(
@@ -160,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     if ($nombre == null) { //2 medios en buscar 
                         echo json_encode(
-                            array('message' => "no se encontro")
+                            array('message' => "no se encontro, se creara uno nuevo")
                         );
                         //crear el producot al inventario
                         if ($di->create_detalle_inventario($post->nombre_producto, $pos->cantidad_compra_producto, $post->valor_producto, $i->id_inventario, $b->id_bodega, $post->id_producto, $fecha) == false) {
