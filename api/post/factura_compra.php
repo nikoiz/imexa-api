@@ -138,7 +138,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
     //me falta hacer el producto 
-
+    echo json_encode(
+        array('message' => $post->id_compra)
+    );
     if ($validador == true) {
         if ($post->create_Factura_Compra()) {
             echo json_encode(
