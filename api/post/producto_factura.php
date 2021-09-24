@@ -136,11 +136,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             //buscar id_compra
             $pos->id_compra = $factura->buscar_el_ultimo_id_de_factura_compra();
 
+            //error o mal dato
+
             //buscar el ultimo id del producto para el detalle
-            $pos->producto_id_producto = $id_producto;
+            $pos->producto_id_producto = $post->id_producto;
 
             echo json_encode(
-                array('message' => "$pos->producto_id_producto = $id_producto")
+                array('asd' => "$pos->producto_id_producto ")
             );
 
             if ($po->create_bodega_has_producto($b->id_bodega, $po->id_producto, $po->cantidad_total) == false) {
@@ -149,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 );
             } else {
                 //agregar el producto a al detalle compra
-                if ($pos->create_detalle_compra($pos->descripcion_compra_producto, $pos->cantidad_compra_producto, $pos->valor, $pos->id_compra, $post->id_producto) == false) {
+                if ($pos->create_detalle_compra($pos->descripcion_compra_producto, $pos->cantidad_compra_producto, $pos->valor, $pos->id_compra, $pos->producto_id_producto) == false) {
                     echo json_encode(
                         array('message' => 'Error no se pudo hacer el detalle del producto: ' . $post->nombre_producto)
                     );
