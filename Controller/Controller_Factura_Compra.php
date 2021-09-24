@@ -363,6 +363,7 @@ class Controller_Factura_Compra
             return false;
         }
     }
+    /*
     function buscar_el_ultimo_id_de_factura_compra()
     {
         $query = "SELECT MAX(id_compra) AS id_compra FROM factura_compra";
@@ -377,6 +378,9 @@ class Controller_Factura_Compra
             return false;
         }
     }
+    */
+    
+
     public function Alter_table_delete_Factura_Compra($id_compra)
     {
         $validador = true;

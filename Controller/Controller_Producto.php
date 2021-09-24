@@ -60,7 +60,7 @@ class Controller_Producto
         }
     }
 
-    public function create_producto()
+    public function create_producto($nombre_producto,$valor_producto)
     {
         $validador = true;
         $query = 'INSERT INTO producto 
@@ -70,10 +70,10 @@ class Controller_Producto
             valor_producto = :valor_producto';
 
         $stmt = $this->conn->prepare($query);
-        if (htmlspecialchars(strip_tags($this->valor_producto)) != "") {
-            if (is_numeric(htmlspecialchars(strip_tags($this->valor_producto)))) {
-                if (htmlspecialchars(strip_tags($this->valor_producto)) >= 0) {
-                    $this->valor_producto = htmlspecialchars(strip_tags($this->valor_producto));
+        if ($valor_producto != "") {
+            if (is_numeric($valor_producto)) {
+                if ($valor_producto >= 0) {
+                    $this->valor_producto = $valor_producto;
                 } else {
                     $validador = false;
                 }
@@ -84,8 +84,8 @@ class Controller_Producto
             $validador = false;
         }
 
-        if (!empty(htmlspecialchars(strip_tags($this->nombre_producto)))) {
-            $this->nombre_producto = htmlspecialchars(strip_tags($this->nombre_producto));
+        if (!empty($nombre_producto)) {
+            $this->nombre_producto = $nombre_producto;
         } else {
             $validador = false;
         }

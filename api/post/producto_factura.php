@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     do {
         $numero_random = $post->obtener_el_ultimo_id();
-        $numero_random += 1;
+        $numero_random =$numero_random+ 1;
     } while ($post->buscar_random_id($numero_random) == false);
 
     $post->id_producto = $numero_random; //se obtendra y retornara +1
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pos->descripcion_compra_producto = $GLOBALS['data']->descripcion_compra_producto;
     $pos->cantidad_compra_producto = $GLOBALS['data']->cantidad_compra_producto;
     $pos->valor = $GLOBALS['data']->valor;
-    $pos->id_compra; // se sacara la cual sera la ultima de factura compra => ya sacada
+    $pos->id_compra= $GLOBALS['data']->id_compra;
     $pos->producto_id_producto = $post->id_producto; //se sacara al hacer ingreso del producto 
 
     //bodega_has_producto
@@ -70,6 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //inventario
     $i->id_inventario = 1;
     $fecha = date('Y-m-d');
+
+    if (empty($pos->id_compra) ) {
+        $validador = false;
+        echo json_encode(
+            array('message' => "No se a ingresado un codigo de la compra")
+        );
+    }
+
 
 
     if ($post->validador_nombre($post->nombre_producto) != null) {
@@ -127,20 +135,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
 
-
-
-
+    //la logica sea es que 1.- se crea la factura, luego se crea el producto y en base a esto se crea el detalle
 
     if ($validador == true) {
-        if ($post->create_producto_factura()) {
-            //buscar id_compra
-            $pos->id_compra = $factura->buscar_el_ultimo_id_de_factura_compra();
+        if ($post->create_producto_factura()) {//mandar datos 
 
-            //error o mal dato
-
-            //buscar el ultimo id del producto para el detalle
             $pos->producto_id_producto = $post->id_producto;
 
+            //verifico el id 
             echo json_encode(
                 array('asd' => "$pos->producto_id_producto")
             );
@@ -253,7 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { // no lo necesita   no o esta retorna
         //Make JSON
 
         print_r(json_encode($post_item));
-    }else {
+    } else {
         echo json_encode(
             array('message' => 'No se encontro datos del producto')
         );
