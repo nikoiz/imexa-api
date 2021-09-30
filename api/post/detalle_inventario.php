@@ -19,11 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['id_bodega'])) {
+    if (isset($_GET['nombre_producto'])) {
 
         $post = new Controller_detalle_inventario($GLOBALS['db']);
-        $post->id_bodega = isset($_GET['id_bodega']) ? $_GET['id_bodega'] : die();
-        $result = $post->Read_single_detalle_invetario();
+        $post->nombre_producto = isset($_GET['nombre_producto']) ? $_GET['nombre_producto'] : die();
+        $result = $post->Read_single_detalle_invetario($post->nombre_producto);
         // Get row count
         $num = $result->rowCount();
 
@@ -35,15 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 extract($row);
                 $post_item = array(
 
-
-                    'id_detalle_inventario' => $id_detalle_inventario,
-                    'nombre_producto' => $nombre_producto,
-                    'cantidad_producto' => $cantidad_producto,
-                    'valor' => $valor,
-                    'fecha_inventario' => $fecha_inventario,
-                    'id_inventario' => $id_inventario,
-                    'id_bodega' => $id_bodega,
-                    'id_producto' => $id_producto
+                    'nombre_producto' => $post->nombre_producto,
+                    'cantidad_producto' => $post->cantidad_producto,
+                    'valor' => $post->valor,
+                    'nombre_bodega' => $post->nombre_bodega,
+                    'numero_bodega' => $post->numero_bodega
                 );
                 array_push($posts_arr['data'], $post_item);
             }
@@ -51,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             // No posts
             echo json_encode(
-                array('message' => 'No se encontro el detalle de la asistencia con el codigo de la bodega N° '.$post->id_bodega)
+                array('message' => 'No se encontro el producto: '.$post->nombre_producto)
             );
         }
 

@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     if ($validador == true) {
-        if ($post->create_producto()) {
+        if ($post->create_producto($post->nombre_producto,$post->valor_producto)) {
 
 
             $id_producto = $post->obtener_el_ultimo_id(); //manda

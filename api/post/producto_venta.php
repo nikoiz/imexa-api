@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 array('message' => 'No existe datos sobre el ' . $post->nombre_producto)
             );
         } else {
-            if ($post->Read_single_detalle_invetario()) {
+            if ($post->Read_single_detalle_invetario($post->nombre_producto)) {
                 $post_item = array(
                     'id_detalle_inventario' => $post->id_detalle_inventario,
                     'nombre_producto' => $post->nombre_producto,

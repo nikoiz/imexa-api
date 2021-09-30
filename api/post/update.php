@@ -160,7 +160,7 @@ function update_bodega()
     
     $validador=true;
     
-    if ($post->buscar_nombre($post->nombre_bodega)==false) {
+    if ($post->buscar_id_bodega($post->id_bodega)==false) {
         $validador=false;
         echo json_encode(
             array('message' => 'Existe mombre de la bodega')
