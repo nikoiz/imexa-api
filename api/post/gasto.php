@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         );
         $validador = false;
     }
-    if ($post->Validador_estado($post->estado) == false) {
+    if ($post->Validador_estado($post->estado) == false) {//1 = si / 2 = no
         echo json_encode(
             array('Error' => 'Falta establecer el estado')
         );

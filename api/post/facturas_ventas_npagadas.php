@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $post = new Controller_Factura_Venta($GLOBALS['db']);
         $post->id_venta = isset($_GET['id_venta']) ? $_GET['id_venta'] : die();
         if (!empty($post->id_venta)) {
-            if ($post->Read_single_factura_no_pagadas()) {
+            if ($post->Read_single_factura()) {
                 $post_item = array(
                     'id_venta' => $post->id_venta,
                     'fecha_venta' => $post->fecha_venta,

@@ -36,6 +36,21 @@ class Controller_Gasto
             return false;
         }
     }
+    public function Read_Gasto_no_pagado()
+    {
+        $query = "SELECT id_gastos,descripcion_gastos,valor_gastos,estado,fecha,nombre_bodega, gastos.id_bodega FROM gastos inner JOIN bodega on bodega.id_bodega=gastos.id_bodega where estado = 2";
+        $stmt = $this->conn->prepare($query);
+
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return false;
+        }
+    }
 
     public function Read_single_gasto()
     {

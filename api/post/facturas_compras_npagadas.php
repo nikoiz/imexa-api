@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                 array('message' => 'No existe datos sobre la factura N°' . $post->folio_factura)
             );
         } else {
-            if ($post->Read_single_Factura_Compra_No_pagadas()) {
+            if ($post->Read_single_Factura_Compra()) {
                 $post_item = array(
                     'id_compra' => $post->id_compra,
                     'fecha_compra' => $post->fecha_compra,
