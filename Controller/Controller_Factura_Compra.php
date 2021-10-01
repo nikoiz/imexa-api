@@ -81,7 +81,7 @@ class Controller_Factura_Compra
         $this->rut_proveedor = $row['rut_proveedor'];
         $this->id_tipo_compra = $row['id_tipo_compra'];
         $this->id_tipo_f_compra = $row['id_tipo_f_compra'];
-        
+
         //resto de la query
         $this->id_detalle_compra = $row['id_detalle_compra'];
         $this->descripcion_compra_producto = $row['descripcion_compra_producto'];
@@ -108,20 +108,7 @@ class Controller_Factura_Compra
     public function create_Factura_Compra()
     {
         $validador = true;
-        $query = 'INSERT INTO factura_compra 
-        SET 
-            
-            id_compra = :id_compra,
-            fecha_compra = :fecha_compra,
-            valor_compra =:valor_compra,
-            estado =:estado,
-            rut_proveedor =:rut_proveedor,
-            id_tipo_compra =:id_tipo_compra,
-            recursiva_compra_id =:recursiva_compra_id,
-            id_tipo_f_compra =:id_tipo_f_compra';
 
-
-        $stmt = $this->conn->prepare($query);
         if (empty(htmlspecialchars(strip_tags($this->id_compra)))) {
             $validador = false;
         }
@@ -148,14 +135,20 @@ class Controller_Factura_Compra
         }
 
         if ($validador == true) {
-            $stmt->bindParam(':id_compra', $this->id_compra);
-            $stmt->bindParam(':fecha_compra', $this->fecha_compra);
-            $stmt->bindParam(':valor_compra', $this->valor_compra);
-            $stmt->bindParam(':estado', $this->estado);
-            $stmt->bindParam(':rut_proveedor', $this->rut_proveedor);
-            $stmt->bindParam(':id_tipo_compra', $this->id_tipo_compra);
-            $stmt->bindParam(':recursiva_compra_id', $this->recursiva_compra_id);
-            $stmt->bindParam(':id_tipo_f_compra', $this->id_tipo_f_compra);
+            $query = 'INSERT INTO factura_compra 
+        SET 
+            
+            id_compra = "' . $this->id_compra . '",
+            fecha_compra = "' . $this->fecha_compra . '",
+            valor_compra ="' . $this->valor_compra . '",
+            estado = "' . $this->estado . '",
+            rut_proveedor = "' . $this->rut_proveedor . '",
+            id_tipo_compra = "' . $this->id_tipo_compra . '",
+            recursiva_compra_id = "' . $this->recursiva_compra_id . '",
+            id_tipo_f_compra = "' . $this->id_tipo_f_compra . '"';
+
+
+            $stmt = $this->conn->prepare($query);
             try {
                 if ($stmt->execute()) {
                     return true;
@@ -341,7 +334,7 @@ class Controller_Factura_Compra
         }
     }
     */
-    
+
 
     public function Alter_table_delete_Factura_Compra($id_compra)
     {
@@ -351,7 +344,7 @@ class Controller_Factura_Compra
 
         if ($id_compra == "") {
             $validador = false;
-        } 
+        }
         if ($validador == true) {
             $stmt->bindParam(1, $id_compra);
             try {
@@ -377,7 +370,7 @@ class Controller_Factura_Compra
 
         $numero_comparar = $row['id_detalle_compra'];
         $numero_comparar2 = $row['producto_id_producto'];
-        $a= array($numero_comparar,$numero_comparar2 );
+        $a = array($numero_comparar, $numero_comparar2);
         /*
         foreach ($a as $a) {
             printf("Error: %s.\n", $a);
@@ -390,4 +383,3 @@ class Controller_Factura_Compra
         }
     }
 }
-?>
