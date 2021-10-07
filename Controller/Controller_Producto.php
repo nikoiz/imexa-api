@@ -384,7 +384,7 @@ class Controller_Producto
     //buscar_el_ultimo_id
     function obtener_el_ultimo_id()// por medio del ultimo id se establecera el poder sumar el ultimo 
     {
-        $query = "SELECT MAX(id_producto) AS id_producto FROM producto";
+        $query = "SELECT MAX(id_producto)+1 AS id_producto FROM producto";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -417,6 +417,8 @@ class Controller_Producto
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $numero_comparar = $row['id_producto'];
+
+        printf("el id que se obtiene por medio de comprobar el id si existe:", $numero_comparar);
         if ($numero_comparar == null) {
             return true;
         } else {

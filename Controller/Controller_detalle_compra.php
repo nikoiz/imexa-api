@@ -21,19 +21,16 @@ class Controller_detalle_compra
         //se realizara en api/post producto_factura para mantener a las los tipos de forma tanto sola como con factura
         //CANTIDAD = cantida de ese producto chek
         //valor =de ese producto
-        $query = "INSERT INTO detalle_compra 
+        $query = 'INSERT INTO detalle_compra 
         SET
-        descripcion_compra_producto = :descripcion_compra_producto,
-        cantidad_compra_producto = :cantidad_compra_producto,
-        valor = :valor,
-        id_compra =:id_compra,
-        producto_id_producto =:producto_id_producto";
+        descripcion_compra_producto = "'.$descripcion_compra_producto.'",
+        cantidad_compra_producto = "'.$cantidad_compra_producto.'",
+        valor = "'.$valor.'",
+        id_compra = "'.$id_compra.'",
+        producto_id_producto = "'.$producto_id_producto.'"';
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':descripcion_compra_producto', $descripcion_compra_producto);
-        $stmt->bindParam(':cantidad_compra_producto', $cantidad_compra_producto);
-        $stmt->bindParam(':valor', $valor);
-        $stmt->bindParam(':id_compra', $id_compra);
-        $stmt->bindParam(':producto_id_producto', $producto_id_producto);
+
+        
         try {
             if ($stmt->execute()) {
                 return true;

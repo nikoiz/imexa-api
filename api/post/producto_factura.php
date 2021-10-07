@@ -41,10 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     //busqeuda con el id no random
 
-    do {
+
         $numero_random = $post->obtener_el_ultimo_id();
-        $numero_random =$numero_random+ 1;
-    } while ($post->buscar_random_id($numero_random) == false);
+
 
     $post->id_producto = $numero_random; //se obtendra y retornara +1
 
