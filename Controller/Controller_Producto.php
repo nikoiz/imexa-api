@@ -36,7 +36,7 @@ class Controller_Producto
     }
     public function Read_producto_id_ultima() //tirar a produc_has_bodega grupby nombre_producto 
     {
-        $query = "SELECT MAX(id_producto) AS id_producto FROM producto";
+        $query = "SELECT MAX(id_producto)+1 AS id_producto FROM producto";
         $stmt = $this->conn->prepare($query);
 
         try {
