@@ -84,7 +84,13 @@ class Controller_Factura_Compra
         $this->nombre_producto = $row['nombre_producto'];
         $this->valor_producto = $row['valor_producto'];
         */
-        
+        $this->id_compra = $row['id_compra'];
+        $this->fecha_compra = $row['fecha_compra'];
+        $this->valor_compra = $row['valor_compra'];
+        $this->estado = $row['estado'];
+        $this->rut_proveedor = $row['rut_proveedor'];
+        $this->id_tipo_compra = $row['id_tipo_compra'];
+        $this->id_tipo_f_compra = $row['id_tipo_f_compra'];
 
 
         try {
@@ -106,14 +112,7 @@ class Controller_Factura_Compra
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // set properties
-        $this->id_compra = $row['id_compra'];
-        $this->fecha_compra = $row['fecha_compra'];
-        $this->valor_compra = $row['valor_compra'];
-        $this->estado = $row['estado'];
-        $this->rut_proveedor = $row['rut_proveedor'];
-        $this->id_tipo_compra = $row['id_tipo_compra'];
-        $this->id_tipo_f_compra = $row['id_tipo_f_compra'];
+        
 
         //resto de la query
         $this->id_detalle_compra = $row['id_detalle_compra'];
