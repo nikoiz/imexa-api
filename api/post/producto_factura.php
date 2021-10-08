@@ -40,12 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } while ($post->buscar_random_id($numero_random)==true);
     */
 
-/*
-
-        $numero_random = $post->obtener_el_ultimo_id();
 
 
-    $post->id_producto = $numero_random; //se obtendra y retornara +1
+       // $numero_random = $post->obtener_el_ultimo_id();
+
+
+    $post->id_producto = $GLOBALS['data']->id_producto; //se obtendra y retornara +1
 
     $post->nombre_producto = $GLOBALS['data']->nombre_producto;
     $post->valor_producto = $GLOBALS['data']->valor_producto;
@@ -239,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
         }
     }
-*/
+
 
 }
 
