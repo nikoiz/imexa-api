@@ -185,31 +185,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                 //otro if con todos los detalles
                 if ($post->Read_single_Factura_Compra_para_detalles()) {
                     $detalle = array(
-                    'id_detalle_compra' => $post->id_detalle_compra,
-                    'descripcion_compra_producto' => $post->descripcion_compra_producto,
-                    'cantidad_compra_producto' => $post->cantidad_compra_producto,
-                    'valor' => $post->valor,
-                    'producto_id_producto' => $post->producto_id_producto,
-                    'id_producto' => $post->id_producto,
-                    'nombre_producto' => $post->nombre_producto,
-                    'valor_producto' => $post->valor_producto
+                    'id_detalle_compra' => $id_detalle_compra,
+                    'descripcion_compra_producto' => $descripcion_compra_producto,
+                    'cantidad_compra_producto' => $cantidad_compra_producto,
+                    'valor' => $valor,
+                    'producto_id_producto' => $producto_id_producto,
+                    'id_producto' => $id_producto,
+                    'nombre_producto' => $nombre_producto,
+                    'valor_producto' => $valor_producto
                     );
                     
                 }
 
                 //Make JSON
-
-                /*$detalle_completo = json_encode(array(
+                $detalle_completo = array();
+                $detalle_completo = array(
                     "Factura" => array(
                         $post_item
                         ),
                     "Detalle" => array(
                     $detalle
                     )
-                    ));*/
+                    );
                  
+                    /*
                     $detalle_completo = array();
-                    array_push($detalle_completo, array($post_item), array($detalle));
+                    array_push($detalle_completo, array($post_item), array($detalle));*/
+                    
 
 
 
