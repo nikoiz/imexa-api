@@ -209,15 +209,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                     ));*/
                 
 
-                    $detalle_completo =array();
-                    $detalle_completo = array(
-                        "Factura" => array(
-                            $post_item
-                            ),
-                        "Detalle" => array(
-                        $detalle
-                        )
-                        );
+                    
+                    $detalle_completo[]=$post_item;
+                    $detalle_completo[]=$detalle;
 
 
 
