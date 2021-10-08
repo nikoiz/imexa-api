@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
 
                 );
                 //otro if con todos los detalles
-                if ($post->Read_single_Factura_Compra_para_detalles) {
+                if ($post->Read_single_Factura_Compra_para_detalles()) {
                     $detalle = array(
                     'id_detalle_compra' => $id_detalle_compra,
                     'descripcion_compra_producto' => $descripcion_compra_producto,
