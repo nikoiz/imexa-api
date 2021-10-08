@@ -207,11 +207,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                     $detalle
                     )
                     ));*/
-                
+                 
+                    $detalle_completo = array();
+                    array_push($detalle_completo, array($post_item), array($detalle));
 
-                    
-                    $detalle_completo[]=$post_item;
-                    $detalle_completo[]=$detalle;
 
 
 
