@@ -194,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
 
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         extract($row);
-                        $post_item = array(
+                        $datos = array(
                             'id_detalle_compra' => $id_detalle_compra,
                             'descripcion_compra_producto' => $descripcion_compra_producto,
                             'cantidad_compra_producto' => $cantidad_compra_producto,
@@ -205,10 +205,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                             'valor_producto' => $valor_producto
                         );
 
-                        array_push($posts_arr['data'], $post_item);
+                        array_push($posts_arr['data'], $datos);
                     }
 
-                    echo json_encode($posts_arr);
+                   // echo json_encode($posts_arr);
                 } else {
                     // No posts
                     echo json_encode(
@@ -219,15 +219,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
 
 
                 //Make JSON
-                $detalle_completo = array();
+
                 $detalle_completo = array(
                     "Factura" => array(
                         $factura_compra
-                    ),
+                        ),
                     "Detalle" => array(
-                        $post_item
+                    $posts_arr
                     )
-                );
+                    );
+
 
                 //array_push($detalle_completo, array($post_item), array($detalle));
 
