@@ -23,6 +23,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $validador = true;
+    $json=0;
     $post = new Controller_Producto($GLOBALS['db']);
     $pos = new Controller_detalle_compra($GLOBALS['db']);
     $po = new  Controller_bodega_has_producto($GLOBALS['db']);
@@ -40,7 +41,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     */
 
     //busqeuda con el id no random
+    $array = $GLOBALS['data']-> array;
 
+    foreach ($array as $a) {
+        
+        
+        $json=$a;
+        //meto todas las variables en otro foreach
+        foreach ($json as $j) {
+            $numero_random = $post->obtener_el_ultimo_id();
+            $post->id_producto = $j->numero_random;
+            echo json_encode(
+                array('message' => "el id es: ".$post->id_producto." del json N°: ".$json)
+            );
+            //se crea las coasas
+
+        }
+        $json++;
+
+    }
+
+/*
 
         $numero_random = $post->obtener_el_ultimo_id();
 
@@ -239,6 +260,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
         }
     }
+*/
+
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') { // no lo necesita   no o esta retornando el nombre
