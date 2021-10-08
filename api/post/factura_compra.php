@@ -182,35 +182,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
 
 
                 );
-                //otro if con todos los detalles
-                if ($post->Read_single_Factura_Compra_para_detalles()) {
-                    $detalle = array(
-                    'id_detalle_compra' => $id_detalle_compra,
-                    'descripcion_compra_producto' => $post->descripcion_compra_producto,
-                    'cantidad_compra_producto' => $post->cantidad_compra_producto,
-                    'valor' => $post->valor,
-                    'producto_id_producto' => $post->producto_id_producto,
-                    'id_producto' => $post->id_producto,
-                    'nombre_producto' => $post->nombre_producto,
-                    'valor_producto' => $post->valor_producto
+
+
+                $result = $post->Read_single_Factura_Compra_para_detalles();
+                $num = $result->rowCount();
+
+                if ($num > 0) {
+                    // Post array
+                    $posts_arr = array();
+                    $posts_arr['data'] = array();
+
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                        extract($row);
+                        $post_item = array(
+                            'id_detalle_compra' => $id_detalle_compra,
+                            'descripcion_compra_producto' => $descripcion_compra_producto,
+                            'cantidad_compra_producto' => $cantidad_compra_producto,
+                            'valor' => $post->valor,
+                            'producto_id_producto' => $producto_id_producto,
+                            'id_producto' => $id_producto,
+                            'nombre_producto' => $nombre_producto,
+                            'valor_producto' => $valor_producto
+                        );
+
+                        array_push($posts_arr['data'], $post_item);
+                    }
+
+                    echo json_encode($posts_arr);
+                } else {
+                    // No posts
+                    echo json_encode(
+
+                        array('message' => 'No existen bodegas')
                     );
-                    
                 }
+
 
                 //Make JSON
                 $detalle_completo = array();
-                $detalle_completo = json_encode(array(
+                $detalle_completo = array(
                     "Factura" => array(
                         $post_item
-                        ),
+                    ),
                     "Detalle" => array(
-                    $detalle
+                        $detalle
                     )
-                    ));
-                 
-                    //array_push($detalle_completo, array($post_item), array($detalle));
-                    
-                    
+                );
+
+                //array_push($detalle_completo, array($post_item), array($detalle));
+
+
 
 
 
@@ -254,7 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                     'nombre_producto' => $nombre_producto,
                     'valor_producto' => $valor_producto
                     */
-                    
+
                 );
                 array_push($posts_arr['data'], $post_item);
             }
@@ -340,7 +361,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { //se hra delete de todas las entid
     }
     
     */
-    
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {

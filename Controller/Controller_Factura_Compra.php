@@ -113,17 +113,6 @@ class Controller_Factura_Compra
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        
-
-        //resto de la query
-        $this->id_detalle_compra = $row['id_detalle_compra'];
-        $this->descripcion_compra_producto = $row['descripcion_compra_producto'];
-        $this->cantidad_compra_producto = $row['cantidad_compra_producto'];
-        $this->valor = $row['valor'];
-        $this->producto_id_producto = $row['producto_id_producto'];
-        $this->id_producto = $row['id_producto'];
-        $this->nombre_producto = $row['nombre_producto'];
-        $this->valor_producto = $row['valor_producto'];
 
 
         try {
