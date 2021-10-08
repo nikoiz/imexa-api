@@ -193,23 +193,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                     'id_producto' => $id_producto,
                     'nombre_producto' => $nombre_producto,
                     'valor_producto' => $valor_producto
-
                     );
                     
                 }
 
                 //Make JSON
 
-                $detalle_completo = json_encode(array(
+                /*$detalle_completo = json_encode(array(
                     "Factura" => array(
                         $post_item
                         ),
                     "Detalle" => array(
                     $detalle
                     )
-                    ));
+                    ));*/
+                
 
-
+                    $detalle_completo =array();
+                    $detalle_completo = array(
+                        "Factura" => array(
+                            $post_item
+                            ),
+                        "Detalle" => array(
+                        $detalle
+                        )
+                        );
 
 
 
