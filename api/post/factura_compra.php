@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
             );
         } else {
             if ($post->Read_single_Factura_Compra()) {
-                $post_item = array(
+                $factura_compra = array(
 
                     //datos de la factura
                     'id_compra' => $post->id_compra,
@@ -222,10 +222,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                 $detalle_completo = array();
                 $detalle_completo = array(
                     "Factura" => array(
-                        $post_item
+                        $factura_compra
                     ),
                     "Detalle" => array(
-                        $detalle
+                        $post_item
                     )
                 );
 
