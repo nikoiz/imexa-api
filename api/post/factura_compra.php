@@ -198,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                             'id_detalle_compra' => $id_detalle_compra,
                             'descripcion_compra_producto' => $descripcion_compra_producto,
                             'cantidad_compra_producto' => $cantidad_compra_producto,
-                            'valor' => $post->valor,
+                            'valor' => $valor,
                             'producto_id_producto' => $producto_id_producto,
                             'id_producto' => $id_producto,
                             'nombre_producto' => $nombre_producto,
