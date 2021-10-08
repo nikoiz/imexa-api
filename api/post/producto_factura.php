@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     */
 
     //busqeuda con el id no random
-    $array = $GLOBALS['data']-> array;
+    $array = $GLOBALS['data']-> items;
 
     foreach ($array as $a) {
         
