@@ -38,7 +38,6 @@ class Controller_Producto
     {
         $query = "SELECT MAX(id_producto)+1 AS id_producto FROM producto";
         $stmt = $this->conn->prepare($query);
-
         try {
             if ($stmt->execute()) {
                 return $stmt;
