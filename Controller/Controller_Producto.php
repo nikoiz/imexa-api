@@ -34,6 +34,21 @@ class Controller_Producto
             return false;
         }
     }
+    public function Read_producto_id_ultima() //tirar a produc_has_bodega grupby nombre_producto 
+    {
+        $query = "SELECT MAX(id_producto)+1 AS id_producto FROM producto";
+        $stmt = $this->conn->prepare($query);
+
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return false;
+        }
+    }
     public function Read_single()
     {
         $query = "SELECT producto.id_producto,nombre_producto,valor_producto,bodega_has_producto.cantidad_total from producto INNER join bodega_has_producto on producto.id_producto=bodega_has_producto.id_producto WHERE id_producto = ?";

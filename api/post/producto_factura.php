@@ -40,32 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } while ($post->buscar_random_id($numero_random)==true);
     */
 
-    //busqeuda con el id no random
-    $array = $GLOBALS['data']-> items;
-
-    foreach ($array as $a) {
-        
-        /*
-        $json=$a;
-        //meto todas las variables en otro foreach
-        foreach ($json as $j) {
-            $numero_random = $post->obtener_el_ultimo_id();
-            $post->id_producto = $j->numero_random;
-            echo json_encode(
-                array('message' => "el id es: ".$post->id_producto." del json N°: ".$json)
-            );
-            //se crea las coasas
-
-        }
-        $json++;
-
-        */
-        echo json_encode(
-            array('message' => "asd".$a)
-        );
-        
-    }
-
 /*
 
         $numero_random = $post->obtener_el_ultimo_id();
