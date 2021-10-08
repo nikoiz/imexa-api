@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     foreach ($array as $a) {
         
-        
+        /*
         $json=$a;
         //meto todas las variables en otro foreach
         foreach ($json as $j) {
@@ -59,6 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         $json++;
 
+        */
+        echo json_encode(
+            array('message' => "asd".$a)
+        );
+        
     }
 
 /*
