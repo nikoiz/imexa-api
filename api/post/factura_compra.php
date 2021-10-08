@@ -158,6 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
     if (isset($_GET['id_compra'])) {
         // Instiate blog post object
         $post = new Controller_Factura_Compra($GLOBALS['db']);
+        $pos = new Controller_detalle_compra($GLOBALS['db']);
 
         // GET ID
         $post->id_compra = isset($_GET['id_compra']) ? $_GET['id_compra'] : die();
@@ -170,6 +171,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
         } else {
             if ($post->Read_single_Factura_Compra()) {
                 $post_item = array(
+
+                    //datos de la factura
                     'id_compra' => $post->id_compra,
                     'fecha_compra' => $post->fecha_compra,
                     'valor_compra' => $post->valor_compra,
@@ -178,19 +181,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                     'id_tipo_f_compra' => $post->id_tipo_f_compra,
 
 
-
-                    'id_detalle_compra' => $post->id_detalle_compra,
-                    'descripcion_compra_producto' => $post->descripcion_compra_producto,
-                    'cantidad_compra_producto' => $post->cantidad_compra_producto,
-                    'valor' => $post->valor,
-                    'producto_id_producto' => $post->producto_id_producto,
-                    'id_producto' => $post->id_producto,
-                    'nombre_producto' => $post->nombre_producto,
-                    'valor_producto' => $post->valor_producto
                 );
+                //otro if con todos los detalles
+                if ($post->Read_single_Factura_Compra_para_detalles) {
+                    $detalle = array(
+                    'id_detalle_compra' => $id_detalle_compra,
+                    'descripcion_compra_producto' => $descripcion_compra_producto,
+                    'cantidad_compra_producto' => $cantidad_compra_producto,
+                    'valor' => $valor,
+                    'producto_id_producto' => $producto_id_producto,
+                    'id_producto' => $id_producto,
+                    'nombre_producto' => $nombre_producto,
+                    'valor_producto' => $valor_producto
+
+                    );
+                    
+                }
+
                 //Make JSON
 
-                print_r(json_encode($post_item));
+                $detalle_completo = json_encode(array(
+                    "Factura" => array(
+                        $post_item
+                        ),
+                    "Detalle" => array(
+                    $detalle
+                    )
+                    ));
+
+
+
+
+
+
+
+                print_r(json_encode($detalle_completo));
             } else {
                 echo json_encode(
                     array('message' => 'No se encontro el codigo de la factura compra')
