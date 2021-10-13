@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             array('message' => 'Ingrese una codigo de venta')
         );
     } else {
-        if ($post->buscar_id_abono($post->id_abono) == true) {
+        if ($post->buscar_id_abono($post->id_abono) == false) {
             $validador = false;
             echo json_encode(
                 array('message' => 'Existe numero de la factura venta')
