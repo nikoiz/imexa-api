@@ -22,25 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $post = new Controller_Abono($GLOBALS['db']);
     $fv = new Controller_Factura_Venta($GLOBALS['db']);
 
-    $post->id_abono = $GLOBALS['data']->id_abono;
+
     $post->valor_abono = $GLOBALS['data']->valor_abono;
     $post->fecha_abono = $fecha = date('Y-m-d'); //se establece como directa 
     $post->id_venta = $GLOBALS['data']->id_venta;
 
 
-    if ($post->Validacion_parametro($post->id_abono) == false) {
-        $validador = false;
-        echo json_encode(
-            array('message' => 'Ingrese una codigo de venta')
-        );
-    } else {
-        if ($post->buscar_id_abono($post->id_abono) == false) {
-            $validador = false;
-            echo json_encode(
-                array('message' => 'Existe numero de la factura venta')
-            );
-        }
-    }
     if ($post->Validador_de_valor_abono($post->valor_abono) == true) {
         $validador = false;
         echo json_encode(

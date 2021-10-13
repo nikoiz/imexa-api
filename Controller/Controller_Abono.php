@@ -57,12 +57,6 @@ class Controller_Abono
     {
         $validador = true;
 
-
-        if (!empty(htmlspecialchars(strip_tags($this->id_abono)))) {
-            $this->id_abono = htmlspecialchars(strip_tags($this->id_abono));
-        } else {
-            $validador = false;
-        }
         if (empty(htmlspecialchars(strip_tags($this->valor_abono)))) {
             $validador = false;
         } else {
@@ -89,17 +83,12 @@ class Controller_Abono
             
             $query = "INSERT INTO abono 
         SET 
-        id_abono = '".$this->id_abono."',
         valor_abono = '".$this->valor_abono."',
         fecha_abono = '".$this->fecha_abono."',
         id_venta = '".$this->id_venta."'
         ";
 
             $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':id_abono', $this->id_abono);
-            $stmt->bindParam(':valor_abono', $this->valor_abono);
-            $stmt->bindParam(':fecha_abono', $this->fecha_abono);
-            $stmt->bindParam(':id_venta', $this->id_venta);
 
             try {
                 if ($stmt->execute()) {
