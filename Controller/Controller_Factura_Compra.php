@@ -63,6 +63,52 @@ class Controller_Factura_Compra
             return false;
         }
     }
+    public function Suma_facturas_Npagadas_proveedor()
+    {
+        $query = "SELECT SUM(`valor_compra`) as 'Total_a_Pagar' FROM `factura_compra` WHERE `estado` = 'Pendiente' and `rut_proveedor`='".$this->rut_proveedor."'";
+        $stmt = $this->conn->prepare($query);
+        try {
+            if ($stmt->execute()) {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $total= $row['Total_a_Pagar'];
+                return $total;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return null;
+        }
+    }
+    public function Suma_facturas_Npagadas()
+    {
+        $query = "SELECT SUM(`valor_compra`) as 'Total_a_Pagar' FROM `factura_compra` WHERE `estado` = 'Pendiente'";
+        $stmt = $this->conn->prepare($query);
+        try {
+            if ($stmt->execute()) {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $total= $row['Total_a_Pagar'];
+                return $total;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return null;
+        }
+    }
+    public function Read_single_Factura_Compra_no_pagados()
+    {
+        $query = "SELECT * FROM `factura_compra` WHERE `estado` = 'Pendiente' and `rut_proveedor`='".$this->rut_proveedor."'";
+        $stmt = $this->conn->prepare($query);
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return false;
+        }
+    }
 
     public function Read_single_Factura_Compra()
     {
@@ -73,17 +119,6 @@ class Controller_Factura_Compra
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        //resto de la query
-        /*
-        $this->id_detalle_compra = $row['id_detalle_compra'];
-        $this->descripcion_compra_producto = $row['descripcion_compra_producto'];
-        $this->cantidad_compra_producto = $row['cantidad_compra_producto'];
-        $this->valor = $row['valor'];
-        $this->producto_id_producto = $row['producto_id_producto'];
-        $this->id_producto = $row['id_producto'];
-        $this->nombre_producto = $row['nombre_producto'];
-        $this->valor_producto = $row['valor_producto'];
-        */
         $this->id_compra = $row['id_compra'];
         $this->fecha_compra = $row['fecha_compra'];
         $this->valor_compra = $row['valor_compra'];

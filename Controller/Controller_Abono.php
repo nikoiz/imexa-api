@@ -8,6 +8,8 @@ class Controller_Abono
     public $fecha_abono;
     public $id_venta;
 
+    public $rut_cliente;
+
     public function __construct($db)
     {
         $this->conn = $db;
@@ -30,20 +32,19 @@ class Controller_Abono
     public function Read_single_abono()
     {
         //SELECT  cliente.rut_cliente, abono.id_abono,abono.valor_abono,abono.fecha_abono,abono.id_venta FROM cliente INNER JOIN factura_venta on cliente.rut_cliente=factura_venta.rut_cliente INNER JOIN abono ON factura_venta.id_venta=abono.id_venta WHERE  cliente.rut_cliente  = ?
-        $query = "SELECT  abono.id_abono,abono.valor_abono,abono.fecha_abono,abono.id_venta FROM cliente INNER JOIN factura_venta on cliente.rut_cliente=factura_venta.rut_cliente INNER JOIN abono ON factura_venta.id_venta=abono.id_venta WHERE  cliente.rut_cliente  = ?";
+        $query = "SELECT  abono.id_abono as id_abono,abono.valor_abono as valor_abono,abono.fecha_abono as fecha_abono,abono.id_venta as id_venta FROM cliente INNER JOIN factura_venta on cliente.rut_cliente=factura_venta.rut_cliente INNER JOIN abono ON factura_venta.id_venta=abono.id_venta WHERE  cliente.rut_cliente  = '" . $this->rut_cliente . "'";
         $stmt = $this->conn->prepare($query);
         //Bind id
-        $stmt->bindParam(1, $this->id_abono);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
-        $this->id_abono = $row['abono.id_abono'];
-        $this->valor_abono = $row['abono.valor_abono'];
-        $this->fecha_abono = $row['abono.fecha_abono'];
-        $this->id_venta = $row['abono.id_venta'];
-
+        $this->id_abono = $row['id_abono'];
+        $this->valor_abono = $row['valor_abono'];
+        $this->fecha_abono = $row['fecha_abono'];
+        $this->id_venta = $row['id_venta'];
         try {
+
             if ($stmt->execute()) {
                 return $stmt;
             }
@@ -69,7 +70,7 @@ class Controller_Abono
         if (!empty(htmlspecialchars(strip_tags($this->fecha_abono)))) {
             $this->fecha_abono = htmlspecialchars(strip_tags($this->fecha_abono));
         } else {
-            
+
             $validador = false;
         }
         if (!empty(htmlspecialchars(strip_tags($this->id_venta)))) {
@@ -80,12 +81,12 @@ class Controller_Abono
 
 
         if ($validador == true) {
-            
+
             $query = "INSERT INTO abono 
         SET 
-        valor_abono = '".$this->valor_abono."',
-        fecha_abono = '".$this->fecha_abono."',
-        id_venta = '".$this->id_venta."'
+        valor_abono = '" . $this->valor_abono . "',
+        fecha_abono = '" . $this->fecha_abono . "',
+        id_venta = '" . $this->id_venta . "'
         ";
 
             $stmt = $this->conn->prepare($query);
@@ -221,6 +222,21 @@ class Controller_Abono
             return $total_abono;
         } else {
             return "";
+        }
+    }
+    public function Obtner_valor_actual()
+    {
+        $query = "SELECT `valor_abono` FROM `abono` WHERE `id_abono`=";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_abono', $this->id_abono);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $numero_comparar = $row['valor_abono'];
+
+        if ($numero_comparar != null) {
+            return $numero_comparar;
+        } else {
+            return null;
         }
     }
 }

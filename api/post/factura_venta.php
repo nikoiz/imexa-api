@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $post->id_venta = isset($_GET['id_venta']) ? $_GET['id_venta'] : die();
         if (!empty($post->id_venta)) {
             if ($post->Read_single_factura()) {
-                $post_item = array(
+                $factura_venta = array(
                     'id_venta' => $post->id_venta,
                     'fecha_venta' => $post->fecha_venta,
                     'valor_venta' => $post->valor_venta,
@@ -173,21 +173,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'rut_cliente' => $post->rut_cliente,
                     'recursiva_id' => $post->recursiva_id,
                     'id_tipo_f_venta' => $post->id_tipo_f_venta,
-
-                    'id_detalle_venta' => $post->id_detalle_venta,
-                    'descripcion_producto' => $post->descripcion_producto,
-                    'cantidad_producto' => $post->cantidad_producto,
-                    'valor' => $post->valor,
-                    'producto_id_producto' => $post->producto_id_producto
-
-
                 );
                 //Make JSON
 
-                print_r(json_encode($post_item));
+                $result = $post->Read_single_Factura_Venta_para_detalles();
+                $num = $result->rowCount();
+
+                if ($num > 0) {
+                    // Post array
+                    $posts_arr = array();
+                    $posts_arr['data'] = array();
+
+                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                        extract($row);
+                        $datos = array(
+                            'id_detalle_venta' => $id_detalle_venta,
+                            'descripcion_producto' => $descripcion_producto,
+                            'cantidad_compra_producto' => $cantidad_compra_producto,
+                            'cantidad_producto' => $cantidad_producto,
+                            'valor ' => $valor,
+                            'producto_id_producto ' => $producto_id_producto
+                        );
+
+                        array_push($posts_arr['data'], $datos);
+                    }
+
+                   // echo json_encode($posts_arr);
+                } else {
+                    // No posts
+                    echo json_encode(
+
+                        array('message' => 'No existen detalle ventas')
+                    );
+                }
+
+                $detalle_completo = array(
+                    "Factura Venta" => array(
+                        $factura_venta
+                        ),
+                    "Detalle venta" => array(
+                    $posts_arr
+                    )
+                    );
+                    print_r(json_encode($detalle_completo));
+
             } else {
                 echo json_encode(
-                    array('message' => 'No Posts Found')
+                    array('message' => 'No se encontro datos dela factura venta')
                 );
             }
         } else {

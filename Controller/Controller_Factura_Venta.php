@@ -57,7 +57,7 @@ class Controller_Factura_Venta
     }
     public function Read_single_factura()
     {
-        $query = "SELECT * FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where factura_venta.id_venta=?";
+        $query = "SELECT * FROM `factura_venta` where id_venta=?";
         $stmt = $this->conn->prepare($query);
         //Bind id
         $stmt->bindParam(1, $this->id_venta);
@@ -75,12 +75,27 @@ class Controller_Factura_Venta
         $this->recursiva_id = $row['recursiva_id'];
         $this->id_tipo_f_venta = $row['id_tipo_f_venta'];
 
-        //detalle venta (no mostrar el producto como tal)
-        $this->id_detalle_venta = $row['id_detalle_venta'];
-        $this->descripcion_producto = $row['descripcion_producto'];
-        $this->cantidad_producto = $row['cantidad_producto'];
-        $this->valor = $row['valor'];
-        $this->producto_id_producto = $row['producto_id_producto'];
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return false;
+        }
+    }
+    public function Read_single_Factura_Venta_para_detalles()
+    {
+
+        $query = "SELECT * FROM detalle_venta INNER join producto on detalle_venta.producto_id_producto=producto.id_producto where detalle_venta.producto_id_producto= ?";
+        $stmt = $this->conn->prepare($query);
+        //Bind id
+        $stmt->bindParam(1, $this->id_compra);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
 
         try {
             if ($stmt->execute()) {
@@ -95,15 +110,21 @@ class Controller_Factura_Venta
 
     public function Read_single_factura_no_pagadas()
     {
-        $query = "SELECT * FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where factura_venta.id_venta=? and `estado` = 'Pendiente'";
+        $query = "SELECT * FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where factura_venta.rut_cliente= ? and `estado` = 'Pendiente'";
         $stmt = $this->conn->prepare($query);
         //Bind id
-        $stmt->bindParam(1, $this->id_venta);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->bindParam(1, $this->rut_cliente);
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
 
-        // set properties
-        //factura
+            return false;
+        }
+        /*
+        factura
         $this->id_venta = $row['id_venta'];
         $this->fecha_venta = $row['fecha_venta'];
         $this->valor_venta = $row['valor_venta'];
@@ -113,12 +134,15 @@ class Controller_Factura_Venta
         $this->recursiva_id = $row['recursiva_id'];
         $this->id_tipo_f_venta = $row['id_tipo_f_venta'];
 
-        //detalle venta (no mostrar el producto como tal)
+
+        detalle venta (no mostrar el producto como tal)
         $this->id_detalle_venta = $row['id_detalle_venta'];
         $this->descripcion_producto = $row['descripcion_producto'];
         $this->cantidad_producto = $row['cantidad_producto'];
         $this->valor = $row['valor'];
         $this->producto_id_producto = $row['producto_id_producto'];
+        */
+        
 
         try {
             if ($stmt->execute()) {
@@ -130,7 +154,38 @@ class Controller_Factura_Venta
             return false;
         }
     }
+    public function Suma_facturas_Npagadas_cliente()
+    {
+        $query = "SELECT SUM('valor_venta') as 'Total a Pagar' FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where `estado` = 'Pendiente' and factura_venta.rut_cliente= '".$this->rut_cliente."'";
+        $stmt = $this->conn->prepare($query);
+        try {
+            if ($stmt->execute()) {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $total= $row['Total_a_Pagar'];
+                return $total;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
 
+            return null;
+        }
+    }
+    public function Suma_facturas_Npagadas()
+    {
+        $query = "SELECT SUM('valor_venta') as 'Total a Pagar' FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where `estado` = 'Pendiente'";
+        $stmt = $this->conn->prepare($query);
+        try {
+            if ($stmt->execute()) {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $total= $row['Total_a_Pagar'];
+                return $total;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return null;
+        }
+    }
     public function create_factura_venta()
     {
         $validador = true;
@@ -383,6 +438,57 @@ class Controller_Factura_Venta
 
         if ($numero_comparar != null) {
             return $numero_comparar;
+        } else {
+            return false;
+        }
+    }
+    function obtner_valor_venta()
+    {
+        $query = "SELECT `valor_venta` FROM `factura_venta` WHERE `id_venta` = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->id_venta);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $numero_comparar = $row['valor_venta'];
+
+        if ($numero_comparar != null) {
+            return $numero_comparar;
+        } else {
+            return null;
+        }
+    }
+    public function update_valor_factura_venta()
+    {
+        $validador = true;
+        //poner atencion a la nomenclatura de las palabas.
+        $query = "UPDATE factura_venta SET    
+            valor_venta = :valor_venta
+          WHERE id_venta = :id_venta";
+        $stmt = $this->conn->prepare($query);
+
+        if (!empty(htmlspecialchars(strip_tags($this->id_venta)))) {
+            $this->id_venta = htmlspecialchars(strip_tags($this->id_venta));
+        } else {
+            $validador = false;
+        }
+        if (!empty(htmlspecialchars(strip_tags($this->valor_venta)))) {
+            $this->valor_venta = htmlspecialchars(strip_tags($this->valor_venta));
+        } else {
+            $validador = false;
+        }
+        
+        // Bind Data
+        if ($validador == true) {
+            $stmt->bindParam(':id_venta', $this->id_venta);
+            $stmt->bindParam(':valor_venta', $this->valor_venta);
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $e);
+                return false;
+            }
         } else {
             return false;
         }

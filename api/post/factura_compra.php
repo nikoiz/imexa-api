@@ -213,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                     // No posts
                     echo json_encode(
 
-                        array('message' => 'No existen bodegas')
+                        array('message' => 'No existen facturas')
                     );
                 }
 
