@@ -26,8 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post->valor_abono = $GLOBALS['data']->valor_abono;
     $post->fecha_abono = $fecha = date('Y-m-d'); //se establece como directa 
     $post->id_venta = $GLOBALS['data']->id_venta;
-    $valor_total = 0;
-
+    $fv->id_venta=$post->id_venta;
     if ($post->Validador_de_valor_abono($post->valor_abono) == true) {
         $validador = false;
         echo json_encode(
@@ -49,27 +48,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     //obtner el total y restarlo 
-    if ($fv->obtner_valor_venta() == null) {
+    if ($fv->obtner_valor_venta()==null) {
         $validador = false;
         echo json_encode(
             array('message' => 'Existe numero de la factura venta')
         );
+        
     } else {
-        $valor_total = $fv->obtner_valor_venta();
-        if ($valor_total > $post->valor_abono) {
+        //500  - 1
+        $valor_total= $fv->obtner_valor_venta();
+
+        if ($valor_total >= $post->valor_abono) {
+            echo json_encode(
+                array('message' => "asd".$valor_total)
+            );
             $valor_total = $valor_total - $post->valor_abono;
             $fv->valor_venta = $valor_total;
+           
+        }else {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'Limite exedido para el abono')
+            );
         }
     }
 
 
 
-    if ($validador == true) {
+if ($validador == true) {
         if ($post->create_abono()) {
             echo json_encode(
                 array('message' => 'Se creo el abono')
             );
             //actualizar factura
+            
             if ($fv->update_valor_factura_venta()) {
                 echo json_encode(
                     array('message' => 'Se actualizo el valor de la factura venta: ' . $post->id_venta)
@@ -85,6 +97,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
         }
     }
+ 
+
+
+    
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {

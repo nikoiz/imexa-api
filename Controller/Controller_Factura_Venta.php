@@ -461,10 +461,7 @@ class Controller_Factura_Venta
     {
         $validador = true;
         //poner atencion a la nomenclatura de las palabas.
-        $query = "UPDATE factura_venta SET    
-            valor_venta = :valor_venta
-          WHERE id_venta = :id_venta";
-        $stmt = $this->conn->prepare($query);
+        
 
         if (!empty(htmlspecialchars(strip_tags($this->id_venta)))) {
             $this->id_venta = htmlspecialchars(strip_tags($this->id_venta));
@@ -476,11 +473,15 @@ class Controller_Factura_Venta
         } else {
             $validador = false;
         }
-        
         // Bind Data
         if ($validador == true) {
-            $stmt->bindParam(':id_venta', $this->id_venta);
-            $stmt->bindParam(':valor_venta', $this->valor_venta);
+           
+            $query = "UPDATE factura_venta SET    
+            valor_venta = '".$this->valor_venta."'
+          WHERE id_venta = '".$this->id_venta."'";
+         
+        $stmt = $this->conn->prepare($query);
+        
             try {
                 if ($stmt->execute()) {
                     return true;
