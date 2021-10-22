@@ -35,9 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 extract($row);
                 $post_item = array(
 
-                    'nombre_producto' => $post->nombre_producto,
-                    'cantidad_producto' => $post->cantidad_producto,
-                    'valor' => $post->valor
+                    'nombre_producto' => $nombre_producto,
+                    'cantidad_producto' => $cantidad_producto,
+                    'valor' => $valor
                 );
                 array_push($posts_arr['data'], $post_item);
             }
