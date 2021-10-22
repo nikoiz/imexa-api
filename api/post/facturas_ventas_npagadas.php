@@ -29,14 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                         extract($row);
                         $post_item = array(
-                            'id_venta' => $post->id_venta,
-                            'fecha_venta' => $post->fecha_venta,
-                            'valor_venta' => $post->valor_venta,
-                            'estado' => $post->estado,
-                            'id_tipo_venta' => $post->id_tipo_venta,
-                            'rut_cliente' => $post->rut_cliente,
-                            'recursiva_id' => $post->recursiva_id,
-                            'id_tipo_f_venta' => $post->id_tipo_f_venta
+                            'id_venta' => $id_venta,
+                            'fecha_venta' => $fecha_venta,
+                            'valor_venta' => $valor_venta,
+                            'estado' => $estado,
+                            'id_tipo_venta' => $id_tipo_venta,
+                            'rut_cliente' => $rut_cliente,
+                            'recursiva_id' => $recursiva_id,
+                            'id_tipo_f_venta' => $id_tipo_f_venta
                         );
                         array_push($posts_arr['data'], $post_item);
                     }
