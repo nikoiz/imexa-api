@@ -49,13 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
 
             if ($post->Suma_facturas_Npagadas_proveedor()!=null) {
                 $total = $post->Suma_facturas_Npagadas_proveedor();
-            }else {
-                echo json_encode(
-                    array('message' => 'No se encontraron facturas no pagadas del cliente: '.$post->rut_proveedor)
-                );
             }
-            
-
             $detalle_completo = array(
                 "Facturas" => array(
                     $posts_arr
@@ -65,14 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
 
                 print_r(json_encode($detalle_completo));
 
-        } else {
-            // No posts
-            echo json_encode(
-
-                array('message' => 'No existen facturas')
-            );
-        }
-
+        } 
             } else {
                 echo json_encode(
                     array('message' => 'No se encontro el codigo de la factura compra')
@@ -109,10 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
             
             if ($post->Suma_facturas_Npagadas()!=null) {
                 $total = $post->Suma_facturas_Npagadas();
-            }else {
-                echo json_encode(
-                    array('message' => 'No existe un total de facturas compras no pagadas')
-                );
             }
 
             $detalle_completo = array(
@@ -124,12 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
 
                 print_r(json_encode($detalle_completo));
 
-        } else {
-            // No posts
-            echo json_encode(
-
-                array('message' => 'No existen facturas compras')
-            );
         }
     }
 }

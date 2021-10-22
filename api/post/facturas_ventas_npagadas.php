@@ -41,19 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         array_push($posts_arr['data'], $post_item);
                     }
                     //echo json_encode($posts_arr);
-                } else {
-                    // No posts
-                    echo json_encode(
-                        array('message' => 'No existen facturas de ventas')
-                    );
                 }
                 //listar el detalle y el valor total
                 if ($post->Suma_facturas_Npagadas_cliente()!=null) {
                     $total = $post->Suma_facturas_Npagadas_cliente();
-                }else {
-                    echo json_encode(
-                        array('message' => 'No se encontraron facturas no pagadas del cliente: '.$post->rut_cliente)
-                    );
                 }
 
 
@@ -98,16 +89,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             
             if ($post->Suma_facturas_Npagadas()!=null) {
                 $total = $post->Suma_facturas_Npagadas();
-            }else {
-                echo json_encode(
-                    array('message' => 'No existe un total de facturas compras no pagadas')
-                );
             }
             $detalle_completo = array(
                 "Facturas" => array(
                     $posts_arr
                     ),
-                "Total" => $total
+                    "Total" => array($total)
                 );
 
             echo json_encode($detalle_completo);
