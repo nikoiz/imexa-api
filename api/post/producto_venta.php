@@ -14,7 +14,7 @@ include_once '../../Controller/Controller_Factura_Venta.php';
 include_once '../../Controller/Controller_detalle_inventario.php';
 include_once '../../Controller/Controller_Inventario.php'; //preguntar si se deve actualizar el total 
 
-
+//detalle de la venta
 $database = new conexion();
 $db = $database->connect();
 error_reporting(0);

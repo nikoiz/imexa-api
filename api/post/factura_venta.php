@@ -189,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         $datos = array(
                             'id_detalle_venta' => $id_detalle_venta,
                             'descripcion_producto' => $descripcion_producto,
-                            'cantidad_compra_producto' => $cantidad_compra_producto,
+                            //'cantidad_compra_producto' => $cantidad_compra_producto,
                             'cantidad_producto' => $cantidad_producto,
                             'valor ' => $valor,
                             'producto_id_producto ' => $producto_id_producto

@@ -87,11 +87,11 @@ class Controller_Factura_Venta
     }
     public function Read_single_Factura_Venta_para_detalles()
     {
-
-        $query = "SELECT * FROM detalle_venta INNER join producto on detalle_venta.producto_id_producto=producto.id_producto where detalle_venta.producto_id_producto= ?";
+ //SELECT * FROM detalle_venta INNER join producto on detalle_venta.producto_id_producto=producto.id_producto where detalle_venta.producto_id_producto= ?
+        $query = "SELECT * FROM detalle_venta INNER join producto on detalle_venta.producto_id_producto=producto.id_producto where detalle_venta.id_venta=?";
         $stmt = $this->conn->prepare($query);
         //Bind id
-        $stmt->bindParam(1, $this->id_compra);
+        $stmt->bindParam(1, $this->id_venta);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
