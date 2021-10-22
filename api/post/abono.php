@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 extract($row);
                 $post_item = array(
                     'id_abono' => $id_abono,
-                    'valor_abono ' => $valor_abono,
+                    'valor_abono' => $valor_abono,
                     'fecha_abono' => $fecha_abono,
                     'id_venta' => $id_venta
                 );
