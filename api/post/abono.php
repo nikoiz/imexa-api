@@ -145,12 +145,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 print_r(json_encode($abono_completo));
             } else {
                 echo json_encode(
-                    array('message' => 'No se encontro  abonos del rut: ' . $cl->rut_cliente)
+                    array('message' => 'No se encontro  abonos de la venta: ' . $post->id_venta)
                 );
             }
         } else {
             echo json_encode(
-                array('message' => 'Ingrese rut del cliente')
+                array('message' => 'Ingrese codigo de venta ')
             );
         }
     } else {
