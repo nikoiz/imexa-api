@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         extract($row);
                         $datos = array(
                             'id_abono' => $id_abono,
-                            'valor_abono ' => $valor_abono,
+                            'valor_abono' => $valor_abono,
                             'fecha_abono' => $fecha_abono,
                             'id_venta' => $id_venta
                         );
