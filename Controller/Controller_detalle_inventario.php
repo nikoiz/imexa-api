@@ -22,7 +22,44 @@ class Controller_detalle_inventario
     {
         $this->conn = $db;
     }
-    public function Read_single_detalle_invetario($id_bodega)
+    public function Read_single_detalle_invetario($nombre_producto)
+    {
+        $query = "SELECT detalle_inventario.nombre_producto as nombre_producto,detalle_inventario.cantidad_producto as cantidad_producto,
+        detalle_inventario.valor as valor,bodega.nombre_bodega as nombre_bodega,bodega.numero_bodega as numero_bodega 
+        FROM `detalle_inventario`
+        inner JOIN bodega_has_producto on detalle_inventario.id_producto = bodega_has_producto.id_producto 
+        INNER JOIN producto on bodega_has_producto.id_producto=producto.id_producto 
+        INNER JOIN bodega on bodega_has_producto.id_bodega=bodega.id_bodega
+        WHERE detalle_inventario.nombre_producto= ?";
+        $stmt = $this->conn->prepare($query);
+        //Bind id
+        $stmt->bindParam(1, $nombre_producto);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+        //$this->id_detalle_inventario = $row['id_detalle_inventario'];
+        $this->nombre_producto = $row['nombre_producto'];
+        $this->cantidad_producto = $row['cantidad_producto'];
+        $this->valor = $row['valor'];
+        $this->nombre_bodega = $row['nombre_bodega'];
+        $this->numero_bodega = $row['numero_bodega'];
+        //$this->fecha_inventario = $row['fecha_inventario'];
+        //$this->id_inventario = $row['id_inventario'];
+        //$this->id_bodega = $row['id_bodega'];
+        //$this->id_producto = $row['id_producto'];
+
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return false;
+        }
+    }
+    public function Read_single_detalle_invetario_por_bodega($id_bodega)
     {
         $query = "SELECT detalle_inventario.nombre_producto as nombre_producto,detalle_inventario.cantidad_producto as cantidad_producto,
         detalle_inventario.valor as valor,bodega.nombre_bodega as nombre_bodega,bodega.numero_bodega as numero_bodega 
