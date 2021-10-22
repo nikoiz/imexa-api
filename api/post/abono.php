@@ -104,12 +104,11 @@ if ($validador == true) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['rut_cliente'])) { //por un cliente y junto con ello mostar 
+    if (isset($_GET['id_venta'])) { //por un cliente y junto con ello mostar 
         $post = new Controller_Abono($GLOBALS['db']);
         $cl = new Controller_Cliente($GLOBALS['db']);
-        $cl->rut_cliente = isset($_GET['rut_cliente']) ? $_GET['rut_cliente'] : die();
-        $post->rut_cliente = $cl->rut_cliente;
-        if (!empty($post->rut_cliente)) {
+        $post->id_venta = isset($_GET['id_venta']) ? $_GET['id_venta'] : die();
+        if (!empty($post->id_venta)) {
             if ($result = $post->Read_single_abono()) {
 
                 $num = $result->rowCount();

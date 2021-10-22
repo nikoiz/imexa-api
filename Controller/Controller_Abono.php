@@ -32,8 +32,9 @@ class Controller_Abono
     public function Read_single_abono()
     {
         //SELECT  cliente.rut_cliente, abono.id_abono,abono.valor_abono,abono.fecha_abono,abono.id_venta FROM cliente INNER JOIN factura_venta on cliente.rut_cliente=factura_venta.rut_cliente INNER JOIN abono ON factura_venta.id_venta=abono.id_venta WHERE  cliente.rut_cliente  = ?
-        $query = "SELECT  abono.id_abono as id_abono,abono.valor_abono as valor_abono,abono.fecha_abono as fecha_abono,abono.id_venta as id_venta FROM cliente INNER JOIN factura_venta on cliente.rut_cliente=factura_venta.rut_cliente INNER JOIN abono ON factura_venta.id_venta=abono.id_venta WHERE  cliente.rut_cliente  = '" . $this->rut_cliente . "'";
+        $query = "SELECT * FROM `abono` WHERE `id_venta` = ?";
         $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->id_venta);
         //Bind id
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
