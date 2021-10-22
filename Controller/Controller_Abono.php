@@ -203,26 +203,26 @@ class Controller_Abono
             }
         }
     }
-    function obtener_valor_total($rut_cliente)
+    function obtener_valor_total()
     {
-        $query = "SELECT  cliente.rut_cliente,SUM(abono.valor_abono) as total_abono FROM cliente INNER JOIN factura_venta on cliente.rut_cliente=factura_venta.rut_cliente INNER JOIN abono ON factura_venta.id_venta=abono.id_venta WHERE  cliente.rut_cliente =  ?";
+        $query = "SELECT SUM(abono.valor_abono) as total_abono FROM `abono` WHERE `id_venta` = ?";
 
         $stmt = $this->conn->prepare($query);
 
         //Bind id
-        $stmt->bindParam(1, $rut_cliente);
+        $stmt->bindParam(1, $this->id_venta);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // set properties
 
-        $numero_comparar = $row['rut_cliente'];
+        $numero_comparar = $row['id_venta'];
         $total_abono  = $row['total_abono'];
 
-        if ($numero_comparar == $rut_cliente) {
+        if ($total_abono !=null) {
             return $total_abono;
         } else {
-            return "";
+            return null;
         }
     }
     public function Obtner_valor_actual()

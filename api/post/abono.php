@@ -133,14 +133,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 //Make JSON
                 //por medio del rut cliente hacer el tan el single y despues mostar el total sumado de los abonos
-                $total_abono = $post->obtener_valor_total($post->rut_cliente);
+                $total_abono = $post->obtener_valor_total();
 
 
                 $abono_completo = array(
                     "Abono" => array(
                         $posts_arr
                     ),
-                    "Total Abono" =>   $total_abono
+                    "Total_Abono" =>   $total_abono
                 );
                 print_r(json_encode($abono_completo));
             } else {
