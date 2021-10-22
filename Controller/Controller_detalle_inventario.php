@@ -22,7 +22,7 @@ class Controller_detalle_inventario
     {
         $this->conn = $db;
     }
-    public function Read_single_detalle_invetario($nombre_producto)
+    public function Read_single_detalle_invetario($id_bodega)
     {
         $query = "SELECT detalle_inventario.nombre_producto as nombre_producto,detalle_inventario.cantidad_producto as cantidad_producto,
         detalle_inventario.valor as valor,bodega.nombre_bodega as nombre_bodega,bodega.numero_bodega as numero_bodega 
@@ -30,10 +30,10 @@ class Controller_detalle_inventario
         inner JOIN bodega_has_producto on detalle_inventario.id_producto = bodega_has_producto.id_producto 
         INNER JOIN producto on bodega_has_producto.id_producto=producto.id_producto 
         INNER JOIN bodega on bodega_has_producto.id_bodega=bodega.id_bodega
-        WHERE detalle_inventario.nombre_producto= ?";
+        WHERE detalle_inventario.id_bodega= ?";
         $stmt = $this->conn->prepare($query);
         //Bind id
-        $stmt->bindParam(1, $nombre_producto);
+        $stmt->bindParam(1, $id_bodega);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 

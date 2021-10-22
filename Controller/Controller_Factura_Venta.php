@@ -143,7 +143,7 @@ class Controller_Factura_Venta
     }
     public function Suma_facturas_Npagadas()
     {
-        $query = "SELECT SUM('valor_venta') as 'Total_a_Pagar' FROM `factura_venta` where `estado` = 'Pendiente'";
+        $query = "SELECT SUM(valor_venta) as 'Total_a_Pagar' FROM `factura_venta` where `estado` = 'Pendiente'";
         $stmt = $this->conn->prepare($query);
         try {
             if ($stmt->execute()) {
