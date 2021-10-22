@@ -111,7 +111,7 @@ class Controller_Factura_Venta
 
     public function Read_single_factura_no_pagadas()
     {
-        $query = "SELECT * FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where factura_venta.rut_cliente= ? and `estado` = 'Pendiente'";
+        $query = "SELECT * FROM `factura_venta` where factura_venta.rut_cliente= ? and `estado` = 'Pendiente'";
         $stmt = $this->conn->prepare($query);
         //Bind id
         $stmt->bindParam(1, $this->rut_cliente);
