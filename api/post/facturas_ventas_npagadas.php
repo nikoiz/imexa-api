@@ -55,7 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "Total" =>array($total) 
                     );
     
-                echo json_encode($detalle_completo);
+                    print_r(json_encode($detalle_completo));
+
             }
         } else {
             echo json_encode(
@@ -97,7 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "Total" => array($total)
                 );
 
-            echo json_encode($detalle_completo);
+                print_r(json_encode($detalle_completo));
+
         } else {
             // No posts
             echo json_encode(
