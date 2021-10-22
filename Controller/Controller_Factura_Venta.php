@@ -17,6 +17,7 @@ class Controller_Factura_Venta
     public $descripcion_producto;
     public $cantidad_producto;
     public $valor;
+    public $valor_producto;
     //public $id_venta;
     public $producto_id_producto;
 
