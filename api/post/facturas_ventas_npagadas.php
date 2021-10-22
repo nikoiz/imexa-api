@@ -58,10 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
                 $detalle_completo = array(
-                    "Facturas venta" => array(
+                    "Facturas" => array(
                         $posts_arr
                         ),
-                    "Total a dever" => $total
+                    "Total" => $total
                     );
     
                 echo json_encode($detalle_completo);
@@ -104,10 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 );
             }
             $detalle_completo = array(
-                "Facturas compra" => array(
+                "Facturas" => array(
                     $posts_arr
                     ),
-                "Total a pagar" => $total
+                "Total" => $total
                 );
 
             echo json_encode($detalle_completo);

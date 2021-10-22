@@ -57,10 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
             
 
             $detalle_completo = array(
-                "Facturas compra" => array(
+                "Facturas" => array(
                     $posts_arr
                     ),
-                "Total a pagar" => $total
+                "Total" => $total
                 );
 
             echo json_encode($detalle_completo);
@@ -115,10 +115,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
             }
 
             $detalle_completo = array(
-                "Facturas compra" => array(
+                "Facturas" => array(
                     $posts_arr
                     ),
-                "Total a pagar" => $total
+                "Total" => $total
                 );
 
             echo json_encode($detalle_completo);
