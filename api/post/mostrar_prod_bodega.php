@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $post = new Controller_detalle_inventario($GLOBALS['db']);
         $post->id_bodega = isset($_GET['id_bodega']) ? $_GET['id_bodega'] : die();
-        $result = $post->Read_single_detalle_invetario($post->nombre_producto);
+        $result = $post->Read_single_detalle_invetario_por_bodega($post->id_bodega);
         // Get row count
         $num = $result->rowCount();
 
@@ -37,9 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     'nombre_producto' => $post->nombre_producto,
                     'cantidad_producto' => $post->cantidad_producto,
-                    'valor' => $post->valor,
-                    'nombre_bodega' => $post->nombre_bodega,
-                    'numero_bodega' => $post->numero_bodega
+                    'valor' => $post->valor
                 );
                 array_push($posts_arr['data'], $post_item);
             }
