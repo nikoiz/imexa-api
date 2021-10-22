@@ -157,7 +157,7 @@ class Controller_Factura_Venta
     }
     public function Suma_facturas_Npagadas_cliente()
     {
-        $query = "SELECT SUM('valor_venta') as 'Total a Pagar' FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where `estado` = 'Pendiente' and factura_venta.rut_cliente= '".$this->rut_cliente."'";
+        $query = "SELECT SUM('valor_venta') as 'Total_a_Pagar' FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where `estado` = 'Pendiente' and factura_venta.rut_cliente= '".$this->rut_cliente."'";
         $stmt = $this->conn->prepare($query);
         try {
             if ($stmt->execute()) {
@@ -173,7 +173,7 @@ class Controller_Factura_Venta
     }
     public function Suma_facturas_Npagadas()
     {
-        $query = "SELECT SUM('valor_venta') as 'Total a Pagar' FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where `estado` = 'Pendiente'";
+        $query = "SELECT SUM('valor_venta') as 'Total_a_Pagar' FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where `estado` = 'Pendiente'";
         $stmt = $this->conn->prepare($query);
         try {
             if ($stmt->execute()) {

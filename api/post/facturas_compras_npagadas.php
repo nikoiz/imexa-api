@@ -58,7 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                 );
 
                 print_r(json_encode($detalle_completo));
-
         } 
             } else {
                 echo json_encode(
