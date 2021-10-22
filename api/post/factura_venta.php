@@ -208,10 +208,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 }
 
                 $detalle_completo = array(
-                    "Factura Venta" => array(
+                    "Factura" => array(
                         $factura_venta
                         ),
-                    "Detalle venta" => array(
+                    "Detalle" => array(
                     $posts_arr
                     )
                     );
