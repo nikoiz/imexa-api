@@ -138,9 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
     //me falta hacer el producto 
-    echo json_encode(
-        array('message' => $post->id_compra)
-    );
     if ($validador == true) {
         if ($post->create_Factura_Compra()) {
             echo json_encode(
@@ -179,8 +176,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                     'estado' => $post->estado,
                     'rut_proveedor' => $post->rut_proveedor,
                     'id_tipo_f_compra' => $post->id_tipo_f_compra,
-
-
                 );
 
 

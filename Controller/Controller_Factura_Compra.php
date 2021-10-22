@@ -112,7 +112,7 @@ class Controller_Factura_Compra
 
     public function Read_single_Factura_Compra()
     {
-        $query = "SELECT * FROM `factura_compra` INNER JOIN detalle_compra ON factura_compra.id_compra=detalle_compra.id_compra INNER join producto on detalle_compra.producto_id_producto=producto.id_producto where factura_compra.id_compra=?";
+        $query = "SELECT * FROM `factura_compra` WHERE factura_compra.id_compra =?";
         $stmt = $this->conn->prepare($query);
         //Bind id
         $stmt->bindParam(1, $this->id_compra);
@@ -204,7 +204,6 @@ class Controller_Factura_Compra
             recursiva_compra_id = "' . $this->recursiva_compra_id . '",
             id_tipo_f_compra = "' . $this->id_tipo_f_compra . '"';
 
-            printf("Error: %s.\n", $query);
             $stmt = $this->conn->prepare($query);
             try {
                 if ($stmt->execute()) {
