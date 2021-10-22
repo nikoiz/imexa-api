@@ -124,40 +124,10 @@ class Controller_Factura_Venta
 
             return false;
         }
-        /*
-        factura
-        $this->id_venta = $row['id_venta'];
-        $this->fecha_venta = $row['fecha_venta'];
-        $this->valor_venta = $row['valor_venta'];
-        $this->estado = $row['estado'];
-        $this->id_tipo_venta = $row['id_tipo_venta'];
-        $this->rut_cliente = $row['rut_cliente'];
-        $this->recursiva_id = $row['recursiva_id'];
-        $this->id_tipo_f_venta = $row['id_tipo_f_venta'];
-
-
-        detalle venta (no mostrar el producto como tal)
-        $this->id_detalle_venta = $row['id_detalle_venta'];
-        $this->descripcion_producto = $row['descripcion_producto'];
-        $this->cantidad_producto = $row['cantidad_producto'];
-        $this->valor = $row['valor'];
-        $this->producto_id_producto = $row['producto_id_producto'];
-        */
-        
-
-        try {
-            if ($stmt->execute()) {
-                return $stmt;
-            }
-        } catch (Exception $e) {
-            printf("Error: %s.\n", $e);
-
-            return false;
-        }
     }
     public function Suma_facturas_Npagadas_cliente()
     {
-        $query = "SELECT SUM('valor_venta') as 'Total_a_Pagar' FROM `factura_venta` INNER JOIN detalle_venta on factura_venta.id_venta=detalle_venta.id_venta where `estado` = 'Pendiente' and factura_venta.rut_cliente= '".$this->rut_cliente."'";
+        $query = "SELECT SUM('valor_venta') as 'Total_a_Pagar' FROM `factura_venta` where `estado` = 'Pendiente' and factura_venta.rut_cliente= '".$this->rut_cliente."'";
         $stmt = $this->conn->prepare($query);
         try {
             if ($stmt->execute()) {
