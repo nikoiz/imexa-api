@@ -199,12 +199,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     }
 
                    // echo json_encode($posts_arr);
-                } else {
-                    // No posts
-                    echo json_encode(
-
-                        array('message' => 'No existen detalle ventas')
-                    );
                 }
 
                 $detalle_completo = array(

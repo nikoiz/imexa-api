@@ -204,13 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //se hara el get de todas la entidade
                     }
 
                    // echo json_encode($posts_arr);
-                } else {
-                    // No posts
-                    echo json_encode(
-
-                        array('message' => 'No existen facturas')
-                    );
-                }
+                } 
 
 
                 //Make JSON
