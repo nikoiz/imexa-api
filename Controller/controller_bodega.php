@@ -14,6 +14,9 @@ class controller_bodega
 
     public $total_gasto;//de los gastos
 
+    //producto
+    public $nombre_producto;
+
     // Constructor with DB
 
     public function __construct($db)
@@ -26,6 +29,22 @@ class controller_bodega
         //$query = "SELECT id, descripcion FROM text";
         $query = "SELECT * from bodega";
         $stmt = $this->conn->prepare($query);
+        try {
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+        } catch (Exception $e) {
+            printf("Error: %s.\n", $e);
+
+            return false;
+        }
+    }
+    public function buscar_bodeganombre_producto()
+    {
+        $query = "SELECT nombre_bodega,bodega.id_bodega as id_bodega FROM bodega INNER JOIN detalle_inventario
+                  ON bodega.id_bodega = detalle_inventario.id_bodega WHERE nombre_producto = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->nombre_producto);
         try {
             if ($stmt->execute()) {
                 return $stmt;
