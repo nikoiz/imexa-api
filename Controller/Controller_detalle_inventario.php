@@ -295,10 +295,10 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
 
 
 
-    public function buscardor_igual_producto($nombre_producto_buscar, $valor) //buscar si es el mismo producto
+    public function buscardor_igual_producto($nombre_producto_buscar, $valor,$id_bodega) //buscar si es el mismo producto
     {
         $nombre_producto_buscar = '"' . $nombre_producto_buscar . '"';
-        $query = "SELECT nombre_producto FROM detalle_inventario WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor";
+        $query = "SELECT nombre_producto FROM detalle_inventario WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor and id_bodega=$id_bodega";
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -322,10 +322,10 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
         }
     }
 
-    public function buscardor_igual_producto_id($nombre_producto_buscar, $valor)
+    public function buscardor_igual_producto_id($nombre_producto_buscar, $valor,$id_bodega)
     {
         $nombre_producto_buscar = '"' . $nombre_producto_buscar . '"';
-        $query = "SELECT nombre_producto,id_detalle_inventario,cantidad_producto FROM detalle_inventario WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor";
+        $query = "SELECT nombre_producto,id_detalle_inventario,cantidad_producto FROM detalle_inventario WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor and id_bodega= $id_bodega";
       
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -391,10 +391,10 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
         }
     }
   
-    public function buscardor_igual_producto_cantidad($nombre_producto_buscar, $valor)
+    public function buscardor_igual_producto_cantidad($nombre_producto_buscar, $valor,$id_bodega)
     {
         $nombre_producto_buscar = '"' . $nombre_producto_buscar . '"';
-        $query = "SELECT `nombre_producto`,`id_detalle_inventario`,`cantidad_producto` FROM `detalle_inventario` WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor";
+        $query = "SELECT `nombre_producto`,`id_detalle_inventario`,`cantidad_producto` FROM `detalle_inventario` WHERE nombre_producto = $nombre_producto_buscar AND valor = $valor  and id_bodega=$id_bodega";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);

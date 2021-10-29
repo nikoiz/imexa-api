@@ -142,10 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $pos->producto_id_producto = $post->id_producto;
 
             //verifico el id 
-            echo json_encode(
-                array('asd' => "$pos->producto_id_producto")
-            );
-
             if ($po->create_bodega_has_producto($b->id_bodega, $po->id_producto, $po->cantidad_total) == false) {
                 echo json_encode(
                     array('message' => 'Error en ingreso de datos teniendo en cuenta el codigo del producto y el codigo de la bodega')
@@ -163,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     //crear el detalle del inventario 
                     //comprobar que ese detalle si ya existe  sumarlo
 
-                    $nombre = $di->buscardor_igual_producto($post->nombre_producto, $post->valor_producto);
+                    $nombre = $di->buscardor_igual_producto($post->nombre_producto, $post->valor_producto,$b->id_bodega);
 
                     if ($nombre == null) { //2 medios en buscar 
                         echo json_encode(
@@ -181,17 +177,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             array('message' => "Producto encontrado")
                         );
 
-                        if ($di->buscardor_igual_producto_id($post->nombre_producto, $post->valor_producto) != null) {
-
-                            $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto, $post->valor_producto);
+                        if ($di->buscardor_igual_producto_id($post->nombre_producto, $post->valor_producto,$b->id_bodega) != null) {
+                            $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto, $post->valor_producto,$b->id_bodega);
                         } else {
                             echo json_encode(
                                 array('message' => "Error: Codigo no encontrado")
                             );
                         }
 
-                        if ($di->buscardor_igual_producto_cantidad($post->nombre_producto, $post->valor_producto) != null) {
-                            $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto, $post->valor_producto);
+                        if ($di->buscardor_igual_producto_cantidad($post->nombre_producto, $post->valor_producto,$b->id_bodega) != null) {
+                            $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto, $post->valor_producto,$b->id_bodega);
                         } else {
                             echo json_encode(
                                 array('message' => "Error: Cantidad no encontrada")
