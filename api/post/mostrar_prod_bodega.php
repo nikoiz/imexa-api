@@ -37,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     'nombre_producto' => $nombre_producto,
                     'cantidad_producto' => $cantidad_producto,
-                    'valor' => $valor
+                    'valor' => $valor,
+                    'id_detalle_inventario'=> $id_detalle_inventario
                 );
                 array_push($posts_arr['data'], $post_item);
             }

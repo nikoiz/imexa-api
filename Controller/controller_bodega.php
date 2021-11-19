@@ -397,4 +397,25 @@ class controller_bodega
             return null;
         }
     }
+    function buscar_nombre_bodega($nombre_bodega)
+    {
+        $query = "SELECT nombre_bodega FROM bodega WHERE nombre_bodega = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $nombre_bodega);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $numero_comparar = $row['nombre_bodega'];
+
+        if ($numero_comparar == $nombre_bodega) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

@@ -62,11 +62,12 @@ class Controller_detalle_inventario
     public function Read_single_detalle_invetario_por_bodega($id_bodega)
     {
         $query = "SELECT detalle_inventario.nombre_producto as nombre_producto,detalle_inventario.cantidad_producto as cantidad_producto,
-        detalle_inventario.valor as valor,bodega.nombre_bodega as nombre_bodega,bodega.numero_bodega as numero_bodega 
+        detalle_inventario.valor as valor,bodega.nombre_bodega as nombre_bodega,bodega.numero_bodega as numero_bodega,
+        detalle_inventario.id_detalle_inventario as id_detalle_inventario
         FROM `detalle_inventario`
         inner JOIN bodega_has_producto on detalle_inventario.id_producto = bodega_has_producto.id_producto 
         INNER JOIN producto on bodega_has_producto.id_producto=producto.id_producto 
-        INNER JOIN bodega on bodega_has_producto.id_bodega=bodega.id_bodega WHERE detalle_inventario.id_bodega= ?";
+        INNER JOIN bodega on bodega_has_producto.id_bodega=bodega.id_bodega WHERE detalle_inventario.id_bodega=  ?";
         $stmt = $this->conn->prepare($query);
         //Bind id
         $stmt->bindParam(1, $id_bodega);
@@ -136,6 +137,124 @@ class Controller_detalle_inventario
             return false;
         }
     }
+    public function update()
+    {
+        $validador = true;
+        //poner atencion a la nomenclatura de las palabas.
+        $query = "UPDATE bodega SET numero_bodega =:numero_bodega, nombre_bodega= :nombre_bodega  WHERE id_bodega = :id_bodega";
+        $stmt = $this->conn->prepare($query);
+
+
+        if (htmlspecialchars(strip_tags($this->numero_bodega)) != "") {
+            $this->numero_bodega = htmlspecialchars(strip_tags($this->numero_bodega));
+        } else {
+            $validador = false;
+        }
+
+        if (htmlspecialchars(strip_tags($this->nombre_bodega)) == empty("")) {
+            $this->nombre_bodega = htmlspecialchars(strip_tags($this->nombre_bodega));
+        } else {
+            $validador = false;
+        }
+
+        if (htmlspecialchars(strip_tags($this->id_bodega)) != "") {
+            $this->id_bodega = htmlspecialchars(strip_tags($this->id_bodega));
+        } else {
+            $validador = false;
+        }
+
+        // Bind Data
+
+        if ($validador == true) {
+            $stmt->bindParam(':numero_bodega', $this->numero_bodega);
+            $stmt->bindParam(':nombre_bodega', $this->nombre_bodega);
+            $stmt->bindParam(':id_bodega', $this->id_bodega);
+
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $e);
+
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }public function update_detalle_inventario()
+    {
+        $validador = true;
+        //poner atencion a la nomenclatura de las palabas.
+        $query = "UPDATE `detalle_inventario` SET 
+        `nombre_producto`=:nombre_producto,`cantidad_producto`=:cantidad_producto,`valor`=:valor,
+        `fecha_inventario`=:fecha_inventario,`id_inventario`=:id_inventario,`id_bodega`=:id_bodega WHERE `id_detalle_inventario`=:id_detalle_inventario";
+        $stmt = $this->conn->prepare($query);
+
+
+        if (htmlspecialchars(strip_tags($this->nombre_producto)) != "") {
+            $this->nombre_producto = htmlspecialchars(strip_tags($this->nombre_producto));
+        } else {
+            $validador = false;
+        }
+
+        if (htmlspecialchars(strip_tags($this->cantidad_producto)) == empty("")) {
+            $this->cantidad_producto = htmlspecialchars(strip_tags($this->cantidad_producto));
+        } else {
+            $validador = false;
+        }
+
+        if (htmlspecialchars(strip_tags($this->valor)) != "") {
+            $this->valor = htmlspecialchars(strip_tags($this->valor));
+        } else {
+            $validador = false;
+        }
+
+        if (htmlspecialchars(strip_tags($this->fecha_inventario)) != "") {
+            $this->fecha_inventario = htmlspecialchars(strip_tags($this->fecha_inventario));
+        } else {
+            $validador = false;
+        }
+        if (htmlspecialchars(strip_tags($this->id_inventario)) != "") {
+            $this->id_inventario = htmlspecialchars(strip_tags($this->id_inventario));
+        } else {
+            $validador = false;
+        }
+        if (htmlspecialchars(strip_tags($this->id_bodega)) != "") {
+            $this->id_bodega = htmlspecialchars(strip_tags($this->id_bodega));
+        } else {
+            $validador = false;
+        }
+        if (htmlspecialchars(strip_tags($this->id_detalle_inventario)) != "") {
+            $this->id_detalle_inventario = htmlspecialchars(strip_tags($this->id_detalle_inventario));
+        } else {
+            $validador = false;
+        }
+
+        // Bind Data
+
+        if ($validador == true) {
+            $stmt->bindParam(':nombre_producto', $this->nombre_producto);
+            $stmt->bindParam(':cantidad_producto', $this->cantidad_producto);
+            $stmt->bindParam(':valor', $this->valor);
+            $stmt->bindParam(':fecha_inventario', $this->fecha_inventario);
+            $stmt->bindParam(':id_inventario', $this->id_inventario);
+            $stmt->bindParam(':id_bodega', $this->id_bodega);
+            $stmt->bindParam(':id_detalle_inventario', $this->id_detalle_inventario);
+
+            try {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } catch (Exception $e) {
+                printf("Error: %s.\n", $e);
+
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
     function buscar_nombre_producto($nombre_producto)//ver°°
     {
        //$query = "SELECT `nombre_producto`,`id_bodega` FROM `detalle_inventario` WHERE nombre_producto = ?";
@@ -153,6 +272,27 @@ class Controller_detalle_inventario
         $numero_comparar = $row['nombre_producto'];
 
         if ($numero_comparar == $nombre_producto) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    function buscar_id_detalle_inventario($id_detalle_inventario)//ver°°
+    {
+        $query = "SELECT `id_detalle_inventario` FROM `detalle_inventario` WHERE id_detalle_inventario = ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $id_detalle_inventario);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // set properties
+
+        $numero_comparar = $row['id_detalle_inventario'];
+
+        if ($numero_comparar == $id_detalle_inventario) {
             return false;
         } else {
             return true;

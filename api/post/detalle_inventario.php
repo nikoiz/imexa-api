@@ -7,6 +7,7 @@ header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,
 
 include_once '../../config/conexion.php';
 include_once '../../Controller/Controller_detalle_inventario.php';
+include_once '../../Controller/controller_bodega.php';
 
 
 $database = new conexion();
@@ -47,11 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             // No posts
             echo json_encode(
-                array('message' => 'No se encontro el producto: '.$post->nombre_producto)
+                array('message' => 'No se encontro el producto: ' . $post->nombre_producto)
             );
         }
-
-       
     } else {
         $post = new Controller_detalle_inventario($GLOBALS['db']);
         $result = $post->Read_producto_detalle_invetario();
@@ -88,10 +87,86 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
-}
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    //este metodo se establecera para el uso de la valansa como tal
+    $post = new Controller_detalle_inventario($GLOBALS['db']);
+    $bdg = new Controller_bodega($GLOBALS['db']);
+
+    $post->id_detalle_inventario = $GLOBALS['data']->id_detalle_inventario;
+    $post->nombre_bodega = $GLOBALS['data']->nombre_bodega;
+    $post->cantidad_producto = $GLOBALS['data']->cantidad_producto;
+    $post->valor = $GLOBALS['data']->valor;
+    $post->fecha_inventario = $fecha = date('Y-m-d');
+    $post->id_inventario = 1;
+    $post->id_bodega = $GLOBALS['data']->id_bodega;
+
+    $validador = true;
+
+    if (empty($post->id_detalle_inventario)) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "Ingrese un codigo de inventario")
+        );
+    } else {
+        if ($post->buscar_id_detalle_inventario($post->id_detalle_inventario) == true) {
+            $validador = false;
+            echo json_encode(
+                array('message' => 'No existe codigo del detalle de inventario en cuestion')
+            );
+        }
+    }
+
+    if (empty($post->nombre_bodega)) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "Ingrese un nombre de la bodega")
+        );
+    } else {
+        if ($bdg->buscar_nombre_bodega($nombre_bodega) == true) {
+            $validador = false;
+            echo json_encode(
+                array('Error' => "No existe la bodega")
+            );
+        }
+    }
+    if (empty($post->valor)) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "Ingrese un valor")
+        );
+    } else {
+        if (!is_numeric($post->valor)) {
+            $validador = false;
+            echo json_encode(
+                array('Error' => "Ingrese un numeros en el valor")
+            );
+        }
+    }
+    if (empty($post->id_bodega)) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "Ingrese un valor")
+        );
+    } else {
+        if ($bdg->buscar_id_bodega($post->id_bodega) == true) {
+            $validador = false;
+            echo json_encode(
+                array('Error' => "No se encontro el codigo de la bodega")
+            );
+        }
+    }
+    if ($validador==true) {
+        if ($post->update_detalle_inventario()) {
+            echo json_encode(
+                array('message' => 'Se actualizo el producto: '.$post->nombre_producto)
+            );
+        } else {
+            echo json_encode(
+                array('message' => 'No se pudo actualizar el producto')
+            );
+        }
+    }
 }
 //En caso de que ninguna de las opciones anteriores se haya ejecutado
 //header("HTTP/1.1 400 Bad Request");
