@@ -198,11 +198,7 @@ class Controller_detalle_inventario
             $validador = false;
         }
 
-        if (htmlspecialchars(strip_tags($this->cantidad_producto)) == empty("")) {
-            $this->cantidad_producto = htmlspecialchars(strip_tags($this->cantidad_producto));
-        } else {
-            $validador = false;
-        }
+
 
         if (htmlspecialchars(strip_tags($this->valor)) != "") {
             $this->valor = htmlspecialchars(strip_tags($this->valor));
@@ -231,6 +227,7 @@ class Controller_detalle_inventario
             $validador = false;
         }
 
+        $this->cantidad_producto = htmlspecialchars(strip_tags($this->cantidad_producto));
         // Bind Data
 
         if ($validador == true) {

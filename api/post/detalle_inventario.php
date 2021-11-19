@@ -149,6 +149,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             );
         }
     }
+    if (!is_numeric($post->cantidad_producto)) {
+        $validador = false;
+            echo json_encode(
+                array('Error' => "Ingrese un numeros para la cantidad")
+            );
+    }
     if ($validador==true) {
         if ($post->update_detalle_inventario()) {
             echo json_encode(
