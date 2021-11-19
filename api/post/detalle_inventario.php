@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $bdg = new Controller_bodega($GLOBALS['db']);
 
     $post->id_detalle_inventario = $GLOBALS['data']->id_detalle_inventario;
-    $post->nombre_bodega = $GLOBALS['data']->nombre_bodega;
+    $post->nombre_producto = $GLOBALS['data']->nombre_producto;
     $post->cantidad_producto = $GLOBALS['data']->cantidad_producto;
     $post->valor = $GLOBALS['data']->valor;
     $post->fecha_inventario = $fecha = date('Y-m-d');
@@ -117,19 +117,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         }
     }
 
-    if (empty($post->nombre_bodega)) {
+    if (empty($post->nombre_producto)) {
         $validador = false;
         echo json_encode(
             array('Error' => "Ingrese un nombre de la bodega")
         );
-    } else {
-        if ($bdg->buscar_nombre_bodega($nombre_bodega) == true) {
-            $validador = false;
-            echo json_encode(
-                array('Error' => "No existe la bodega")
-            );
-        }
-    }
+    } 
     if (empty($post->valor)) {
         $validador = false;
         echo json_encode(
