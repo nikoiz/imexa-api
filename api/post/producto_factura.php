@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pos->valor = $GLOBALS['data']->valor;
     $pos->id_compra= $GLOBALS['data']->id_compra;
     $pos->producto_id_producto = $post->id_producto; //se sacara al hacer ingreso del producto 
+    $di->peso_unitario= $GLOBALS['data']->peso_unitario;
 
     //bodega_has_producto
     $b->id_bodega = $GLOBALS['data']->id_bodega;
@@ -129,7 +130,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             array('message' => "No existe el inventario")
         );
     }
-
+    if (empty($di->peso_unitario)) {
+        $validador = false;
+        echo json_encode(
+            array('message' => "ingrese el peso unitario")
+        );
+    }
 
 
 
@@ -166,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             array('message' => "no se encontro, se creara uno nuevo")
                         );
                         //crear el producot al inventario
-                        if ($di->create_detalle_inventario($post->nombre_producto, $pos->cantidad_compra_producto, $post->valor_producto, $i->id_inventario, $b->id_bodega, $post->id_producto, $fecha) == false) {
+                        if ($di->create_detalle_inventario($post->nombre_producto, $pos->cantidad_compra_producto, $post->valor_producto, $i->id_inventario, $b->id_bodega, $post->id_producto, $fecha,$di->peso_unitario) == false) {
                             echo json_encode(
                                 array('message' => 'no se pudo crear el detalle del inventario')
                             );

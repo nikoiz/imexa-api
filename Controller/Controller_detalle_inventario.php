@@ -12,6 +12,7 @@ class Controller_detalle_inventario
     public $id_inventario;
     public $id_bodega;
     public $id_producto;
+    public $peso_unitario;
 
     //datos de la bodega
     public $nombre_bodega;
@@ -25,7 +26,7 @@ class Controller_detalle_inventario
     public function Read_single_detalle_invetario($nombre_producto)
     {
         $query = "SELECT detalle_inventario.nombre_producto as nombre_producto,detalle_inventario.cantidad_producto as cantidad_producto,
-        detalle_inventario.valor as valor,bodega.nombre_bodega as nombre_bodega,bodega.numero_bodega as numero_bodega 
+        detalle_inventario.valor as valor,bodega.nombre_bodega as nombre_bodega,bodega.numero_bodega as numero_bodega,detalle_inventario.peso_unitario as detalle_inventario
         FROM `detalle_inventario`
         inner JOIN bodega_has_producto on detalle_inventario.id_producto = bodega_has_producto.id_producto 
         INNER JOIN producto on bodega_has_producto.id_producto=producto.id_producto 
@@ -44,6 +45,7 @@ class Controller_detalle_inventario
         $this->valor = $row['valor'];
         $this->nombre_bodega = $row['nombre_bodega'];
         $this->numero_bodega = $row['numero_bodega'];
+        $this->detalle_inventario = $row['detalle_inventario'];
         //$this->fecha_inventario = $row['fecha_inventario'];
         //$this->id_inventario = $row['id_inventario'];
         //$this->id_bodega = $row['id_bodega'];
@@ -295,7 +297,7 @@ class Controller_detalle_inventario
             return true;
         }
     }
-    public function create_detalle_inventario($nombre_producto, $cantidad_producto, $valor, $id_inventario, $id_bodega, $id_producto, $fecha)
+    public function create_detalle_inventario($nombre_producto, $cantidad_producto, $valor, $id_inventario, $id_bodega, $id_producto, $fecha,$peso_unitario)
     { //esto se realizara en el metodo producto
         $validador = true;
         $query = 'INSERT INTO detalle_inventario 
@@ -303,7 +305,8 @@ class Controller_detalle_inventario
         nombre_producto = :nombre_producto,
         cantidad_producto = :cantidad_producto,
         valor = :valor,
-        fecha_inventario = :fecha_inventario, 
+        fecha_inventario = :fecha_inventario,
+        peso_unitario = :peso_unitario, 
         id_inventario = :id_inventario,
         id_bodega = :id_bodega,
         id_producto = :id_producto';
@@ -364,6 +367,11 @@ class Controller_detalle_inventario
         } else {
             $validador = false;
         }
+        if (!empty($peso_unitario)) {
+            $this->peso_unitario = $peso_unitario;
+        } else {
+            $validador = false;
+        }
         $this->fecha_inventario = "'" . $fecha . "'";
 
 
@@ -381,6 +389,7 @@ VALUES ("APIO",2,1313,'2021-06-19',1,1,72) // me lo toma con comillas la fecha
             $stmt->bindParam(':id_bodega', $this->id_bodega);
             $stmt->bindParam(':id_producto', $this->id_producto);
             $stmt->bindParam(':fecha_inventario', $fecha);
+            $stmt->bindParam(':peso_unitario', $this->peso_unitario);
 
 
 

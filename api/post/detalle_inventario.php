@@ -40,7 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'cantidad_producto' => $post->cantidad_producto,
                     'valor' => $post->valor,
                     'nombre_bodega' => $post->nombre_bodega,
-                    'numero_bodega' => $post->numero_bodega
+                    'numero_bodega' => $post->numero_bodega,
+                    'peso_unitario'=> $post->peso_unitario
                 );
                 array_push($posts_arr['data'], $post_item);
             }
@@ -73,7 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'fecha_inventario' => $fecha_inventario,
                     'id_inventario' => $id_inventario,
                     'id_bodega' => $id_bodega,
-                    'id_producto' => $id_producto
+                    'id_producto' => $id_producto,
+                    'peso_unitario' =>$peso_unitario
                 );
                 array_push($posts_arr['data'], $post_item);
             }
@@ -100,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $post->fecha_inventario = $fecha = date('Y-m-d');
     $post->id_inventario = 1;
     $post->id_bodega = $GLOBALS['data']->id_bodega;
+    $post->peso_unitario=$GLOBALS['data']->peso_unitario;
 
     $validador = true;
 
@@ -154,6 +157,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             echo json_encode(
                 array('Error' => "Ingrese un numeros para la cantidad")
             );
+    }
+    if (empty($post->peso_unitario)) {
+        $validador = false;
+        echo json_encode(
+            array('Error' => "Ingrese un valor para el peso unitario")
+        );
     }
     if ($validador==true) {
         if ($post->update_detalle_inventario()) {
