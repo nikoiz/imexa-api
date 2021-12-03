@@ -114,8 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         }
     } else {
-        $post =  new Controller_Gasto($GLOBALS['db']);
-        $result = $post->Read_Gasto();
+        $post =  new Controller_Dispositivo_peso($GLOBALS['db']);
+        $result = $post->Read_dispositivo();
         $num = $result->rowCount();
 
         if ($num > 0) {
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $post_item = array(
                     'id_dispositivo' => $id_dispositivo,
                     'peso_dispositivo' => $peso_dispositivo,
-                    'unidad_de_medida' => $post->unidad_de_medida,
+                    'unidad_de_medida' => $unidad_de_medida,
                     'topico' => $topico,
                     'id_detalle_inventario' =>$id_detalle_inventario
                 );
@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // No posts
             echo json_encode(
 
-                array('message' => 'No existe gastos')
+                array('message' => 'No existe dispositivos')
             );
         }
     }
