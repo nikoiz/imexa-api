@@ -158,12 +158,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
                 array('Error' => "Ingrese un numeros para la cantidad")
             );
     }
-    if (empty($post->peso_unitario)) {
-        $validador = false;
-        echo json_encode(
-            array('Error' => "Ingrese un valor para el peso unitario")
-        );
-    }
     if ($validador==true) {
         if ($post->update_detalle_inventario()) {
             echo json_encode(
