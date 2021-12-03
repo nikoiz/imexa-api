@@ -116,12 +116,8 @@ class Controller_Dispositivo_peso{
         $validador = true;
         //poner atencion a la nomenclatura de las palabas.
         $query = "UPDATE abono SET    
-        id_dispositivo = :id_dispositivo,
-        peso_dispositivo = :peso_dispositivo,
-        unidad_de_medida = :unidad_de_medida,
-        topico = :topico,
-        id_detalle_inventario = :id_detalle_inventario
-          WHERE id_abono = :id_abono";
+        peso_dispositivo = :peso_dispositivo
+          WHERE id_dispositivo = :id_dispositivo";
         $stmt = $this->conn->prepare($query);
         if (empty(htmlspecialchars(strip_tags($this->id_dispositivo)))) {
             $validador = false;
@@ -142,31 +138,13 @@ class Controller_Dispositivo_peso{
                 $this->peso_dispositivo = htmlspecialchars(strip_tags($this->peso_dispositivo));
             }
         }
-        if (!empty(htmlspecialchars(strip_tags($this->unidad_de_medida)))) {
-            $this->unidad_de_medida = htmlspecialchars(strip_tags($this->unidad_de_medida));
-        } else {
-            $validador = false;
-        }
 
-        if (!empty(htmlspecialchars(strip_tags($this->topico)))) {
-            $this->topico = htmlspecialchars(strip_tags($this->topico));
-        } else {
-            $validador = false;
-        }
-
-        if (!empty(htmlspecialchars(strip_tags($this->id_detalle_inventario)))) {
-            $this->id_detalle_inventario = htmlspecialchars(strip_tags($this->id_detalle_inventario));
-        } else {
-            $validador = false;
-        }
+        
 
         // Bind Data
         if ($validador == true) {
             $stmt->bindParam(':id_dispositivo', $this->id_dispositivo);
             $stmt->bindParam(':peso_dispositivo', $this->peso_dispositivo);
-            $stmt->bindParam(':unidad_de_medida', $this->fechunidad_de_medidaa_abono);
-            $stmt->bindParam(':topico', $this->topico);
-            $stmt->bindParam(':id_detalle_inventario', $this->id_detalle_inventario);
             
             try {
                 if ($stmt->execute()) {

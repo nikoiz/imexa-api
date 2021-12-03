@@ -166,13 +166,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
     }
 }
 if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
+    $validador==true;
     $post = new Controller_Dispositivo_peso($GLOBALS['db']);
     
     $post->id_dispositivo = $GLOBALS['data']->id_dispositivo;
     $post->peso_dispositivo = $GLOBALS['data']->peso_dispositivo;
-    $post->unidad_de_medida = $GLOBALS['data']->unidad_de_medida;
-    $post->topico = $GLOBALS['data']->topico;
-    $post->id_detalle_inventario = $GLOBALS['data']->id_detalle_inventario;
 
     if ($post->id_dispositivo == null) {
         $validador = false;
@@ -193,32 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
         );
         $validador = false;
     }
-    if (!$post->Validador_unidad_de_medida($post->unidad_de_medida) == "") {
-        echo json_encode(
-            array('Error' => $post->Validador_peso_dispositivo($post->unidad_de_medida))
-        );
-        $validador = false;
-    }
-    if (!$post->Validador_unidad_de_medida($post->topico) == "") {
-        echo json_encode(
-            array('Error' => $post->Validador_peso_dispositivo($post->topico))
-        );
-        $validador = false;
-    }
-    if (!$post->Validador_id_detalle_inventario($post->id_detalle_inventario) == "") {
-        echo json_encode(
-            array('Error' => $post->Validador_id_detalle_inventario($post->id_detalle_inventario))
-        );
-        $validador = false;
-    }else {
-        //buscar id_detalle_inventario
-        if ($id->buscar_id_detalle_inventario($post->id_detalle_inventario)==true) {
-            echo json_encode(
-                array('Error' => 'No se encontro el codigo del invenatrio')
-            );
-            $validador = false;
-        }
-    } 
+    
 
     if ($validador==true) {
         if ($post->update_dispositivo()) {
