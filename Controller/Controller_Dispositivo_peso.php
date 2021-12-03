@@ -30,9 +30,10 @@ class Controller_Dispositivo_peso{
     }
     public function Read_single_dipositivo()
     {
-        $query = "SELECT * FROM `dispositivo_peso` WHERE `id_dispositivo` = ?";
+        $query = "SELECT * FROM `dispositivo_peso` INNER JOIN detalle_inventario on dispositivo_peso.id_detalle_inventario = detalle_inventario.id_detalle_inventario
+         where detalle_inventario.id_detalle_inventario= ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $this->id_dispositivo);
+        $stmt->bindParam(1, $this->id_detalle_inventario);
         //Bind id
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);

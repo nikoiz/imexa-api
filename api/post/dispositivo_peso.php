@@ -79,21 +79,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     
 }
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['id_dispositivo'])) {
+    if (isset($_GET['id_detalle_inventario'])) {
 
         // Instiate blog post object
         $post = new Controller_Dispositivo_peso($GLOBALS['db']);
-
+        $di = new Controller_Inventario($GLOBALS['db']);
 
 
         // GET ID
         //se puede cambiar por el id_bodega (decir a compañeero para ver quer le parece)
-        $post->id_dispositivo = isset($_GET['id_dispositivo']) ? $_GET['id_dispositivo'] : die();
+        $post->id_detalle_inventario = isset($_GET['id_detalle_inventario']) ? $_GET['id_detalle_inventario'] : die();
 
 
-        if (!empty($post->buscar_id_dispositivo($post->id_dispositivo))) {
+        if (!empty($di->Busacar_id_inventario($post->id_detalle_inventario))) {
             echo json_encode(
-                array('message' => 'No existe datos sobre el dispositivo N° ' . $post->id_dispositivo)
+                array('message' => 'No existe datos sobre el dispositivo ')
             );
         } else {
             if ($post->Read_single_dipositivo()) {
