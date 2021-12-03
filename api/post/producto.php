@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post->valor_producto = $GLOBALS['data']->valor_producto;
     $cantidad_total = $GLOBALS['data']->cantidad_total;
     $p->id_bodega = $GLOBALS['data']->id_bodega;
+    $di->peso_unitario = $GLOBALS['data']->peso_unitario;
     $id_inventario = 1;
     $fecha = date('Y-m-d');
     //$fecha = date('d-m-Y');
@@ -67,6 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             );
         }
     }
+    if (empty($di->peso_unitario)) {
+        $validador = false;
+        echo json_encode(
+            array('message' => "ingrese un peso unitario")
+        );
+    }
 
 
     if ($validador == true) {
@@ -87,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         array('message' => "no se encontro")
                     );
 
-                    if ($di->create_detalle_inventario($post->nombre_producto, $cantidad_total, $post->valor_producto, 1, $p->id_bodega, $id_producto, $fecha) == false) { //listo
+                    if ($di->create_detalle_inventario($post->nombre_producto, $cantidad_total, $post->valor_producto, 1, $p->id_bodega, $id_producto, $fecha,$di->peso_unitario) == false) { //listo
                         echo json_encode(
                             array('message' => 'Error en ingreso para el inventario')
                         );
@@ -101,8 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         array('message' => "Producto encontrado")
                     );
 
-                    $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto, $post->valor_producto);
-                    $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto, $post->valor_producto);
+                    $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto, $post->valor_producto,$p->id_bodega);
+                    $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto, $post->valor_producto,$p->id_bodega);
 
                     $cantidad_d_i = $cantidad_d_i + $cantidad_total;
                     if ($di->Sumar_mismo_producto($di->id_detalle_inventario, $cantidad_d_i, $fecha) == false) {
@@ -231,13 +238,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
         //obtenr nombre y valor  por id 
         $post->nombre_producto = $post->Obtener_nombre_producto($post->id_producto);
         $post->valor_producto = $post->Obtener_valor_producto($post->id_producto);
+        $po->id_bodega= $post->Obtener_id_bodega($post->id_producto);
 
         //restarla del inventario
         //se obtien el total del inventario sobre el producto 
-        $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto, $post->valor_producto);
+        $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto, $post->valor_producto,$po->id_bodega);
         $cantidad_d_i = $cantidad_d_i - $po->cantidad_total;
         //se obtiene el id
-        $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto, $post->valor_producto);
+        $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto, $post->valor_producto,$po->id_bodega);
         
 
         if ($di->Sumar_mismo_producto($di->id_detalle_inventario, $cantidad_d_i, $fecha) == false) {
@@ -304,10 +312,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
 
 
 
-                $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto, $post->valor_producto);
+                $cantidad_d_i = $di->buscardor_igual_producto_cantidad($post->nombre_producto, $post->valor_producto,$p->id_bodega);
                 $cantidad_d_i = $cantidad_d_i - $po->cantidad_total;
                 //se obtiene el id
-                $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto, $post->valor_producto);
+                $di->id_detalle_inventario = $di->buscardor_igual_producto_id($post->nombre_producto, $post->valor_producto,$p->id_bodega);
 
 
                 if ($di->Sumar_mismo_producto($di->id_detalle_inventario, $cantidad_d_i, $fecha) == false) {

@@ -352,6 +352,25 @@ class Controller_Producto
             return null;
         }
     }
+    public function Obtener_id_bodega($id_producto)
+    {
+        $query = "SELECT bodega_has_producto.id_bodega as id_bodega FROM producto 
+        inner join bodega_has_producto on producto.id_producto=bodega_has_producto.id_producto WHERE producto.id_producto= ?";
+
+        $stmt = $this->conn->prepare($query);
+
+        //Bind id
+        $stmt->bindParam(1, $id_producto);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $numero_comparar = $row['id_bodega'];
+
+        if ($numero_comparar != null) {
+            return $numero_comparar;
+        } else {
+            return null;
+        }
+    }
     public function Obtener_nombre_producto($id_producto)
     {
         $query = "SELECT nombre_producto FROM producto WHERE id_producto = ?";
