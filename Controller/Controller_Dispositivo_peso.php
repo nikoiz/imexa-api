@@ -115,7 +115,7 @@ class Controller_Dispositivo_peso{
         
         $validador = true;
         //poner atencion a la nomenclatura de las palabas.
-        $query = "UPDATE abono SET    
+        $query = "UPDATE dispositivo_peso SET    
         peso_dispositivo = :peso_dispositivo
           WHERE id_dispositivo = :id_dispositivo";
         $stmt = $this->conn->prepare($query);
@@ -129,15 +129,7 @@ class Controller_Dispositivo_peso{
         }else {
             $this->peso_dispositivo = htmlspecialchars(strip_tags($this->peso_dispositivo));
         }
-        if (empty(htmlspecialchars(strip_tags($this->peso_dispositivo)))) {
-            $validador = false;
-        } else {
-            if (!is_numeric(htmlspecialchars(strip_tags($this->peso_dispositivo)))) {
-                $validador = false;
-            } else {
-                $this->peso_dispositivo = htmlspecialchars(strip_tags($this->peso_dispositivo));
-            }
-        }
+        
 
         
 

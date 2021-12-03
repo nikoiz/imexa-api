@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $validador = false;
         }
     } 
+    
     if ($validador == true) {
         if ($post->create_dispositivo()) {
             echo json_encode(
@@ -166,13 +167,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
     }
 }
 if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
-    $validador==true;
+    $validador=true;
     $post = new Controller_Dispositivo_peso($GLOBALS['db']);
     
     $post->id_dispositivo = $GLOBALS['data']->id_dispositivo;
     $post->peso_dispositivo = $GLOBALS['data']->peso_dispositivo;
 
-    if ($post->id_dispositivo == null) {
+    if (empty($post->id_dispositivo)) {
         $validador = false;
         echo json_encode(
             array('Error' => "Falta el codigo de la pesa")
@@ -181,19 +182,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
 
     if (!$post->Validador_peso_dispositivo($post->peso_dispositivo) == "") {
         echo json_encode(
-            array('Error' => $post->Validador_peso_dispositivo($post->valor_gastos))
+            array('Error' => $post->Validador_peso_dispositivo($post->peso_dispositivo))
         );
         $validador = false;
     }
     if (!$post->Validador_peso_dispositivo($post->peso_dispositivo) == "") {
         echo json_encode(
-            array('Error' => $post->Validador_peso_dispositivo($post->valor_gastos))
+            array('Error' => $post->Validador_peso_dispositivo($post->peso_dispositivo))
         );
         $validador = false;
     }
-    
 
     if ($validador==true) {
+        
         if ($post->update_dispositivo()) {
             echo json_encode(
                 array('message' => 'Se actualizo el dispositivo')
