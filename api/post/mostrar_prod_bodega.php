@@ -38,7 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'nombre_producto' => $nombre_producto,
                     'cantidad_producto' => $cantidad_producto,
                     'valor' => $valor,
-                    'id_detalle_inventario'=> $id_detalle_inventario
+                    'id_detalle_inventario'=> $id_detalle_inventario,
+                    'peso_unitario' =>$peso_unitario
                 );
                 array_push($posts_arr['data'], $post_item);
             }
@@ -73,7 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'fecha_inventario' => $fecha_inventario,
                     'id_inventario' => $id_inventario,
                     'id_bodega' => $id_bodega,
-                    'id_producto' => $id_producto
+                    'id_producto' => $id_producto,
+                    'peso_unitario' =>$peso_unitario
                 );
                 array_push($posts_arr['data'], $post_item);
             }

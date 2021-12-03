@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
 
                 //buscardor
-                $nombre = $di->buscardor_igual_producto($post->nombre_producto, $post->valor_producto);
+                $nombre = $di->buscardor_igual_producto($post->nombre_producto, $post->valor_producto,$p->id_bodega);
                 if ($nombre == null) {
                     echo json_encode(
                         array('message' => "no se encontro")
