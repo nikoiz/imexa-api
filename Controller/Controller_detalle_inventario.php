@@ -65,7 +65,7 @@ class Controller_detalle_inventario
     {
         $query = "SELECT detalle_inventario.nombre_producto as nombre_producto,detalle_inventario.cantidad_producto as cantidad_producto,
         detalle_inventario.valor as valor,bodega.nombre_bodega as nombre_bodega,bodega.numero_bodega as numero_bodega,
-        detalle_inventario.id_detalle_inventario as id_detalle_inventario
+        detalle_inventario.id_detalle_inventario as id_detalle_inventario,detalle_inventario.peso_unitario
         FROM `detalle_inventario`
         inner JOIN bodega_has_producto on detalle_inventario.id_producto = bodega_has_producto.id_producto 
         INNER JOIN producto on bodega_has_producto.id_producto=producto.id_producto 
